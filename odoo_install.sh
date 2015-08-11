@@ -21,9 +21,10 @@
 OE_USER="odoo"
 OE_HOME="/$OE_USER"
 OE_HOME_EXT="/$OE_USER/$OE_USER-server"
+#The default port where this Odoo instance will run under
 OE_PORT="8070"
 
-#Enter version for checkout "8.0" for version 8.0, "7.0 (version 7), saas-4, saas-5 (opendays version) and "master" for trunk
+#Choose the Odoo version which you want to install. For example: 8.0, 7.0 or saas-6. When using 'trunk' the master version will be installed.
 OE_VERSION="8.0"
 
 #set the superadmin password
