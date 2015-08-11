@@ -23,6 +23,8 @@ OE_HOME="/$OE_USER"
 OE_HOME_EXT="/$OE_USER/$OE_USER-server"
 #The default port where this Odoo instance will run under
 OE_PORT="8070"
+#Set to true if you want to install it, false if you don't need it or have it already installed.
+INSTALL_WKHTMLTOPDF = "True"
 
 #Choose the Odoo version which you want to install. For example: 8.0, 7.0 or saas-6. When using 'trunk' the master version will be installed.
 OE_VERSION="8.0"
@@ -62,11 +64,18 @@ sudo apt-get install python-dateutil python-feedparser python-ldap python-libxsl
 echo -e "\n---- Install python libraries ----"
 sudo pip install gdata
 
+#--------------------------------------------------
+# Install Wkhtmltopdf if needed
+#--------------------------------------------------
+if [ $INSTALL_WKHTMLTOPDF = "True" ]; then
 echo -e "\n---- Install wkhtml and place on correct place for ODOO 8 ----"
 sudo wget http://download.gna.org/wkhtmltopdf/0.12/0.12.1/wkhtmltox-0.12.1_linux-trusty-amd64.deb
 sudo dpkg -i wkhtmltox-0.12.1_linux-trusty-amd64.deb
 sudo cp /usr/local/bin/wkhtmltopdf /usr/bin
 sudo cp /usr/local/bin/wkhtmltoimage /usr/bin
+else
+  echo "Wkhtmltopdf isn't installed due to the choice of the user!"
+fi
 	
 echo -e "\n---- Create ODOO system user ----"
 sudo adduser --system --quiet --shell=/bin/bash --home=$OE_HOME --gecos 'ODOO' --group $OE_USER
