@@ -199,5 +199,16 @@ sudo su root -c "echo 'xmlrpc_port = $OE_PORT' >> /etc/$OE_CONFIG.conf"
 
 echo -e "* Start ODOO on Startup"
 sudo update-rc.d $OE_CONFIG defaults
- 
-echo "Done! The ODOO server can be started with /etc/init.d/$OE_CONFIG"
+
+echo -e "* Starting Odoo Service"
+sudo su root -c "/etc/init.d/$OE_CONFIG start"
+echo "-----------------------------------------------------------"
+echo "Done! The Odoo server is up and running. Specifications:"
+echo "Port: $OE_PORT"
+echo "User: $OE_USER"
+echo "Code location: $OE_USER"
+echo "Addons folder: $OE_USER/$OE_CONFIG/addons/"
+echo "Start Odoo service: sudo service $OE_CONFIG start"
+echo "Stop Odoo service: sudo service $OE_CONFIG stop"
+echo "Restart Odoo service: sudo service $OE_CONFIG restart"
+echo "-----------------------------------------------------------"
