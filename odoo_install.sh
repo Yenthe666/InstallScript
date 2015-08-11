@@ -24,7 +24,7 @@ OE_HOME_EXT="/$OE_USER/$OE_USER-server"
 #The default port where this Odoo instance will run under
 OE_PORT="8070"
 #Set to true if you want to install it, false if you don't need it or have it already installed.
-INSTALL_WKHTMLTOPDF = "True"
+INSTALL_WKHTMLTOPDF="True"
 
 #Choose the Odoo version which you want to install. For example: 8.0, 7.0 or saas-6. When using 'trunk' the master version will be installed.
 OE_VERSION="8.0"
