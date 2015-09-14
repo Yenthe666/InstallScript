@@ -26,6 +26,7 @@ OE_HOME_EXT="/$OE_USER/$OE_USER-server"
 INSTALL_WKHTMLTOPDF="True"
 
 #Choose the Odoo version which you want to install. For example: 9.0, 8.0, 7.0 or saas-6. When using 'trunk' the master version will be installed.
+#IMPORTANT! This script contains extra libraries that are specifically needed for Odoo 9.0
 OE_VERSION="8.0"
 
 #set the superadmin password
