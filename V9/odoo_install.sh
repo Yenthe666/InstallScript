@@ -64,6 +64,10 @@ sudo apt-get install python-dateutil python-feedparser python-ldap python-libxsl
 echo -e "\n---- Install python libraries ----"
 sudo pip install gdata
 
+echo -e "\n--- Install Node-less and node-clean-css"
+sudo apt-get install node-clean-css
+sudo apt-get install node-less
+
 #--------------------------------------------------
 # Install Wkhtmltopdf if needed
 #--------------------------------------------------
