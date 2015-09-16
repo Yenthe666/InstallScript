@@ -25,6 +25,9 @@ OE_HOME_EXT="/$OE_USER/$OE_USER-server"
 #Set to true if you want to install it, false if you don't need it or have it already installed.
 INSTALL_WKHTMLTOPDF="True"
 
+#Set the default Odoo port (you still have to use -c /etc/odoo-server.conf for example to use this.)
+OE_PORT="8069"
+
 #Choose the Odoo version which you want to install. For example: 9.0, 8.0, 7.0 or saas-6. When using 'trunk' the master version will be installed.
 #IMPORTANT! This script contains extra libraries that are specifically needed for Odoo 9.0
 OE_VERSION="9.0"
@@ -32,7 +35,6 @@ OE_VERSION="9.0"
 #set the superadmin password
 OE_SUPERADMIN="admin"
 OE_CONFIG="$OE_USER-server"
-OE_PORT="8069"
 
 #--------------------------------------------------
 # Update Server
