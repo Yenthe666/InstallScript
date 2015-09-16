@@ -32,6 +32,7 @@ OE_VERSION="9.0"
 #set the superadmin password
 OE_SUPERADMIN="admin"
 OE_CONFIG="$OE_USER-server"
+OE_PORT="8069"
 
 #--------------------------------------------------
 # Update Server
