@@ -132,10 +132,10 @@ cat <<EOF > ~/$OE_CONFIG
 #!/bin/sh
 ### BEGIN INIT INFO
 # Provides: $OE_CONFIG
-# Required-Start: $remote_fs $syslog
-# Required-Stop: $remote_fs $syslog
-# Should-Start: $network
-# Should-Stop: $network
+# Required-Start: \$remote_fs \$syslog
+# Required-Stop: \$remote_fs \$syslog
+# Should-Start: \$network
+# Should-Stop: \$network
 # Default-Start: 2 3 4 5
 # Default-Stop: 0 1 6
 # Short-Description: Enterprise Business Applications
