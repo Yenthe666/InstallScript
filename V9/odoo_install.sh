@@ -20,7 +20,7 @@
 #odoo
 OE_USER="odoo"
 OE_HOME="/$OE_USER"
-OE_HOME_EXT="/$OE_USER/$OE_USER-server"
+OE_HOME_EXT="/$OE_USER/${OE_USER}-server"
 #The default port where this Odoo instance will run under (provided you use the command -c in the terminal)
 #Set to true if you want to install it, false if you don't need it or have it already installed.
 INSTALL_WKHTMLTOPDF="True"
@@ -34,7 +34,7 @@ OE_VERSION="9.0"
 
 #set the superadmin password
 OE_SUPERADMIN="admin"
-OE_CONFIG="$OE_USER-server"
+OE_CONFIG="${OE_USER}-server"
 
 #--------------------------------------------------
 # Update Server
@@ -108,19 +108,19 @@ echo -e "\n---- Setting permissions on home folder ----"
 sudo chown -R $OE_USER:$OE_USER $OE_HOME/*
 
 echo -e "* Create server config file"
-sudo cp $OE_HOME_EXT/debian/openerp-server.conf /etc/$OE_CONFIG.conf
-sudo chown $OE_USER:$OE_USER /etc/$OE_CONFIG.conf
-sudo chmod 640 /etc/$OE_CONFIG.conf
+sudo cp $OE_HOME_EXT/debian/openerp-server.conf /etc/${OE_CONFIG}.conf
+sudo chown $OE_USER:$OE_USER /etc/${OE_CONFIG}.conf
+sudo chmod 640 /etc/${OE_CONFIG}.conf
 
 echo -e "* Change server config file"
-sudo sed -i s/"db_user = .*"/"db_user = $OE_USER"/g /etc/$OE_CONFIG.conf
-sudo sed -i s/"; admin_passwd.*"/"admin_passwd = $OE_SUPERADMIN"/g /etc/$OE_CONFIG.conf
-sudo su root -c "echo 'logfile = /var/log/$OE_USER/$OE_CONFIG$1.log' >> /etc/$OE_CONFIG.conf"
-sudo su root -c "echo 'addons_path=$OE_HOME_EXT/addons,$OE_HOME/custom/addons' >> /etc/$OE_CONFIG.conf"
+sudo sed -i s/"db_user = .*"/"db_user = $OE_USER"/g /etc/${OE_CONFIG}.conf
+sudo sed -i s/"; admin_passwd.*"/"admin_passwd = $OE_SUPERADMIN"/g /etc/${OE_CONFIG}.conf
+sudo su root -c "echo 'logfile = /var/log/$OE_USER/$OE_CONFIG$1.log' >> /etc/${OE_CONFIG}.conf"
+sudo su root -c "echo 'addons_path=$OE_HOME_EXT/addons,$OE_HOME/custom/addons' >> /etc/${OE_CONFIG}.conf"
 
 echo -e "* Create startup file"
 sudo su root -c "echo '#!/bin/sh' >> $OE_HOME_EXT/start.sh"
-sudo su root -c "echo 'sudo -u $OE_USER $OE_HOME_EXT/openerp-server --config=/etc/$OE_CONFIG.conf' >> $OE_HOME_EXT/start.sh"
+sudo su root -c "echo 'sudo -u $OE_USER $OE_HOME_EXT/openerp-server --config=/etc/${OE_CONFIG}.conf' >> $OE_HOME_EXT/start.sh"
 sudo chmod 755 $OE_HOME_EXT/start.sh
 
 #--------------------------------------------------
@@ -169,31 +169,31 @@ return 1
 case "\${1}" in
 start)
 echo -n "Starting \${DESC}: "
-start-stop-daemon --start --quiet --pidfile \${PIDFILE} \
---chuid \${USER} --background --make-pidfile \
---exec \${DAEMON} -- \${DAEMON_OPTS}
+start-stop-daemon --start --quiet --pidfile \$PIDFILE \
+--chuid \$USER --background --make-pidfile \
+--exec \$DAEMON -- \$DAEMON_OPTS
 echo "\${NAME}."
 ;;
 stop)
 echo -n "Stopping \${DESC}: "
-start-stop-daemon --stop --quiet --pidfile \${PIDFILE} \
+start-stop-daemon --stop --quiet --pidfile \$PIDFILE \
 --oknodo
 echo "\${NAME}."
 ;;
 
 restart|force-reload)
 echo -n "Restarting \${DESC}: "
-start-stop-daemon --stop --quiet --pidfile \${PIDFILE} \
+start-stop-daemon --stop --quiet --pidfile \$PIDFILE \
 --oknodo
 sleep 1
-start-stop-daemon --start --quiet --pidfile \${PIDFILE} \
---chuid \${USER} --background --make-pidfile \
---exec \${DAEMON} -- \${DAEMON_OPTS}
+start-stop-daemon --start --quiet --pidfile \$PIDFILE \
+--chuid \$USER --background --make-pidfile \
+--exec \$DAEMON -- \$DAEMON_OPTS
 echo "\${NAME}."
 ;;
 *)
-N=/etc/init.d/\${NAME}
-echo "Usage: \${NAME} {start|stop|restart|force-reload}" >&2
+N=/etc/init.d/\$NAME
+echo "Usage: \$NAME {start|stop|restart|force-reload}" >&2
 exit 1
 ;;
 
@@ -207,7 +207,7 @@ sudo chmod 755 /etc/init.d/$OE_CONFIG
 sudo chown root: /etc/init.d/$OE_CONFIG
 
 echo -e "* Change default xmlrpc port"
-sudo su root -c "echo 'xmlrpc_port = $OE_PORT' >> /etc/$OE_CONFIG.conf"
+sudo su root -c "echo 'xmlrpc_port = $OE_PORT' >> /etc/${OE_CONFIG}.conf"
 
 echo -e "* Start ODOO on Startup"
 sudo update-rc.d $OE_CONFIG defaults
