@@ -128,76 +128,78 @@ sudo chmod 755 $OE_HOME_EXT/start.sh
 #--------------------------------------------------
 
 echo -e "* Create init file"
-echo '#!/bin/sh' >> ~/$OE_CONFIG
-echo '### BEGIN INIT INFO' >> ~/$OE_CONFIG
-echo '# Provides: $OE_CONFIG' >> ~/$OE_CONFIG
-echo '# Required-Start: $remote_fs $syslog' >> ~/$OE_CONFIG
-echo '# Required-Stop: $remote_fs $syslog' >> ~/$OE_CONFIG
-echo '# Should-Start: $network' >> ~/$OE_CONFIG
-echo '# Should-Stop: $network' >> ~/$OE_CONFIG
-echo '# Default-Start: 2 3 4 5' >> ~/$OE_CONFIG
-echo '# Default-Stop: 0 1 6' >> ~/$OE_CONFIG
-echo '# Short-Description: Enterprise Business Applications' >> ~/$OE_CONFIG
-echo '# Description: ODOO Business Applications' >> ~/$OE_CONFIG
-echo '### END INIT INFO' >> ~/$OE_CONFIG
-echo 'PATH=/bin:/sbin:/usr/bin' >> ~/$OE_CONFIG
-echo "DAEMON=$OE_HOME_EXT/openerp-server" >> ~/$OE_CONFIG
-echo "NAME=$OE_CONFIG" >> ~/$OE_CONFIG
-echo "DESC=$OE_CONFIG" >> ~/$OE_CONFIG
-echo '' >> ~/$OE_CONFIG
-echo '# Specify the user name (Default: odoo).' >> ~/$OE_CONFIG
-echo "USER=$OE_USER" >> ~/$OE_CONFIG
-echo '' >> ~/$OE_CONFIG
-echo '# Specify an alternate config file (Default: /etc/openerp-server.conf).' >> ~/$OE_CONFIG
-echo "CONFIGFILE=\"/etc/$OE_CONFIG.conf\"" >> ~/$OE_CONFIG
-echo '' >> ~/$OE_CONFIG
-echo '# pidfile' >> ~/$OE_CONFIG
-echo 'PIDFILE=/var/run/$NAME.pid' >> ~/$OE_CONFIG
-echo '' >> ~/$OE_CONFIG
-echo '# Additional options that are passed to the Daemon.' >> ~/$OE_CONFIG
-echo 'DAEMON_OPTS="-c $CONFIGFILE"' >> ~/$OE_CONFIG
-echo '[ -x $DAEMON ] || exit 0' >> ~/$OE_CONFIG
-echo '[ -f $CONFIGFILE ] || exit 0' >> ~/$OE_CONFIG
-echo 'checkpid() {' >> ~/$OE_CONFIG
-echo '[ -f $PIDFILE ] || return 1' >> ~/$OE_CONFIG
-echo 'pid=`cat $PIDFILE`' >> ~/$OE_CONFIG
-echo '[ -d /proc/$pid ] && return 0' >> ~/$OE_CONFIG
-echo 'return 1' >> ~/$OE_CONFIG
-echo '}' >> ~/$OE_CONFIG
-echo '' >> ~/$OE_CONFIG
-echo 'case "${1}" in' >> ~/$OE_CONFIG
-echo 'start)' >> ~/$OE_CONFIG
-echo 'echo -n "Starting ${DESC}: "' >> ~/$OE_CONFIG
-echo 'start-stop-daemon --start --quiet --pidfile ${PIDFILE} \' >> ~/$OE_CONFIG
-echo '--chuid ${USER} --background --make-pidfile \' >> ~/$OE_CONFIG
-echo '--exec ${DAEMON} -- ${DAEMON_OPTS}' >> ~/$OE_CONFIG
-echo 'echo "${NAME}."' >> ~/$OE_CONFIG
-echo ';;' >> ~/$OE_CONFIG
-echo 'stop)' >> ~/$OE_CONFIG
-echo 'echo -n "Stopping ${DESC}: "' >> ~/$OE_CONFIG
-echo 'start-stop-daemon --stop --quiet --pidfile ${PIDFILE} \' >> ~/$OE_CONFIG
-echo '--oknodo' >> ~/$OE_CONFIG
-echo 'echo "${NAME}."' >> ~/$OE_CONFIG
-echo ';;' >> ~/$OE_CONFIG
-echo '' >> ~/$OE_CONFIG
-echo 'restart|force-reload)' >> ~/$OE_CONFIG
-echo 'echo -n "Restarting ${DESC}: "' >> ~/$OE_CONFIG
-echo 'start-stop-daemon --stop --quiet --pidfile ${PIDFILE} \' >> ~/$OE_CONFIG
-echo '--oknodo' >> ~/$OE_CONFIG
-echo 'sleep 1' >> ~/$OE_CONFIG
-echo 'start-stop-daemon --start --quiet --pidfile ${PIDFILE} \' >> ~/$OE_CONFIG
-echo '--chuid ${USER} --background --make-pidfile \' >> ~/$OE_CONFIG
-echo '--exec ${DAEMON} -- ${DAEMON_OPTS}' >> ~/$OE_CONFIG
-echo 'echo "${NAME}."' >> ~/$OE_CONFIG
-echo ';;' >> ~/$OE_CONFIG
-echo '*)' >> ~/$OE_CONFIG
-echo 'N=/etc/init.d/${NAME}' >> ~/$OE_CONFIG
-echo 'echo "Usage: ${NAME} {start|stop|restart|force-reload}" >&2' >> ~/$OE_CONFIG
-echo 'exit 1' >> ~/$OE_CONFIG
-echo ';;' >> ~/$OE_CONFIG
-echo '' >> ~/$OE_CONFIG
-echo 'esac' >> ~/$OE_CONFIG
-echo 'exit 0' >> ~/$OE_CONFIG
+cat <<EOF > ~/$OE_CONFIG
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides: $OE_CONFIG
+# Required-Start: $remote_fs $syslog
+# Required-Stop: $remote_fs $syslog
+# Should-Start: $network
+# Should-Stop: $network
+# Default-Start: 2 3 4 5
+# Default-Stop: 0 1 6
+# Short-Description: Enterprise Business Applications
+# Description: ODOO Business Applications
+### END INIT INFO
+PATH=/bin:/sbin:/usr/bin
+DAEMON=$OE_HOME_EXT/openerp-server
+NAME=$OE_CONFIG
+DESC=$OE_CONFIG
+
+# Specify the user name (Default: odoo).
+USER=$OE_USER
+
+# Specify an alternate config file (Default: /etc/openerp-server.conf).
+CONFIGFILE="/etc/$OE_CONFIG.conf"
+
+# pidfile
+PIDFILE=/var/run/$NAME.pid
+
+# Additional options that are passed to the Daemon.
+DAEMON_OPTS="-c $CONFIGFILE"
+[ -x $DAEMON ] || exit 0
+[ -f $CONFIGFILE ] || exit 0
+checkpid() {
+[ -f $PIDFILE ] || return 1
+pid=`cat $PIDFILE`
+[ -d /proc/$pid ] && return 0
+return 1
+}
+
+case "${1}" in
+start)
+echo -n "Starting ${DESC}: "
+start-stop-daemon --start --quiet --pidfile ${PIDFILE} \
+--chuid ${USER} --background --make-pidfile \
+--exec ${DAEMON} -- ${DAEMON_OPTS}
+echo "${NAME}."
+;;
+stop)
+echo -n "Stopping ${DESC}: "
+start-stop-daemon --stop --quiet --pidfile ${PIDFILE} \
+--oknodo
+echo "${NAME}."
+;;
+
+restart|force-reload)
+echo -n "Restarting ${DESC}: "
+start-stop-daemon --stop --quiet --pidfile ${PIDFILE} \
+--oknodo
+sleep 1
+start-stop-daemon --start --quiet --pidfile ${PIDFILE} \
+--chuid ${USER} --background --make-pidfile \
+--exec ${DAEMON} -- ${DAEMON_OPTS}
+echo "${NAME}."
+;;
+*)
+N=/etc/init.d/${NAME}
+echo "Usage: ${NAME} {start|stop|restart|force-reload}" >&2
+exit 1
+;;
+
+esac
+exit 0
+EOF
 
 echo -e "* Security Init File"
 sudo mv ~/$OE_CONFIG /etc/init.d/$OE_CONFIG
