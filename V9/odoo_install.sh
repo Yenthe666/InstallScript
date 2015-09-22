@@ -161,7 +161,7 @@ DAEMON_OPTS="-c \$CONFIGFILE"
 [ -f \$CONFIGFILE ] || exit 0
 checkpid() {
 [ -f \$PIDFILE ] || return 1
-pid=`cat \$PIDFILE`
+pid=\`cat \$PIDFILE\`
 [ -d /proc/\$pid ] && return 0
 return 1
 }
