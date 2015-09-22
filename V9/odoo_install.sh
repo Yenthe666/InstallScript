@@ -24,6 +24,14 @@ OE_HOME_EXT="/$OE_USER/${OE_USER}-server"
 #The default port where this Odoo instance will run under (provided you use the command -c in the terminal)
 #Set to true if you want to install it, false if you don't need it or have it already installed.
 INSTALL_WKHTMLTOPDF="True"
+##
+###  WKHTMLTOPDF download links
+## === Ubuntu Trusty x64 & x32 === (for other distributions please replace these two links,
+## in order to have correct version of wkhtmltox installed, for a danger note refer to 
+## https://www.odoo.com/documentation/8.0/setup/install.html#deb ):
+WKHTMLTOX_X64=http://download.gna.org/wkhtmltopdf/0.12/0.12.1/wkhtmltox-0.12.1_linux-trusty-amd64.deb
+WKHTMLTOX_X32=http://download.gna.org/wkhtmltopdf/0.12/0.12.1/wkhtmltox-0.12.1_linux-trusty-i386.deb
+
 
 #Set the default Odoo port (you still have to use -c /etc/odoo-server.conf for example to use this.)
 OE_PORT="8069"
@@ -76,11 +84,17 @@ sudo apt-get install python-gevent -y
 # Install Wkhtmltopdf if needed
 #--------------------------------------------------
 if [ $INSTALL_WKHTMLTOPDF = "True" ]; then
-echo -e "\n---- Install wkhtml and place on correct place for ODOO 8 ----"
-sudo wget http://download.gna.org/wkhtmltopdf/0.12/0.12.1/wkhtmltox-0.12.1_linux-trusty-amd64.deb
-sudo dpkg -i wkhtmltox-0.12.1_linux-trusty-amd64.deb
-sudo cp /usr/local/bin/wkhtmltopdf /usr/bin
-sudo cp /usr/local/bin/wkhtmltoimage /usr/bin
+  echo -e "\n---- Install wkhtml and place shortcuts on correct place for ODOO 9 ----"
+  #pick up correct one from x64 & x32 versions:
+  if ((1<<32));then
+      _url=$WKHTMLTOX_X64
+  else
+      _url=$WKHTMLTOX_X32
+  fi
+  sudo wget $_url
+  sudo gdebi --n `basename $_url`
+  sudo ln -s /usr/local/bin/wkhtmltopdf /usr/bin
+  sudo ln -s /usr/local/bin/wkhtmltoimage /usr/bin
 else
   echo "Wkhtmltopdf isn't installed due to the choice of the user!"
 fi
