@@ -68,9 +68,9 @@ echo -e "\n---- Install python libraries ----"
 sudo pip install gdata
 
 echo -e "\n--- Install other required packages"
-sudo apt-get install node-clean-css
-sudo apt-get install node-less
-sudo apt-get install python-gevent
+sudo apt-get install node-clean-css -y
+sudo apt-get install node-less -y
+sudo apt-get install python-gevent -y
 
 #--------------------------------------------------
 # Install Wkhtmltopdf if needed
