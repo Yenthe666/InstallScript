@@ -115,8 +115,8 @@ echo -e "\n==== Installing ODOO Server ===="
 sudo git clone --branch $OE_VERSION https://www.github.com/odoo/odoo $OE_HOME_EXT/
 
 echo -e "\n---- Create custom module directory ----"
-sudo su $OE_USER -c "mkdir $OE_HOME/custom"
-sudo su $OE_USER -c "mkdir $OE_HOME/custom/addons"
+mkdir -p $OE_HOME/custom/addons
+chown $OE_USER:$OE_USER $OE_HOME/custom/addons
 
 echo -e "\n---- Setting permissions on home folder ----"
 sudo chown -R $OE_USER:$OE_USER $OE_HOME/*
