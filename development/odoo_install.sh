@@ -86,7 +86,7 @@ sudo apt-get install python-gevent -y
 if [ $INSTALL_WKHTMLTOPDF = "True" ]; then
   echo -e "\n---- Install wkhtml and place shortcuts on correct place for ODOO 9 ----"
   #pick up correct one from x64 & x32 versions:
-  if ((1<<32));then
+  if [ "`getconf LONG_BIT`" == "64" ];then
       _url=$WKHTMLTOX_X64
   else
       _url=$WKHTMLTOX_X32
@@ -115,8 +115,8 @@ echo -e "\n==== Installing ODOO Server ===="
 sudo git clone --branch $OE_VERSION https://www.github.com/odoo/odoo $OE_HOME_EXT/
 
 echo -e "\n---- Create custom module directory ----"
-mkdir -p $OE_HOME/custom/addons
-chown $OE_USER:$OE_USER $OE_HOME/custom/addons
+sudo su $OE_USER -c "mkdir $OE_HOME/custom"
+sudo su $OE_USER -c "mkdir $OE_HOME/custom/addons"
 
 echo -e "\n---- Setting permissions on home folder ----"
 sudo chown -R $OE_USER:$OE_USER $OE_HOME/*
