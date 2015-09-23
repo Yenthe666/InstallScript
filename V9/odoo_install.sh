@@ -86,7 +86,7 @@ sudo apt-get install python-gevent -y
 if [ $INSTALL_WKHTMLTOPDF = "True" ]; then
   echo -e "\n---- Install wkhtml and place shortcuts on correct place for ODOO 9 ----"
   #pick up correct one from x64 & x32 versions:
-  if ((1<<32));then
+  if [ "`getconf LONG_BIT`" == "64" ];then
       _url=$WKHTMLTOX_X64
   else
       _url=$WKHTMLTOX_X32
