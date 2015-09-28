@@ -235,14 +235,17 @@ update-rc.d $OE_CONFIG defaults
 
 echo -e "* Starting Odoo Service"
 su root -c "/etc/init.d/$OE_CONFIG start"
-echo "-----------------------------------------------------------"
-echo "Done! The Odoo server is up and running. Specifications:"
-echo "Port: $OE_PORT"
-echo "User service: $OE_USER"
-echo "User PostgreSQL: $OE_USER"
-echo "Code location: $OE_USER"
-echo "Addons folder: $OE_USER/$OE_CONFIG/addons/"
-echo "Start Odoo service: sudo service $OE_CONFIG start"
-echo "Stop Odoo service: sudo service $OE_CONFIG stop"
-echo "Restart Odoo service: sudo service $OE_CONFIG restart"
-echo "-----------------------------------------------------------"
+
+cat << EOF
+-----------------------------------------------------------
+Done! The Odoo server is up and running. Specifications:
+Port: $OE_PORT
+User service: $OE_USER
+User PostgreSQL: $OE_USER
+Code location: $OE_USER
+Addons folder: $OE_USER/$OE_CONFIG/addons/
+Start Odoo service: sudo service $OE_CONFIG start
+Stop Odoo service: sudo service $OE_CONFIG stop
+Restart Odoo service: sudo service $OE_CONFIG restart
+-----------------------------------------------------------
+EOF
