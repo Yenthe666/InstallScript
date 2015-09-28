@@ -107,9 +107,7 @@ else
 fi
 	
 echo -e "\n---- Create ODOO system user ----"
-adduser --system --quiet --shell=/bin/bash --home=$OE_HOME --gecos 'ODOO' --group $OE_USER
-#The user should also be added to the sudo'ers group.
-adduser $OE_USER sudo
+adduser --system --quiet --shell=/bin/false --home=$OE_HOME --gecos 'ODOO' --group $OE_USER
 
 echo -e "\n---- Create Log directory ----"
 mkdir /var/log/$OE_USER
