@@ -1,8 +1,0 @@
-if [ -f ~/.gitconfig ]
-then
-  echo "We can do a git pull - git user configged."
-  #git pull origin master
-else
-  echo "We can not update the Odoo code base - no git user configged"
-fi
-  echo "Done updating."
