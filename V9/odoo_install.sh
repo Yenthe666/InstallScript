@@ -45,6 +45,14 @@ OE_SUPERADMIN="admin"
 OE_CONFIG="${OE_USER}-server"
 
 #--------------------------------------------------
+# Make sure only root or sudoers can run our script
+#--------------------------------------------------
+if [ "$(id -u)" != "0" ]; then
+    echo "This script must be run with administrator rights!" 1>&2
+    exit 1
+fi
+
+#--------------------------------------------------
 # Update Server
 #--------------------------------------------------
 echo -e "\n---- Update Server ----"
