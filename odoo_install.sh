@@ -1,19 +1,17 @@
 #!/bin/bash
 ################################################################################
-# Script for Installation: ODOO Saas4/Trunk server on Ubuntu 14.04 LTS
+# Script for install Odoo V9 on Ubuntu 14.04 LTS (could be used for other version too)
 # Author: Yenthe Van Ginneken
 #-------------------------------------------------------------------------------
-#  
 # This script will install Odoo on your Ubuntu 14.04 server. It can install multiple Odoo instances
 # in one Ubuntu because of the different xmlrpc_ports
 #-------------------------------------------------------------------------------
-# USAGE:
-#
-# odoo-install
-#
-# EXAMPLE:
-# ./odoo-install 
-#
+# Make a new file:
+# sudo nano odoo-install.sh
+# Place this content in it and then make the file executable:
+# sudo chmod +x odoo-install.sh
+# Execute the script to install Odoo:
+# ./odoo-install
 ################################################################################
  
 ##fixed parameters
