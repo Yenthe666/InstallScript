@@ -1,6 +1,6 @@
 #!/bin/bash
 ################################################################################
-# Script for install Odoo V8 on Ubuntu 14.04 LTS (could be used for other version too)
+# Script for installing Odoo V8 on Ubuntu 14.04 LTS (could be used for other version too)
 # Author: Yenthe Van Ginneken
 #-------------------------------------------------------------------------------
 # This script will install Odoo on your Ubuntu 14.04 server. It can install multiple Odoo instances
