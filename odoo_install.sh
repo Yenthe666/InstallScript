@@ -22,12 +22,12 @@ OE_HOME_EXT="/$OE_USER/$OE_USER-server"
 #The default port where this Odoo instance will run under (provided you use the command -c in the terminal)
 #Set to true if you want to install it, false if you don't need it or have it already installed.
 INSTALL_WKHTMLTOPDF="True"
-
 #Choose the Odoo version which you want to install. For example: 8.0, 7.0 or saas-6. When using 'trunk' the master version will be installed.
 #IMPORTANT! This script will work fine for any Odoo version except V9. 9.0 needs extra libraries. Please use the script found at
 #https://github.com/Yenthe666/InstallScript/tree/master/V9
 OE_VERSION="8.0"
-
+#Choose the port on which your Odoo should run (xmlrpc-port)
+OE_PORT="8069"
 #set the superadmin password
 OE_SUPERADMIN="admin"
 OE_CONFIG="$OE_USER-server"
