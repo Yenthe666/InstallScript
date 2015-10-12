@@ -102,7 +102,7 @@ else
 fi
 	
 echo -e "\n---- Create ODOO system user ----"
-adduser --system --quiet --shell=/bin/false --home=$OE_HOME --gecos 'ODOO' --group $OE_USER
+adduser --system --quiet --home=$OE_HOME --group $OE_USER
 
 echo -e "\n---- Create Log directory ----"
 mkdir /var/log/$OE_USER
