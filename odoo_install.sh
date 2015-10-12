@@ -61,9 +61,6 @@ apt-get update && apt-get upgrade -y
 #--------------------------------------------------
 echo -e "\n---- Install PostgreSQL Server ----"
 apt-get install postgresql -y
-	
-echo -e "\n---- PostgreSQL $PG_VERSION Settings  ----"
-sed -i s/"#listen_addresses = 'localhost'"/"listen_addresses = '*'"/g /etc/postgresql/9.3/main/postgresql.conf #FIXME this line needs to be keept udated or replace version with computed one instead of hardcoded... do we know ahead that posgresql 9.3 will be version installed?
 
 echo -e "\n---- Creating the ODOO PostgreSQL User  ----"
 su - postgres -c "createuser -s $OE_USER" 2> /dev/null || true
