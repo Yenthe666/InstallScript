@@ -72,6 +72,9 @@ sudo apt-get install node-clean-css -y
 sudo apt-get install node-less -y
 sudo apt-get install python-gevent -y
 
+echo -e "\n--- Create symlink for node"
+sudo ln -s /usr/bin/nodejs /usr/bin/node
+
 #--------------------------------------------------
 # Install Wkhtmltopdf if needed
 #--------------------------------------------------
