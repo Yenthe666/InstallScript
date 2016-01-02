@@ -75,7 +75,7 @@ echo -e "\n---- Install python packages ----"
 apt-get install python-dateutil python-feedparser python-ldap python-libxslt1 python-lxml python-mako python-openid python-psycopg2 python-pybabel python-pychart python-pydot python-pyparsing python-reportlab python-simplejson python-tz python-vatnumber python-vobject python-werkzeug python-xlwt python-yaml python-docutils python-psutil python-mock python-unittest2 python-jinja2 python-pypdf python-decorator python-requests python-passlib python-geoip python-unicodecsv python-serial python-pil -y
 	
 echo -e "\n---- Install python libraries ----"
-pip install gdata
+pip install gdata psycogreen
 
 echo -e "\n--- Install other required packages"
 apt-get install node-clean-css -y
