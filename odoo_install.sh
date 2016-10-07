@@ -1,6 +1,6 @@
 #!/bin/bash
 ################################################################################
-# Script for installing Odoo V9 on Ubuntu 14.04 LTS (could be used for other version too)
+# Script for installing Odoo V10 on Ubuntu 14.04 LTS (could be used for other version too)
 # Author: Yenthe Van Ginneken
 #-------------------------------------------------------------------------------
 # This script will install Odoo on your Ubuntu 14.04 server. It can install multiple Odoo instances
@@ -24,8 +24,8 @@ OE_HOME_EXT="/$OE_USER/${OE_USER}-server"
 INSTALL_WKHTMLTOPDF="True"
 #Set the default Odoo port (you still have to use -c /etc/odoo-server.conf for example to use this.)
 OE_PORT="8069"
-#Choose the Odoo version which you want to install. For example: 9.0, 8.0, 7.0 or saas-6. When using 'trunk' the master version will be installed.
-#IMPORTANT! This script contains extra libraries that are specifically needed for Odoo 9.0
+#Choose the Odoo version which you want to install. For example: 10.0, 9.0, 8.0, 7.0 or saas-6. When using 'trunk' the master version will be installed.
+#IMPORTANT! This script contains extra libraries that are specifically needed for Odoo 10.0
 OE_VERSION="10.0"
 #set the superadmin password
 OE_SUPERADMIN="admin"
@@ -76,7 +76,7 @@ sudo apt-get install python-gevent -y
 # Install Wkhtmltopdf if needed
 #--------------------------------------------------
 if [ $INSTALL_WKHTMLTOPDF = "True" ]; then
-  echo -e "\n---- Install wkhtml and place shortcuts on correct place for ODOO 9 ----"
+  echo -e "\n---- Install wkhtml and place shortcuts on correct place for ODOO 10 ----"
   #pick up correct one from x64 & x32 versions:
   if [ "`getconf LONG_BIT`" == "64" ];then
       _url=$WKHTMLTOX_X64
