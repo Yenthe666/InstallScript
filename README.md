@@ -5,7 +5,7 @@ This script can be safely used in a multi-odoo code base server because the defa
 <h3>Installation procedure</h3>
 1. Download the script:
 ```
-sudo wget https://raw.githubusercontent.com/Yenthe666/InstallScript/9.0/odoo_install.sh
+sudo wget https://raw.githubusercontent.com/Yenthe666/InstallScript/10.0/odoo_install.sh
 ```
 2. Make the script executable:
 ```
