@@ -26,7 +26,7 @@ INSTALL_WKHTMLTOPDF="True"
 OE_PORT="8069"
 #Choose the Odoo version which you want to install. For example: 9.0, 8.0, 7.0 or saas-6. When using 'trunk' the master version will be installed.
 #IMPORTANT! This script contains extra libraries that are specifically needed for Odoo 9.0
-OE_VERSION="9.0"
+OE_VERSION="10.0"
 #set the superadmin password
 OE_SUPERADMIN="admin"
 OE_CONFIG="${OE_USER}-server"
@@ -121,7 +121,7 @@ sudo chmod 640 /etc/${OE_CONFIG}.conf
 echo -e "* Change server config file"
 sudo sed -i s/"db_user = .*"/"db_user = $OE_USER"/g /etc/${OE_CONFIG}.conf
 sudo sed -i s/"; admin_passwd.*"/"admin_passwd = $OE_SUPERADMIN"/g /etc/${OE_CONFIG}.conf
-sudo su root -c "echo '[options]'"
+sudo su root -c "echo '[options]' >> /etc/${OE_CONFIG}.conf"
 sudo su root -c "echo 'logfile = /var/log/$OE_USER/$OE_CONFIG$1.log' >> /etc/${OE_CONFIG}.conf"
 sudo su root -c "echo 'addons_path=$OE_HOME_EXT/addons,$OE_HOME/custom/addons' >> /etc/${OE_CONFIG}.conf"
 
