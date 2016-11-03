@@ -59,9 +59,6 @@ apt-get install dialog -y >> ./install_log
 #
 # Remove Odoo and PostgreSQL
 #
-echo -e "\n---- Purge odoo postgresql wkhtmltox ----"
-apt-get remove --purge  wkhtmltox postgresql postgresql-9.4 postgresql-client postgresql-client-9.4 postgresql-client-common postgresql-common odoo -y >> ./install_log
-apt-get autoremove -y >> ./install_log
 #--------------------------------------------------
 # Update Server
 #--------------------------------------------------
