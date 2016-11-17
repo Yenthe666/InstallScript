@@ -116,7 +116,7 @@ if [ $IS_ENTERPRISE = "True" ]; then
     sudo su $OE_USER -c "mkdir $OE_HOME/enterprise/addons"
 
     echo -e "\n---- Adding Enterprise code under $OE_HOME/enterprise/addons ----"
-    sudo git clone --depth 1 --branch 10.0 https://www.github.com/odoo/enterprise "$OE_HOME/enterprise/addons"
+    sudo git clone --depth 1 --branch 10.0 --single-branch https://www.github.com/odoo/enterprise "$OE_HOME/enterprise/addons"
 
     echo -e "\n---- Installing Enterprise specific libraries ----"
     sudo apt-get install nodejs npm
