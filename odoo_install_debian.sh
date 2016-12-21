@@ -206,7 +206,7 @@ without_demo = False
 workers = 2
 xmlrpc = True
 xmlrpc_interface =
-xmlrpc_port = 8069
+xmlrpc_port = $OE_PORT
 EOF
 
 chown $OE_USER:$OE_USER /etc/${OE_CONFIG}.conf
