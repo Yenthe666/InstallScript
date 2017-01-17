@@ -92,13 +92,12 @@ else
 fi
 	
 echo -e "\n---- Create ODOO system user ----"
-sudo adduser --system --quiet --shell=/bin/bash --home=$OE_HOME --gecos 'ODOO' --group $OE_USER
+sudo adduser --system --home=$OE_HOME --group odoo
 #The user should also be added to the sudo'ers group.
-sudo adduser $OE_USER sudo
 
 echo -e "\n---- Create Log directory ----"
 sudo mkdir /var/log/$OE_USER
-sudo chown $OE_USER:$OE_USER /var/log/$OE_USER
+sudo chown $OE_USER:root /var/log/$OE_USER
 
 #--------------------------------------------------
 # Install ODOO
