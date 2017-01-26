@@ -144,7 +144,7 @@ sudo su root -c "echo 'logfile = /var/log/$OE_USER/$OE_CONFIG$1.log' >> /etc/${O
 if [  $IS_ENTERPRISE = "True" ]; then
     sudo su root -c "echo 'addons_path=$OE_HOME/enterprise/addons,$OE_HOME_EXT/addons' >> /etc/${OE_CONFIG}.conf"
 else
-    sudo su root -c "echo 'addons_path=$OE_HOME_EXT/addons,$OE_HOME/custom/addons' >> /etc/${OE_CONFIG}.conf"
+    sudo su root -c "echo 'addons_path=$OE_HOME_EXT/odoo/addons,$OE_HOME_EXT/addons,$OE_HOME/custom/addons' >> /etc/${OE_CONFIG}.conf"
 fi
 
 echo -e "* Create startup file"
