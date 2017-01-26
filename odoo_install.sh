@@ -52,7 +52,7 @@ sudo apt-get upgrade -y
 # Install PostgreSQL Server
 #--------------------------------------------------
 echo -e "\n---- Install PostgreSQL Server ----"
-sudo apt-get install postgresql -y
+sudo apt-get install postgresql libxml2-dev postgresql-server-dev-all libxslt-dev libevent-dev libsasl2-dev libldap2-dev -y
 
 echo -e "\n---- Creating the ODOO PostgreSQL User  ----"
 sudo su - postgres -c "createuser -s $OE_USER" 2> /dev/null || true
@@ -63,16 +63,12 @@ sudo su - postgres -c "createuser -s $OE_USER" 2> /dev/null || true
 echo -e "\n---- Install tool packages ----"
 sudo apt-get install wget git python-pip gdebi-core -y
 	
-echo -e "\n---- Install python packages ----"
-sudo apt-get install python-dateutil python-feedparser python-ldap python-libxslt1 python-lxml python-mako python-openid python-psycopg2 python-pybabel python-pychart python-pydot python-pyparsing python-reportlab python-simplejson python-tz python-vatnumber python-vobject python-webdav python-werkzeug python-xlwt python-yaml python-zsi python-docutils python-psutil python-mock python-unittest2 python-jinja2 python-pypdf python-decorator python-requests python-passlib python-pil -y python-suds
-	
-echo -e "\n---- Install python libraries ----"
-sudo pip install gdata psycogreen ofxparse XlsxWriter
+echo -e "\n---- Install python packages & libraries ----"
+sudo pip install -r https://raw.githubusercontent.com/aryge/odoo/10.0/requirements.txt	
 
 echo -e "\n--- Install other required packages"
 sudo apt-get install node-clean-css -y
 sudo apt-get install node-less -y
-sudo apt-get install python-gevent -y
 
 #--------------------------------------------------
 # Install Wkhtmltopdf if needed
