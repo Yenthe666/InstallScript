@@ -52,7 +52,7 @@ sudo apt-get upgrade -y
 # Install PostgreSQL Server
 #--------------------------------------------------
 echo -e "\n---- Install PostgreSQL Server ----"
-sudo apt-get install postgresql libxml2-dev postgresql-server-dev-all libxslt-dev libevent-dev libsasl2-dev libldap2-dev -y
+sudo apt-get install postgresql postgresql-server-dev-all -y
 
 echo -e "\n---- Creating the ODOO PostgreSQL User  ----"
 sudo su - postgres -c "createuser -s $OE_USER" 2> /dev/null || true
@@ -64,7 +64,8 @@ echo -e "\n---- Install tool packages ----"
 sudo apt-get install wget git python-pip gdebi-core -y
 	
 echo -e "\n---- Install python packages & libraries ----"
-sudo pip install -r https://raw.githubusercontent.com/aryge/odoo/10.0/requirements.txt	
+sudo apt-get install libxml2-dev libxslt-dev libevent-dev libsasl2-dev libldap2-dev -y
+sudo pip install -r https://raw.githubusercontent.com/odoo/odoo/10.0/requirements.txt	
 
 echo -e "\n--- Install other required packages"
 sudo apt-get install node-clean-css -y
@@ -128,15 +129,14 @@ echo -e "\n---- Setting permissions on home folder ----"
 sudo chown -R $OE_USER:$OE_USER $OE_HOME/*
 
 echo -e "* Create server config file"
-sudo cp $OE_HOME_EXT/debian/odoo.conf /etc/${OE_CONFIG}.conf
+#sudo cp $OE_HOME_EXT/debian/odoo.conf /etc/${OE_CONFIG}.conf
+sudo touch /etc/${OE_CONFIG}.conf
 sudo chown $OE_USER:$OE_USER /etc/${OE_CONFIG}.conf
 sudo chmod 640 /etc/${OE_CONFIG}.conf
+sudo -u $OE_USER $OE_HOME_EXT/odoo-bin --db_user=$OE_USER --logfile=/var/log/$OE_USER/$OE_CONFIG$1.log --save --config=/etc/${OE_CONFIG}.conf --stop-after-init
 
 echo -e "* Change server config file"
-sudo sed -i s/"db_user = .*"/"db_user = $OE_USER"/g /etc/${OE_CONFIG}.conf
 sudo sed -i s/"; admin_passwd.*"/"admin_passwd = $OE_SUPERADMIN"/g /etc/${OE_CONFIG}.conf
-sudo su root -c "echo '[options]' >> /etc/${OE_CONFIG}.conf"
-sudo su root -c "echo 'logfile = /var/log/$OE_USER/$OE_CONFIG$1.log' >> /etc/${OE_CONFIG}.conf"
 if [  $IS_ENTERPRISE = "True" ]; then
     sudo su root -c "echo 'addons_path=$OE_HOME/enterprise/addons,$OE_HOME_EXT/addons' >> /etc/${OE_CONFIG}.conf"
 else
