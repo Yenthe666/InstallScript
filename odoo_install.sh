@@ -52,7 +52,7 @@ sudo apt-get upgrade -y
 # Install PostgreSQL Server
 #--------------------------------------------------
 echo -e "\n---- Install PostgreSQL Server ----"
-sudo apt-get install postgresql -y
+sudo apt-get install postgresql postgresql-server-dev-all -y
 
 echo -e "\n---- Creating the ODOO PostgreSQL User  ----"
 sudo su - postgres -c "createuser -s $OE_USER" 2> /dev/null || true
@@ -63,16 +63,13 @@ sudo su - postgres -c "createuser -s $OE_USER" 2> /dev/null || true
 echo -e "\n---- Install tool packages ----"
 sudo apt-get install wget git python-pip gdebi-core -y
 	
-echo -e "\n---- Install python packages ----"
-sudo apt-get install python-dateutil python-feedparser python-ldap python-libxslt1 python-lxml python-mako python-openid python-psycopg2 python-pybabel python-pychart python-pydot python-pyparsing python-reportlab python-simplejson python-tz python-vatnumber python-vobject python-webdav python-werkzeug python-xlwt python-yaml python-zsi python-docutils python-psutil python-mock python-unittest2 python-jinja2 python-pypdf python-decorator python-requests python-passlib python-pil -y python-suds
-	
-echo -e "\n---- Install python libraries ----"
-sudo pip install gdata psycogreen ofxparse XlsxWriter
+echo -e "\n---- Install python packages & libraries ----"
+sudo apt-get install libxml2-dev libxslt1-dev libevent-dev libsasl2-dev libldap2-dev -y
+sudo pip install -r https://raw.githubusercontent.com/odoo/odoo/10.0/requirements.txt	
 
 echo -e "\n--- Install other required packages"
 sudo apt-get install node-clean-css -y
 sudo apt-get install node-less -y
-sudo apt-get install python-gevent -y
 
 #--------------------------------------------------
 # Install Wkhtmltopdf if needed
@@ -106,7 +103,7 @@ sudo chown $OE_USER:$OE_USER /var/log/$OE_USER
 # Install ODOO
 #--------------------------------------------------
 echo -e "\n==== Installing ODOO Server ===="
-sudo git clone --depth 1 --branch $OE_VERSION https://www.github.com/odoo/odoo $OE_HOME_EXT/
+sudo git clone --depth 1 --branch $OE_VERSION https://www.github.com/odoo/odoo.git $OE_HOME_EXT/
 
 if [ $IS_ENTERPRISE = "True" ]; then
     # Odoo Enterprise install!
@@ -116,7 +113,7 @@ if [ $IS_ENTERPRISE = "True" ]; then
     sudo su $OE_USER -c "mkdir $OE_HOME/enterprise/addons"
 
     echo -e "\n---- Adding Enterprise code under $OE_HOME/enterprise/addons ----"
-    sudo git clone --depth 1 --branch 10.0 https://www.github.com/odoo/enterprise "$OE_HOME/enterprise/addons"
+    sudo git clone --depth 1 --branch 10.0 --single-branch https://www.github.com/odoo/enterprise "$OE_HOME/enterprise/addons"
 
     echo -e "\n---- Installing Enterprise specific libraries ----"
     sudo apt-get install nodejs npm
@@ -132,24 +129,25 @@ echo -e "\n---- Setting permissions on home folder ----"
 sudo chown -R $OE_USER:$OE_USER $OE_HOME/*
 
 echo -e "* Create server config file"
-sudo cp $OE_HOME_EXT/debian/odoo.conf /etc/${OE_CONFIG}.conf
+sudo touch /etc/${OE_CONFIG}.conf
 sudo chown $OE_USER:$OE_USER /etc/${OE_CONFIG}.conf
 sudo chmod 640 /etc/${OE_CONFIG}.conf
+sudo -u $OE_USER $OE_HOME_EXT/odoo-bin --db_user=$OE_USER --logfile=/var/log/$OE_USER/$OE_CONFIG$1.log xmlrpc_port=$OE_PORT --save --config=/etc/${OE_CONFIG}.conf --stop-after-init 
 
 echo -e "* Change server config file"
-sudo sed -i s/"db_user = .*"/"db_user = $OE_USER"/g /etc/${OE_CONFIG}.conf
 sudo sed -i s/"; admin_passwd.*"/"admin_passwd = $OE_SUPERADMIN"/g /etc/${OE_CONFIG}.conf
-sudo su root -c "echo '[options]' >> /etc/${OE_CONFIG}.conf"
-sudo su root -c "echo 'logfile = /var/log/$OE_USER/$OE_CONFIG$1.log' >> /etc/${OE_CONFIG}.conf"
 if [  $IS_ENTERPRISE = "True" ]; then
     sudo su root -c "echo 'addons_path=$OE_HOME/enterprise/addons,$OE_HOME_EXT/addons' >> /etc/${OE_CONFIG}.conf"
 else
-    sudo su root -c "echo 'addons_path=$OE_HOME_EXT/addons,$OE_HOME/custom/addons' >> /etc/${OE_CONFIG}.conf"
+    sudo su root -c "echo 'addons_path=$OE_HOME_EXT/odoo/addons,$OE_HOME_EXT/addons,$OE_HOME/custom/addons' >> /etc/${OE_CONFIG}.conf"
 fi
 
 echo -e "* Create startup file"
 sudo su root -c "echo '#!/bin/sh' >> $OE_HOME_EXT/start.sh"
-sudo su root -c "echo 'sudo -u $OE_USER $OE_HOME_EXT/openerp-server --config=/etc/${OE_CONFIG}.conf' >> $OE_HOME_EXT/start.sh"
+#--------------------------------------------------
+# openerp-server become odoo-bin
+#--------------------------------------------------
+sudo su root -c "echo 'sudo -u $OE_USER $OE_HOME_EXT/odoo-bin --config=/etc/${OE_CONFIG}.conf' >> $OE_HOME_EXT/start.sh"
 sudo chmod 755 $OE_HOME_EXT/start.sh
 
 #--------------------------------------------------
@@ -234,9 +232,6 @@ echo -e "* Security Init File"
 sudo mv ~/$OE_CONFIG /etc/init.d/$OE_CONFIG
 sudo chmod 755 /etc/init.d/$OE_CONFIG
 sudo chown root: /etc/init.d/$OE_CONFIG
-
-echo -e "* Change default xmlrpc port"
-sudo su root -c "echo 'xmlrpc_port = $OE_PORT' >> /etc/${OE_CONFIG}.conf"
 
 echo -e "* Start ODOO on Startup"
 sudo update-rc.d $OE_CONFIG defaults
