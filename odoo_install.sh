@@ -129,11 +129,10 @@ echo -e "\n---- Setting permissions on home folder ----"
 sudo chown -R $OE_USER:$OE_USER $OE_HOME/*
 
 echo -e "* Create server config file"
-#sudo cp $OE_HOME_EXT/debian/odoo.conf /etc/${OE_CONFIG}.conf
 sudo touch /etc/${OE_CONFIG}.conf
 sudo chown $OE_USER:$OE_USER /etc/${OE_CONFIG}.conf
 sudo chmod 640 /etc/${OE_CONFIG}.conf
-sudo -u $OE_USER $OE_HOME_EXT/odoo-bin --db_user=$OE_USER --logfile=/var/log/$OE_USER/$OE_CONFIG$1.log --save --config=/etc/${OE_CONFIG}.conf --stop-after-init
+sudo -u $OE_USER $OE_HOME_EXT/odoo-bin --db_user=$OE_USER --logfile=/var/log/$OE_USER/$OE_CONFIG$1.log xmlrpc_port=$OE_PORT --save --config=/etc/${OE_CONFIG}.conf --stop-after-init 
 
 echo -e "* Change server config file"
 sudo sed -i s/"; admin_passwd.*"/"admin_passwd = $OE_SUPERADMIN"/g /etc/${OE_CONFIG}.conf
@@ -233,9 +232,6 @@ echo -e "* Security Init File"
 sudo mv ~/$OE_CONFIG /etc/init.d/$OE_CONFIG
 sudo chmod 755 /etc/init.d/$OE_CONFIG
 sudo chown root: /etc/init.d/$OE_CONFIG
-
-echo -e "* Change default xmlrpc port"
-sudo su root -c "echo 'xmlrpc_port = $OE_PORT' >> /etc/${OE_CONFIG}.conf"
 
 echo -e "* Start ODOO on Startup"
 sudo update-rc.d $OE_CONFIG defaults
