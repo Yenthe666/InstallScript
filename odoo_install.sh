@@ -64,7 +64,7 @@ echo -e "\n---- Install tool packages ----"
 sudo apt-get install wget git python-pip gdebi-core -y
 	
 echo -e "\n---- Install python packages & libraries ----"
-sudo apt-get install libxml2-dev libxslt-dev libevent-dev libsasl2-dev libldap2-dev -y
+sudo apt-get install libxml2-dev libxslt1-dev libevent-dev libsasl2-dev libldap2-dev -y
 sudo pip install -r https://raw.githubusercontent.com/odoo/odoo/10.0/requirements.txt	
 
 echo -e "\n--- Install other required packages"
