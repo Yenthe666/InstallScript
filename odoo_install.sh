@@ -62,10 +62,10 @@ sudo su - postgres -c "createuser -s $OE_USER" 2> /dev/null || true
 #--------------------------------------------------
 echo -e "\n---- Install tool packages ----"
 sudo apt-get install wget git python-pip gdebi-core -y
-	
+
 echo -e "\n---- Install python packages ----"
 sudo apt-get install python-dateutil python-feedparser python-ldap python-libxslt1 python-lxml python-mako python-openid python-psycopg2 python-pybabel python-pychart python-pydot python-pyparsing python-reportlab python-simplejson python-tz python-vatnumber python-vobject python-webdav python-werkzeug python-xlwt python-yaml python-zsi python-docutils python-psutil python-mock python-unittest2 python-jinja2 python-pypdf python-decorator python-requests python-passlib python-pil -y python-suds
-	
+
 echo -e "\n---- Install python libraries ----"
 sudo pip install gdata psycogreen ofxparse XlsxWriter xlrd
 
@@ -92,7 +92,7 @@ if [ $INSTALL_WKHTMLTOPDF = "True" ]; then
 else
   echo "Wkhtmltopdf isn't installed due to the choice of the user!"
 fi
-	
+
 echo -e "\n---- Create ODOO system user ----"
 sudo adduser --system --quiet --shell=/bin/bash --home=$OE_HOME --gecos 'ODOO' --group $OE_USER
 #The user should also be added to the sudo'ers group.
@@ -115,9 +115,18 @@ if [ $IS_ENTERPRISE = "True" ]; then
     sudo su $OE_USER -c "mkdir $OE_HOME/enterprise"
     sudo su $OE_USER -c "mkdir $OE_HOME/enterprise/addons"
 
-    echo -e "\n---- Adding Enterprise code under $OE_HOME/enterprise/addons ----"
-    sudo git clone --depth 1 --branch 10.0 https://www.github.com/odoo/enterprise "$OE_HOME/enterprise/addons"
+    GITHUB_RESPONSE=$(sudo git clone --depth 1 --branch 10.0 https://www.github.com/odoo/enterprise "$OE_HOME/enterprise/addons" 2>&1)
+    while [[ $GITHUB_RESPONSE == *"Authentication"* ]]; do
+        echo "------------------------WARNING------------------------------"
+        echo "Your authentication with Github has failed! Please try again."
+        printf "In order to clone and install the Odoo enterprise version you \nneed to be an offical Odoo partner and you need access to\nhttp://github.com/odoo/enterprise.\n"
+        echo "TIP: Press ctrl+c to stop this script."
+        echo "-------------------------------------------------------------"
+        echo " "
+        GITHUB_RESPONSE=$(sudo git clone --depth 1 --branch 10.0 https://www.github.com/odoo/enterprise "$OE_HOME/enterprise/addons" 2>&1)
+    done
 
+    echo -e "\n---- Added Enterprise code under $OE_HOME/enterprise/addons ----"
     echo -e "\n---- Installing Enterprise specific libraries ----"
     sudo apt-get install nodejs npm
     sudo npm install -g less
