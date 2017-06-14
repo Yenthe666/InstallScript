@@ -112,9 +112,7 @@ sudo git clone --depth 1 --branch $OE_VERSION https://www.github.com/odoo/odoo $
 
 if [ $IS_ENTERPRISE = "True" ]; then
     # Odoo Enterprise install!
-	echo -e "\n--- Create symlink for node"
-    sudo ln -s /usr/bin/nodejs /usr/bin/node
-	sudo su $OE_USER -c "mkdir $OE_HOME/enterprise"
+    sudo su $OE_USER -c "mkdir $OE_HOME/enterprise"
     sudo su $OE_USER -c "mkdir $OE_HOME/enterprise/addons"
 	
     echo -e "\n---- Adding Enterprise code under $OE_HOME/enterprise/addons ----"
@@ -124,6 +122,9 @@ if [ $IS_ENTERPRISE = "True" ]; then
     sudo apt-get install nodejs npm
     sudo npm install -g less
     sudo npm install -g less-plugin-clean-css
+
+    echo -e "\n--- Create symlink for node"
+    sudo ln -s /usr/bin/nodejs /usr/bin/node
 else 
     echo -e "\n---- Create custom module directory ----"
     sudo su $OE_USER -c "mkdir $OE_HOME/custom"
