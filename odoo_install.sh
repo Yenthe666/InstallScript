@@ -17,6 +17,7 @@
 ##fixed parameters
 #odoo
 OE_USER="odoo"
+OE_USER2="vagrant"
 OE_HOME="/$OE_USER"
 OE_HOME_EXT="/$OE_USER/${OE_USER}-server"
 #The default port where this Odoo instance will run under (provided you use the command -c in the terminal)
@@ -56,6 +57,7 @@ sudo apt-get install postgresql -y
 
 echo -e "\n---- Creating the ODOO PostgreSQL User  ----"
 sudo su - postgres -c "createuser -s $OE_USER" 2> /dev/null || true
+sudo su - postgres -c "createuser -s $OE_USER2" 2> /dev/null || true
 
 #--------------------------------------------------
 # Install Dependencies
