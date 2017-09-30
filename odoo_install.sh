@@ -73,7 +73,7 @@ sudo pip3 install pypdf2 Babel passlib Werkzeug decorator python-dateutil pyyaml
 echo -e "\n---- Install python libraries ----"
 sudo pip install gdata psycogreen
 # This is for compatibility with Ubuntu 16.04. Will work on 14.04, 15.04 and 16.04
-sudo -H pip install suds
+sudo apt-get install python3-suds
 
 echo -e "\n--- Install other required packages"
 sudo apt-get install node-clean-css -y
