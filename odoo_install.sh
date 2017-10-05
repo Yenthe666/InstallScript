@@ -17,6 +17,7 @@
 ##fixed parameters
 #odoo
 OE_USER="odoo"
+OE_USER2="vagrant"
 OE_HOME="/$OE_USER"
 OE_HOME_EXT="/$OE_USER/${OE_USER}-server"
 #The default port where this Odoo instance will run under (provided you use the command -c in the terminal)
@@ -26,7 +27,8 @@ INSTALL_WKHTMLTOPDF="True"
 OE_PORT="8069"
 #Choose the Odoo version which you want to install. For example: 10.0, 9.0, 8.0, 7.0 or saas-6. When using 'trunk' the master version will be installed.
 #IMPORTANT! This script contains extra libraries that are specifically needed for Odoo 10.0
-OE_VERSION="10.0"
+#OE_VERSION="10.0"
+OE_VERSION="saas-17"
 # Set this to True if you want to install Odoo 10 Enterprise!
 IS_ENTERPRISE="False"
 #set the superadmin password
@@ -56,6 +58,7 @@ sudo apt-get install postgresql -y
 
 echo -e "\n---- Creating the ODOO PostgreSQL User  ----"
 sudo su - postgres -c "createuser -s $OE_USER" 2> /dev/null || true
+sudo su - postgres -c "createuser -s $OE_USER2" 2> /dev/null || true
 
 #--------------------------------------------------
 # Install Dependencies
