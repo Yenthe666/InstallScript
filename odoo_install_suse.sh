@@ -45,14 +45,14 @@ WKHTMLTOX_X32=https://downloads.wkhtmltopdf.org/0.12/0.12.1/wkhtmltox-0.12.1_lin
 # Update Server
 #--------------------------------------------------
 echo -e "\n---- Update Server ----"
-sudo apt-get update
-sudo apt-get upgrade -y
+sudo zypper update
+sudo zypper up 
 
 #--------------------------------------------------
 # Install PostgreSQL Server
 #--------------------------------------------------
 echo -e "\n---- Install PostgreSQL Server ----"
-sudo apt-get install postgresql -y
+sudo zypper install -y postgresql 
 
 echo -e "\n---- Creating the ODOO PostgreSQL User  ----"
 sudo su - postgres -c "createuser -s $OE_USER" 2> /dev/null || true
@@ -61,23 +61,34 @@ sudo su - postgres -c "createuser -s $OE_USER" 2> /dev/null || true
 # Install Dependencies
 #--------------------------------------------------
 echo -e "\n--- Installing Python 3 + pip3 --"
-sudo apt-get install python3 python3-pip
+sudo zypper install python3 python3-pip python-devel python3-devel bzr python-suds libxml2-devel libxslt-devel mc make gcc 
+
+sudo zypper install -y libxslt
 
 echo -e "\n---- Install tool packages ----"
-sudo apt-get install wget git bzr python-pip -y
+sudo zypper install wget git bzr python-pip -y
 
-echo -e "\n---- Install python packages ----"
-sudo apt-get install python-pypdf2 python-dateutil python-feedparser python-ldap python-libxslt1 python-lxml python-mako python-openid python-psycopg2 python-pybabel python-pychart python-pydot python-pyparsing python-reportlab python-simplejson python-tz python-vatnumber python-vobject python-webdav python-werkzeug python-xlwt python-yaml python-zsi python-docutils python-psutil python-mock python-unittest2 python-jinja2 python-pypdf python-decorator python-requests python-passlib python-pil -y
-sudo pip3 install pypdf2 Babel passlib Werkzeug decorator python-dateutil pyyaml psycopg2 psutil html2text docutils lxml pillow reportlab ninja2 requests gdata XlsxWriter vobject python-openid pyparsing pydot mock mako Jinja2 ebaysdk feedparser xlwt psycogreen suds-jurko pytz pyusb greenlet xlrd 
+echo -e "\n---- Install PyChart ----"
+sudo zypper addrepo https://download.opensuse.org/repositories/spins:invis:common/openSUSE_Leap_42.3/spins:invis:common.repo
+sudo zypper refresh
+sudo zypper install -y python-PyChart
 
 echo -e "\n---- Install python libraries ----"
-# This is for compatibility with Ubuntu 16.04. Will work on 14.04, 15.04 and 16.04
-sudo apt-get install python3-suds
+sudo zypper install python3-suds
+
+echo -e "\n---- Install python packages ----"
+sudo pip3 install PyPDF2 PyWebDAV
+sudo pip3 install python-dateutil docutils feedparser jinja2 ldap lxml mako mock
+sudo pip3 install python-openid psycopg2 psutil babel pydot pyparsing reportlab simplejson pytz 
+sudo pip3 install unittest2 vatnumber vobject pywebdav werkzeug xlwt pyyaml pypdf passlib decorator
+sudo pip3 install markupsafe pyusb pyserial paramiko utils pdftools requests xlsxwriter
+sudo pip3 install psycogreen ofxparse gevent argparse pyOpenSSL>=16.2.0
+sudo pip3 install pypdf2 Babel Werkzeug html2text pillow ninja2 gdata XlsxWriter ebaysdk suds-jurko greenlet xlrd 
 
 echo -e "\n--- Install other required packages"
-sudo apt-get install node-clean-css -y
-sudo apt-get install node-less -y
-sudo apt-get install python-gevent -y
+sudo zypper install node-clean-css -y
+sudo zypper install node-less -y
+sudo zypper install python-gevent -y
 
 #--------------------------------------------------
 # Install Wkhtmltopdf if needed
@@ -134,7 +145,7 @@ if [ $IS_ENTERPRISE = "True" ]; then
     echo -e "\n---- Added Enterprise code under $OE_HOME/enterprise/addons ----"
     echo -e "\n---- Installing Enterprise specific libraries ----"
     sudo pip3 install num2words ofxparse
-    sudo apt-get install nodejs npm
+    sudo zypper install nodejs npm
     sudo npm install -g less
     sudo npm install -g less-plugin-clean-css
 fi
