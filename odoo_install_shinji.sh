@@ -21,7 +21,7 @@ OE_HOME="/$OE_USER"
 OE_HOME_EXT="/$OE_USER/${OE_USER}-server"
 #The default port where this Odoo instance will run under (provided you use the command -c in the terminal)
 #Set to true if you want to install it, false if you don't need it or have it already installed.
-INSTALL_WKHTMLTOPDF="True"
+INSTALL_WKHTMLTOPDF="False"
 #Set the default Odoo port (you still have to use -c /etc/odoo-server.conf for example to use this.)
 OE_PORT="8069"
 #Choose the Odoo version which you want to install. For example: 11.0, 10.0, 9.0 or saas-18. When using 'master' the master version will be installed.
@@ -138,9 +138,9 @@ if [ $IS_ENTERPRISE = "True" ]; then
     echo -e "\n---- Added Enterprise code under $OE_HOME/enterprise/addons ----"
     echo -e "\n---- Installing Enterprise specific libraries ----"
     sudo pip3 install num2words ofxparse
-    sudo ln -s /usr/bin/nodejs /usr/bin/node
-    sudo npm install -g less less-plugin-clean-css
-    sudo apt-get install node-less
+    sudo apt-get install nodejs npm
+    sudo npm install -g less
+    sudo npm install -g less-plugin-clean-css
 fi
 
 echo -e "\n---- Create custom module directory ----"
