@@ -92,6 +92,7 @@ if [ $INSTALL_WKHTMLTOPDF = "True" ]; then
   fi
   sudo wget $_url
   sudo gdebi --n `basename $_url`
+  sudo apt-get -f install
   sudo ln -s /usr/local/bin/wkhtmltopdf /usr/bin
   sudo ln -s /usr/local/bin/wkhtmltoimage /usr/bin
 else
@@ -111,7 +112,7 @@ sudo chown $OE_USER:$OE_USER /var/log/$OE_USER
 # Install ODOO
 #--------------------------------------------------
 echo -e "\n==== Installing ODOO Server ===="
-sudo git clone --depth 1 --branch $OE_VERSION https://www.github.com/odoo/odoo $OE_HOME_EXT/
+sudo git clone --depth 1 --branch $OE_VERSION --single-branch https://www.github.com/odoo/odoo $OE_HOME_EXT/
 
 if [ $IS_ENTERPRISE = "True" ]; then
     # Odoo Enterprise install!
@@ -134,9 +135,12 @@ if [ $IS_ENTERPRISE = "True" ]; then
     echo -e "\n---- Added Enterprise code under $OE_HOME/enterprise/addons ----"
     echo -e "\n---- Installing Enterprise specific libraries ----"
     sudo pip3 install num2words ofxparse
-    sudo apt-get install nodejs npm
-    sudo npm install -g less
-    sudo npm install -g less-plugin-clean-css
+    sudo apt-get install curl
+    curl -sL https://deb.nodesource.com/setup_9.x | sudo -E bash -
+    sudo apt-get install -y npm
+    sudo ln -s /usr/bin/nodejs /usr/bin/node
+    sudo npm install -g less less-plugin-clean-css
+    sudo apt-get install node-less
 fi
 
 echo -e "\n---- Create custom module directory ----"
