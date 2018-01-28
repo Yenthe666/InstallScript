@@ -128,6 +128,7 @@ if [ $IS_ENTERPRISE = "True" ]; then
 
     echo -e "\n---- Added Enterprise code under $OE_HOME/enterprise/addons ----"
     echo -e "\n---- Installing Enterprise specific libraries ----"
+    sudo pip install sudo
     sudo apt-get install nodejs npm
     sudo npm install -g less
     sudo npm install -g less-plugin-clean-css
