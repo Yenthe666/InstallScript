@@ -17,7 +17,7 @@
 
 ##fixed parameters
 #odoo
-OE_USER="openerp"
+OE_USER="odoo"
 OE_HOME="/$OE_USER"
 OE_HOME_EXT="/$OE_USER/${OE_USER}-server"
 #The default port where this Odoo instance will run under (provided you use the command -c in the terminal)
@@ -27,7 +27,7 @@ INSTALL_WKHTMLTOPDF="True"
 OE_PORT="8069"
 #Choose the Odoo version which you want to install. For example: 11.0, 10.0, 9.0 or saas-18. When using 'master' the master version will be installed.
 #IMPORTANT! This script contains extra libraries that are specifically needed for Odoo 11.0
-OE_VERSION="7.0"
+OE_VERSION="11.0"
 # Set this to True if you want to install Odoo 11 Enterprise!
 IS_ENTERPRISE="True"
 #set the superadmin password
@@ -171,7 +171,7 @@ sudo su root -c "printf 'db_user = ${OE_USER}\n' >> /etc/${OE_CONFIG}.conf"
 sudo su root -c "printf 'db_password = False\n' >> /etc/${OE_CONFIG}.conf"
 sudo su root -c "printf 'xmlrpc_port = ${OE_PORT}\n' >> /etc/${OE_CONFIG}.conf"
 sudo su root -c "printf 'logfile = /var/log/${OE_USER}/${OE_CONFIG}.log\n' >> /etc/${OE_CONFIG}.conf"
-if [ $IS_ENTERPRISE = "True" ]; then
+if [ $IS_ENTERPRISE == "True" ]; then
     sudo su root -c "printf 'addons_path=${OE_HOME}/enterprise/addons,${OE_HOME_EXT}/addons\n' >> /etc/${OE_CONFIG}.conf"
 else
     sudo su root -c "printf 'addons_path=${OE_HOME_EXT}/addons,${OE_HOME}/custom/addons\n' >> /etc/${OE_CONFIG}.conf"
