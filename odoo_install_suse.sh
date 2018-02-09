@@ -60,10 +60,6 @@ OE_SUPERADMIN="admin"
 OE_CONFIG="${OE_USER}-server"
 OE_SERVICE="${OE_USER}.service"
 
-echo "Version is $OE_VERSION";
-
-echo 'Exiting there';
-exit 1;
 ##
 ###  WKHTMLTOPDF download links
 ## === Ubuntu Trusty x64 & x32 === (for other distributions please replace these two links,
