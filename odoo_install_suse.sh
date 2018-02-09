@@ -15,6 +15,31 @@
 # ./odoo-install
 ################################################################################
 
+# Color codes
+DARKRED='\033[0;31m'
+RED='\033[1;31m'
+NOCOLOR='\033[0m'
+CYAN='\033[1;36m'
+this_script=`basename "$0"`
+
+# Check if version was provided
+if [[ "$1" == "" ]];then
+    echo -e "${DARKRED}Error...${NOCOLOR}";
+    echo -e "\n${RED}required: version ${NOCOLOR}(e.g 11.0, 10.0, etc)";
+    echo -e "\ntry running: \n\t${CYAN}bash $this_script 11.0${NOCOLOR}\n"
+    exit 1;
+else
+    # Check if version matches syntax
+    if [[ "$1" =~ "^[0-9]{1,2}.[0-9]{1}$" ]]; then
+        OE_VERSION="$1";
+    else
+        echo -e "${DARKRED}Error...${NOCOLOR}";
+        echo -e "\n${RED}version should match existent github branch versions${NOCOLOR} (e.g 10.0, 11.0, etc)";
+        echo -e "\ntry running: \n\t${CYAN}bash $this_script 11.0${NOCOLOR}\n"
+        exit 1;
+    fi
+fi
+
 ##fixed parameters
 #odoo
 OE_USER="odoo"
@@ -27,7 +52,7 @@ INSTALL_WKHTMLTOPDF="True"
 OE_PORT="8069"
 #Choose the Odoo version which you want to install. For example: 11.0, 10.0, 9.0 or saas-18. When using 'master' the master version will be installed.
 #IMPORTANT! This script contains extra libraries that are specifically needed for Odoo 11.0
-OE_VERSION="11.0"
+OE_VERSION="$1"
 # Set this to True if you want to install Odoo 11 Enterprise!
 IS_ENTERPRISE="True"
 #set the superadmin password
@@ -35,6 +60,10 @@ OE_SUPERADMIN="admin"
 OE_CONFIG="${OE_USER}-server"
 OE_SERVICE="${OE_USER}.service"
 
+echo "Version is $OE_VERSION";
+
+echo 'Exiting there';
+exit 1;
 ##
 ###  WKHTMLTOPDF download links
 ## === Ubuntu Trusty x64 & x32 === (for other distributions please replace these two links,
