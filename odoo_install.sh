@@ -29,6 +29,8 @@ OE_PORT="8069"
 OE_VERSION="11.0"
 # Set this to True if you want to install Odoo 11 Enterprise!
 IS_ENTERPRISE="False"
+# Set this to True if you want to install Nginx!
+INSTALL_NGINX="True"
 #set the superadmin password
 OE_SUPERADMIN="admin"
 OE_CONFIG="${OE_USER}-server"
@@ -36,7 +38,7 @@ OE_CONFIG="${OE_USER}-server"
 ##
 ###  WKHTMLTOPDF download links
 ## === Ubuntu Trusty x64 & x32 === (for other distributions please replace these two links,
-## in order to have correct version of wkhtmltox installed, for a danger note refer to 
+## in order to have correct version of wkhtmltox installed, for a danger note refer to
 ## https://www.odoo.com/documentation/8.0/setup/install.html#deb ):
 WKHTMLTOX_X64=https://downloads.wkhtmltopdf.org/0.12/0.12.1/wkhtmltox-0.12.1_linux-trusty-amd64.deb
 WKHTMLTOX_X32=https://downloads.wkhtmltopdf.org/0.12/0.12.1/wkhtmltox-0.12.1_linux-trusty-i386.deb
@@ -61,14 +63,14 @@ sudo su - postgres -c "createuser -s $OE_USER" 2> /dev/null || true
 # Install Dependencies
 #--------------------------------------------------
 echo -e "\n--- Installing Python 3 + pip3 --"
-sudo apt-get install python3 python3-pip
+sudo apt-get install python3 python3-pip -y
 
 echo -e "\n---- Install tool packages ----"
 sudo apt-get install wget git bzr python-pip gdebi-core -y
 
 echo -e "\n---- Install python packages ----"
 sudo apt-get install python-pypdf2 python-dateutil python-feedparser python-ldap python-libxslt1 python-lxml python-mako python-openid python-psycopg2 python-pybabel python-pychart python-pydot python-pyparsing python-reportlab python-simplejson python-tz python-vatnumber python-vobject python-webdav python-werkzeug python-xlwt python-yaml python-zsi python-docutils python-psutil python-mock python-unittest2 python-jinja2 python-pypdf python-decorator python-requests python-passlib python-pil -y
-sudo pip3 install pypdf2 Babel passlib Werkzeug decorator python-dateutil pyyaml psycopg2 psutil html2text docutils lxml pillow reportlab ninja2 requests gdata XlsxWriter vobject python-openid pyparsing pydot mock mako Jinja2 ebaysdk feedparser xlwt psycogreen suds-jurko pytz pyusb greenlet xlrd 
+sudo pip3 install pypdf2 Babel passlib Werkzeug decorator python-dateutil pyyaml psycopg2 psutil html2text docutils lxml pillow reportlab ninja2 requests gdata XlsxWriter vobject python-openid pyparsing pydot mock mako Jinja2 ebaysdk feedparser xlwt psycogreen suds-jurko pytz pyusb greenlet xlrd
 
 echo -e "\n---- Install python libraries ----"
 # This is for compatibility with Ubuntu 16.04. Will work on 14.04, 15.04 and 16.04
@@ -148,12 +150,15 @@ sudo chown -R $OE_USER:$OE_USER $OE_HOME/*
 
 echo -e "* Create server config file"
 
+
 sudo touch /etc/${OE_CONFIG}.conf
 echo -e "* Creating server config file"
 sudo su root -c "printf '[options] \n; This is the password that allows database operations:\n' >> /etc/${OE_CONFIG}.conf"
 sudo su root -c "printf 'admin_passwd = ${OE_SUPERADMIN}\n' >> /etc/${OE_CONFIG}.conf"
 sudo su root -c "printf 'xmlrpc_port = ${OE_PORT}\n' >> /etc/${OE_CONFIG}.conf"
+sudo su root -c "printf 'proxy_mode = True\n' >> /etc/${OE_CONFIG}.conf"
 sudo su root -c "printf 'logfile = /var/log/${OE_USER}/${OE_CONFIG}.log\n' >> /etc/${OE_CONFIG}.conf"
+
 if [ $IS_ENTERPRISE = "True" ]; then
     sudo su root -c "printf 'addons_path=${OE_HOME}/enterprise/addons,${OE_HOME_EXT}/addons\n' >> /etc/${OE_CONFIG}.conf"
 else
@@ -248,6 +253,85 @@ sudo update-rc.d $OE_CONFIG defaults
 
 echo -e "* Starting Odoo Service"
 sudo su root -c "/etc/init.d/$OE_CONFIG start"
+#--------------------------------------------------
+# Install Nginx if needed
+#--------------------------------------------------
+if [ $INSTALL_NGINX = "True" ]; then
+  echo -e "\n---- Installing and setting up Nginx ----"
+  sudo apt install nginx -y
+  cat <<EOF > ~/odoo
+   server {
+   listen 80;
+
+   # set proper server name after domain set
+   server_name _;
+
+   # Add Headers for odoo proxy mode
+   proxy_set_header X-Forwarded-Host \$host;
+   proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+   proxy_set_header X-Forwarded-Proto \$scheme;
+   proxy_set_header X-Real-IP \$remote_addr;
+
+   #   odoo    log files
+   access_log  /var/log/nginx/odoo-access.log;
+   error_log       /var/log/nginx/odoo-error.log;
+
+   #   increase    proxy   buffer  size
+   proxy_buffers   16  64k;
+   proxy_buffer_size   128k;
+
+   proxy_read_timeout 720s;
+   proxy_connect_timeout 720s;
+   proxy_send_timeout 720s;
+
+   #   force   timeouts    if  the backend dies
+   proxy_next_upstream error   timeout invalid_header  http_500    http_502
+   http_503;
+
+   types {
+   text/less less;
+   }
+
+   #   enable  data    compression
+   gzip    on;
+   gzip_min_length 1100;
+   gzip_buffers    4   32k;
+   gzip_types  text/css text/less text/plain text/xml application/xml application/json application/javascript application/pdf image/jpeg image/png;
+   gzip_vary   on;
+
+   client_max_body_size 0;
+
+   location / {
+   proxy_pass    http://127.0.0.1:8069;
+   # by default, do not forward anything
+   proxy_redirect off;
+   }
+
+   location /longpolling {
+   proxy_pass http://127.0.0.1:8072;
+   }
+
+   # cache some static data in memory for 60mins.
+   location ~ /[a-zA-Z0-9_-]*/static/ {
+   proxy_cache_valid 200 302 60m;
+   proxy_cache_valid 404      1m;
+   proxy_buffering    on;
+   expires 864000;
+   proxy_pass    http://127.0.0.1:8069;
+   }
+   }
+EOF
+
+  sudo mv ~/odoo /etc/nginx/sites-available/
+  sudo ln -s /etc/nginx/sites-available/odoo /etc/nginx/sites-enabled/odoo
+  sudo rm /etc/nginx/sites-enabled/default
+  sudo service nginx reload
+
+else
+  echo "Nginx isn't installed due to the choice of the user!"
+fi
+
+
 echo "-----------------------------------------------------------"
 echo "Done! The Odoo server is up and running. Specifications:"
 echo "Port: $OE_PORT"
@@ -258,4 +342,7 @@ echo "Addons folder: $OE_USER/$OE_CONFIG/addons/"
 echo "Start Odoo service: sudo service $OE_CONFIG start"
 echo "Stop Odoo service: sudo service $OE_CONFIG stop"
 echo "Restart Odoo service: sudo service $OE_CONFIG restart"
+if [ $INSTALL_NGINX = "True" ]; then
+ echo "Done! The Nginx server is up and running. Configuration can be found at /etc/nginx/sites-available/odoo"
+fi
 echo "-----------------------------------------------------------"
