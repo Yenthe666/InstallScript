@@ -34,7 +34,8 @@ INSTALL_NGINX="True"
 #set the superadmin password
 OE_SUPERADMIN="admin"
 OE_CONFIG="${OE_USER}-server"
-
+#set the website name
+WEBSITE_NAME="_"
 ##
 ###  WKHTMLTOPDF download links
 ## === Ubuntu Trusty x64 & x32 === (for other distributions please replace these two links,
@@ -264,7 +265,7 @@ if [ $INSTALL_NGINX = "True" ]; then
    listen 80;
 
    # set proper server name after domain set
-   server_name _;
+   server_name $WEBSITE_NAME;
 
    # Add Headers for odoo proxy mode
    proxy_set_header X-Forwarded-Host \$host;
@@ -302,7 +303,7 @@ if [ $INSTALL_NGINX = "True" ]; then
    client_max_body_size 0;
 
    location / {
-   proxy_pass    http://127.0.0.1:8069;
+   proxy_pass    http://127.0.0.1:$OE_PORT;
    # by default, do not forward anything
    proxy_redirect off;
    }
@@ -317,7 +318,7 @@ if [ $INSTALL_NGINX = "True" ]; then
    proxy_cache_valid 404      1m;
    proxy_buffering    on;
    expires 864000;
-   proxy_pass    http://127.0.0.1:8069;
+   proxy_pass    http://127.0.0.1:$OE_PORT;
    }
    }
 EOF
