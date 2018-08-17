@@ -30,7 +30,7 @@ OE_VERSION="11.0"
 # Set this to True if you want to install Odoo 11 Enterprise!
 IS_ENTERPRISE="False"
 # Set this to True if you want to install Nginx!
-INSTALL_NGINX="True"
+INSTALL_NGINX="False"
 #set the superadmin password
 OE_SUPERADMIN="admin"
 OE_CONFIG="${OE_USER}-server"
@@ -157,7 +157,9 @@ echo -e "* Creating server config file"
 sudo su root -c "printf '[options] \n; This is the password that allows database operations:\n' >> /etc/${OE_CONFIG}.conf"
 sudo su root -c "printf 'admin_passwd = ${OE_SUPERADMIN}\n' >> /etc/${OE_CONFIG}.conf"
 sudo su root -c "printf 'xmlrpc_port = ${OE_PORT}\n' >> /etc/${OE_CONFIG}.conf"
-sudo su root -c "printf 'proxy_mode = True\n' >> /etc/${OE_CONFIG}.conf"
+if [ $INSTALL_NGINX = "True" ]; then
+    sudo su root -c "printf 'proxy_mode = True\n' >> /etc/${OE_CONFIG}.conf"
+fi
 sudo su root -c "printf 'logfile = /var/log/${OE_USER}/${OE_CONFIG}.log\n' >> /etc/${OE_CONFIG}.conf"
 
 if [ $IS_ENTERPRISE = "True" ]; then
@@ -299,7 +301,8 @@ if [ $INSTALL_NGINX = "True" ]; then
    gzip_buffers    4   32k;
    gzip_types  text/css text/less text/plain text/xml application/xml application/json application/javascript application/pdf image/jpeg image/png;
    gzip_vary   on;
-
+   client_header_buffer_size 4k;
+   large_client_header_buffers 4 64k;
    client_max_body_size 0;
 
    location / {
