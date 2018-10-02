@@ -60,7 +60,7 @@ sudo su - postgres -c "createuser -s $OE_USER" 2> /dev/null || true
 # Install Dependencies
 #--------------------------------------------------
 echo -e "\n--- Installing Python 3 + pip3 --"
-sudo apt-get install python3 python3-pip git gdebi-core
+sudo apt-get install python3 python3-pip git gdebi-core -y
 
 echo -e "\n--- Install other required packages"
 sudo apt-get install node-clean-css -y
