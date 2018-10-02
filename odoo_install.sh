@@ -65,7 +65,6 @@ sudo apt-get install python3 python3-pip git gdebi-core -y
 echo -e "\n--- Install other required packages"
 sudo apt-get install node-clean-css -y
 sudo apt-get install node-less -y
-sudo apt-get install python-gevent -y
 
 #--------------------------------------------------
 # Install Wkhtmltopdf if needed
