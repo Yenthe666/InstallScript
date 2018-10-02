@@ -104,6 +104,7 @@ sudo git clone --depth 1 --branch $OE_VERSION https://www.github.com/odoo/odoo $
 #--------------------------------------------------
 # Install required packages
 #--------------------------------------------------
+echo -e "\n---- Installing Python packages (requirements) ----"
 sudo pip3 install -r $OE_HOME_EXT/requirements.txt
 
 if [ $IS_ENTERPRISE = "True" ]; then
