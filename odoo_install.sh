@@ -24,10 +24,9 @@ OE_HOME_EXT="/$OE_USER/${OE_USER}-server"
 INSTALL_WKHTMLTOPDF="True"
 #Set the default Odoo port (you still have to use -c /etc/odoo-server.conf for example to use this.)
 OE_PORT="8069"
-#Choose the Odoo version which you want to install. For example: 11.0, 10.0, 9.0 or saas-18. When using 'master' the master version will be installed.
-#IMPORTANT! This script contains extra libraries that are specifically needed for Odoo 11.0
-OE_VERSION="11.0"
-# Set this to True if you want to install Odoo 11 Enterprise!
+#Choose the Odoo version which you want to install. For example: 12.0, 11.0, 10.0, 9.0 or saas-18. When using 'master' the master version will be installed.
+OE_VERSION="saas-11.5" # Note that after v12 is released (03/10/2018) you should change this to 12.0
+# Set this to True if you want to install Odoo 12 Enterprise!
 IS_ENTERPRISE="False"
 #set the superadmin password
 OE_SUPERADMIN="admin"
@@ -72,7 +71,7 @@ sudo apt-get install python-gevent -y
 # Install Wkhtmltopdf if needed
 #--------------------------------------------------
 if [ $INSTALL_WKHTMLTOPDF = "True" ]; then
-  echo -e "\n---- Install wkhtml and place shortcuts on correct place for ODOO 11 ----"
+  echo -e "\n---- Install wkhtml and place shortcuts on correct place for ODOO 12 ----"
   #pick up correct one from x64 & x32 versions:
   if [ "`getconf LONG_BIT`" == "64" ];then
       _url=$WKHTMLTOX_X64
