@@ -17,6 +17,7 @@ There are a few things you can configure, this is the most used list:<br/>
 ```OE_PORT``` is the port where Odoo should run on, for example 8069.<br/>
 ```OE_VERSION``` is the Odoo version to install, for example ```11.0``` for Odoo V11.<br/>
 ```IS_ENTERPRISE``` will install the Enterprise version on top of ```11.0``` if you set it to ```True```, set it to ```False``` if you want the community version of Odoo 11.<br/>
+```INSTALL_NGINX``` set to ```False``` if you do not want to install Nginx, if you want to install it you should set it to ```True```.<br/>
 ```OE_SUPERADMIN``` is the master password for this Odoo installation.<br/>
 
 #### 3. Make the script executable
