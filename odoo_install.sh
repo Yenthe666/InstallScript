@@ -51,7 +51,7 @@ sudo apt-get upgrade -y
 # Install PostgreSQL Server
 #--------------------------------------------------
 echo -e "\n---- Install PostgreSQL Server ----"
-sudo apt-get install postgresql -y
+sudo apt-get install postgresql postgresql-server-dev-10 build-essential -y
 
 echo -e "\n---- Creating the ODOO PostgreSQL User  ----"
 sudo su - postgres -c "createuser -s $OE_USER" 2> /dev/null || true
@@ -60,7 +60,7 @@ sudo su - postgres -c "createuser -s $OE_USER" 2> /dev/null || true
 # Install Dependencies
 #--------------------------------------------------
 echo -e "\n--- Installing Python 3 + pip3 --"
-sudo apt-get install python3 python3-pip git gdebi-core -y
+sudo apt-get install python3 python3-pip python3-pil python3-lxml python-ldap3 python3-dev python3-setuptools git gdebi-core libldap2-dev libsasl2-dev libxml2-dev libxslt1-dev libjpeg-dev -y
 
 echo -e "\n--- Install other required packages"
 sudo apt-get install node-clean-css -y
