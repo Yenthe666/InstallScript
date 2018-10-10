@@ -328,8 +328,8 @@ if [ $INSTALL_NGINX = "True" ]; then
    }
 EOF
 
-  mv ~/odoo /etc/nginx/sites-available/
-  ln -s /etc/nginx/sites-available/odoo /etc/nginx/sites-enabled/odoo
+  mv ~/$OE_USER /etc/nginx/sites-available/
+  ln -s /etc/nginx/sites-available/odoo /etc/nginx/sites-enabled/$OE_USER
   rm /etc/nginx/sites-enabled/default
   service nginx reload
 
