@@ -262,7 +262,7 @@ sudo su root -c "/etc/init.d/$OE_CONFIG start"
 if [ $INSTALL_NGINX = "True" ]; then
   echo -e "\n---- Installing and setting up Nginx ----"
   sudo apt install nginx -y
-  cat <<EOF > ~/odoo
+  cat <<EOF > ~/$OE_USER
    server {
    listen 80;
 
@@ -278,8 +278,8 @@ if [ $INSTALL_NGINX = "True" ]; then
    add_header X-XSS-Protection "1; mode=block";
 
    #   odoo    log files
-   access_log  /var/log/nginx/odoo-access.log;
-   error_log       /var/log/nginx/odoo-error.log;
+   access_log  /var/log/nginx/$OE_USER-access.log;
+   error_log       /var/log/nginx/$OE_USER-error.log;
 
    #   increase    proxy   buffer  size
    proxy_buffers   16  64k;
@@ -328,10 +328,10 @@ if [ $INSTALL_NGINX = "True" ]; then
    }
 EOF
 
-  sudo mv ~/odoo /etc/nginx/sites-available/
-  sudo ln -s /etc/nginx/sites-available/odoo /etc/nginx/sites-enabled/odoo
-  sudo rm /etc/nginx/sites-enabled/default
-  sudo service nginx reload
+  mv ~/odoo /etc/nginx/sites-available/
+  ln -s /etc/nginx/sites-available/odoo /etc/nginx/sites-enabled/odoo
+  rm /etc/nginx/sites-enabled/default
+  service nginx reload
 
 else
   echo "Nginx isn't installed due to the choice of the user!"
@@ -349,6 +349,6 @@ echo "Start Odoo service: sudo service $OE_CONFIG start"
 echo "Stop Odoo service: sudo service $OE_CONFIG stop"
 echo "Restart Odoo service: sudo service $OE_CONFIG restart"
 if [ $INSTALL_NGINX = "True" ]; then
- echo "Done! The Nginx server is up and running. Configuration can be found at /etc/nginx/sites-available/odoo"
+ echo "Done! The Nginx server is up and running. Configuration can be found at /etc/nginx/sites-available/$OE_USER"
 fi
 echo "-----------------------------------------------------------"
