@@ -112,8 +112,7 @@ if [ $IS_ENTERPRISE = "True" ]; then
     # Odoo Enterprise install!
     echo -e "\n--- Create symlink for node"
     sudo ln -s /usr/bin/nodejs /usr/bin/node
-    sudo su $OE_USER -c "mkdir $OE_HOME/enterprise"
-    sudo su $OE_USER -c "mkdir $OE_HOME/enterprise/addons"
+    sudo su $OE_USER -c "mkdir -p $OE_HOME/enterprise/addons"
 
     GITHUB_RESPONSE=$(sudo git clone --depth 1 --branch 10.0 https://www.github.com/odoo/enterprise "$OE_HOME/enterprise/addons" 2>&1)
     while [[ $GITHUB_RESPONSE == *"Authentication"* ]]; do
@@ -135,8 +134,7 @@ if [ $IS_ENTERPRISE = "True" ]; then
 fi
 
 echo -e "\n---- Create custom module directory ----"
-sudo su $OE_USER -c "mkdir $OE_HOME/custom"
-sudo su $OE_USER -c "mkdir $OE_HOME/custom/addons"
+sudo su $OE_USER -c "mkdir -p $OE_HOME/custom/addons"
 
 echo -e "\n---- Setting permissions on home folder ----"
 sudo chown -R $OE_USER:$OE_USER $OE_HOME/*
