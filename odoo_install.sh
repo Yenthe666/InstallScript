@@ -34,7 +34,7 @@ OE_SUPERADMIN="admin"
 OE_CONFIG="${OE_USER}-server"
 # Set the website name
 WEBSITE_NAME="_"
-#Set the default Odoo port (you still have to use -c /etc/odoo-server.conf for example to use this.)
+#Set the default Odoo longpolling port (you still have to use -c /etc/odoo-server.conf for example to use this.)
 LONGPOLLING_PORT="8072"
 
 ##
