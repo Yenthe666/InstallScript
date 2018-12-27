@@ -14,8 +14,6 @@
 # ./odoo-install
 ################################################################################
 
-##fixed parameters
-#odoo
 OE_USER="odoo"
 OE_HOME="/$OE_USER"
 OE_HOME_EXT="/$OE_USER/${OE_USER}-server"
@@ -31,11 +29,14 @@ OE_VERSION="12.0"
 IS_ENTERPRISE="False"
 # Set this to True if you want to install Nginx!
 INSTALL_NGINX="False"
-#set the superadmin password
+# Set the superadmin password
 OE_SUPERADMIN="admin"
 OE_CONFIG="${OE_USER}-server"
-#set the website name
+# Set the website name
 WEBSITE_NAME="_"
+#Set the default Odoo port (you still have to use -c /etc/odoo-server.conf for example to use this.)
+LONGPOLLING_PORT="8072"
+
 ##
 ###  WKHTMLTOPDF download links
 ## === Ubuntu Trusty x64 & x32 === (for other distributions please replace these two links,
@@ -297,6 +298,7 @@ if [ $INSTALL_NGINX = "True" ]; then
 
    types {
    text/less less;
+   text/scss scss;
    }
 
    #   enable  data    compression
@@ -316,7 +318,7 @@ if [ $INSTALL_NGINX = "True" ]; then
    }
 
    location /longpolling {
-   proxy_pass http://127.0.0.1:8072;
+   proxy_pass http://127.0.0.1:$LONGPOLLING_PORT;
    }
 
    # cache some static data in memory for 60mins.
