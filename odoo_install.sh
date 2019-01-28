@@ -42,16 +42,10 @@ LONGPOLLING_PORT="8072"
 ## === Ubuntu Trusty x64 & x32 === (for other distributions please replace these two links,
 ## in order to have correct version of wkhtmltox installed, for a danger note refer to
 ## https://www.odoo.com/documentation/8.0/setup/install.html#deb ):
-## For odoo version 12.0 onwards 
 ## https://www.odoo.com/documentation/12.0/setup/install.html#debian-ubuntu
-if [ $OE_VERSION == "12.0" ];then
-      WKHTMLTOX_X64=https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.trusty_amd64.deb
-      WKHTMLTOX_X32=https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.trusty_i386.deb
 
-  else
-      WKHTMLTOX_X64=https://downloads.wkhtmltopdf.org/0.12/0.12.1/wkhtmltox-0.12.1_linux-trusty-amd64.deb
-      WKHTMLTOX_X32=https://downloads.wkhtmltopdf.org/0.12/0.12.1/wkhtmltox-0.12.1_linux-trusty-i386.deb
-  fi
+WKHTMLTOX_X64=https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.trusty_amd64.deb
+WKHTMLTOX_X32=https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.trusty_i386.deb
 #--------------------------------------------------
 # Update Server
 #--------------------------------------------------
@@ -112,7 +106,7 @@ if [ $INSTALL_WKHTMLTOPDF = "True" ]; then
   sudo ln -s /usr/local/bin/wkhtmltopdf /usr/bin
   sudo ln -s /usr/local/bin/wkhtmltoimage /usr/bin
 else
-  echo "Wkhtmltopdf isn't installed due to the choice of the user!"
+  echo "Wkhtmltopdf isn't installed due to choice of the user!"
 fi
 
 echo -e "\n---- Create ODOO system user ----"
@@ -168,9 +162,10 @@ sudo touch /etc/${OE_CONFIG}.conf
 echo -e "* Creating server config file"
 sudo su root -c "printf '[options] \n; This is the password that allows database operations:\n' >> /etc/${OE_CONFIG}.conf"
 sudo su root -c "printf 'admin_passwd = ${OE_SUPERADMIN}\n' >> /etc/${OE_CONFIG}.conf"
-sudo su root -c "printf 'xmlrpc_port = ${OE_PORT}\n' >> /etc/${OE_CONFIG}.conf"
-if [ $INSTALL_NGINX = "True" ]; then
-    sudo su root -c "printf 'proxy_mode = True\n' >> /etc/${OE_CONFIG}.conf"
+if [ $OE_VERSION == "12.0" ];then
+    sudo su root -c "printf 'http_port = ${OE_PORT}\n' >> /etc/${OE_CONFIG}.conf"
+else
+    sudo su root -c "printf 'xmlrpc_port = ${OE_PORT}\n' >> /etc/${OE_CONFIG}.conf"
 fi
 sudo su root -c "printf 'logfile = /var/log/${OE_USER}/${OE_CONFIG}.log\n' >> /etc/${OE_CONFIG}.conf"
 
@@ -266,8 +261,6 @@ sudo chown root: /etc/init.d/$OE_CONFIG
 echo -e "* Start ODOO on Startup"
 sudo update-rc.d $OE_CONFIG defaults
 
-echo -e "* Starting Odoo Service"
-sudo su root -c "/etc/init.d/$OE_CONFIG start"
 #--------------------------------------------------
 # Install Nginx if needed
 #--------------------------------------------------
@@ -345,12 +338,13 @@ EOF
   sudo ln -s /etc/nginx/sites-available/odoo /etc/nginx/sites-enabled/$OE_USER
   sudo rm /etc/nginx/sites-enabled/default
   sudo service nginx reload
-
+  sudo su root -c "printf 'proxy_mode = True\n' >> /etc/${OE_CONFIG}.conf"
+  echo "Done! The Nginx server is up and running. Configuration can be found at /etc/nginx/sites-enabled/$OE_USER"
 else
-  echo "Nginx isn't installed due to the choice of the user!"
+  echo "Nginx isn't installed due to choice of the user!"
 fi
-
-
+echo -e "* Starting Odoo Service"
+sudo su root -c "/etc/init.d/$OE_CONFIG start"
 echo "-----------------------------------------------------------"
 echo "Done! The Odoo server is up and running. Specifications:"
 echo "Port: $OE_PORT"
@@ -361,7 +355,4 @@ echo "Addons folder: $OE_USER/$OE_CONFIG/addons/"
 echo "Start Odoo service: sudo service $OE_CONFIG start"
 echo "Stop Odoo service: sudo service $OE_CONFIG stop"
 echo "Restart Odoo service: sudo service $OE_CONFIG restart"
-if [ $INSTALL_NGINX = "True" ]; then
- echo "Done! The Nginx server is up and running. Configuration can be found at /etc/nginx/sites-available/$OE_USER"
-fi
 echo "-----------------------------------------------------------"
