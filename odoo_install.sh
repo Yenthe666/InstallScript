@@ -41,10 +41,12 @@ OE_CONFIG="${OE_USER}-server"
 WKHTMLTOX_X64=https://downloads.wkhtmltopdf.org/0.12/0.12.1/wkhtmltox-0.12.1_linux-trusty-amd64.deb
 WKHTMLTOX_X32=https://downloads.wkhtmltopdf.org/0.12/0.12.1/wkhtmltox-0.12.1_linux-trusty-i386.deb
 
+
 #--------------------------------------------------
 # Update Server
 #--------------------------------------------------
 echo -e "\n---- Update Server ----"
+sudo add-apt-repository "deb http://mirrors.kernel.org/ubuntu/ xenial main"
 sudo apt-get update
 sudo apt-get upgrade -y
 
@@ -52,6 +54,7 @@ sudo apt-get upgrade -y
 #  tools and libraries required to build Odoo dependencies
 #----------------------------------------------------------
 echo -e "\n---- install tools and libraries required ----"
+sudo apt-get install libpng12-0
 sudo apt install -y libxslt1-dev git python3-pip build-essential wget python3-dev python3-venv python3-wheel libxslt-dev libzip-dev libldap2-dev libsasl2-dev python3-setuptools node-less
 sudo apt-get -y install python3-dev libmysqlclient-dev libxmlsec1-dev
 
