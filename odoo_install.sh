@@ -252,7 +252,7 @@ sudo su root -c "/etc/init.d/$OE_CONFIG start"
 # Adding ODOO as a deamon (initscript)
 #--------------------------------------------------
 echo -e "install odoo requirements"
-sudo pip3 install -r $OE_USER/$OE_CONFIG/requirements.txt
+sudo pip3 install -r /$OE_USER/$OE_CONFIG/requirements.txt
 echo "-----------------------------------------------------------"
 echo "Done! The Odoo server is up and running. Specifications:"
 echo "Port: $OE_PORT"
