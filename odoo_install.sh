@@ -340,6 +340,8 @@ sudo chown root: /etc/init.d/$OE_CONFIG
 
 echo -e "* Start ODOO on Startup"
 sudo update-rc.d $OE_CONFIG defaults
+echo -e "* Starting Odoo Service"
+sudo su root -c "/etc/init.d/$OE_CONFIG start"
 
 #--------------------------------------------------
 # Adding ODOO as a Modules (initscript)
@@ -566,9 +568,16 @@ echo -e "install odoo requirements"
  pip3 install -r oca/web/requirements.txt
  pip3 install -r oca/webkit-tools/requirements.txt
  pip3 install -r oca/website/requirements.txt
+ pip3 install -r it-projects-llc/e-commerce/requirements.txt
+ pip3 install -r it-projects-llc/pos-addons/requirements.txt
+ pip3 install -r it-projects-llc/access-addons/requirements.txt
+ pip3 install -r it-projects-llc/website-addons/requirements.txt
+ pip3 install -r it-projects-llc/misc-addons/requirements.txt
+ pip3 install -r it-projects-llc/odoo-saas-tools/requirements.txt
+ pip3 install -r it-projects-llc/odoo-telegram/requirements.txt
 
-echo -e "* Starting Odoo Service"
-sudo su root -c "/etc/init.d/$OE_CONFIG start"
+echo -e "* restarting Odoo Service"
+sudo su root -c "/etc/init.d/$OE_CONFIG restart"
 #--------------------------------------------------
 # Adding ODOO as a deamon (initscript)
 #--------------------------------------------------
@@ -584,3 +593,4 @@ echo "Start Odoo service: sudo service $OE_CONFIG start"
 echo "Stop Odoo service: sudo service $OE_CONFIG stop"
 echo "Restart Odoo service: sudo service $OE_CONFIG restart"
 echo "-----------------------------------------------------------"
+
