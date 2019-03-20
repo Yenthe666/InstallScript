@@ -32,7 +32,7 @@ IS_ENTERPRISE="False"
 #set the superadmin password
 OE_SUPERADMIN="admin"
 OE_CONFIG="${OE_USER}-server"
-
+DOMAIN="codefish.com.eg"
 ##
 ###  WKHTMLTOPDF download links
 ## === Ubuntu Trusty x64 & x32 === (for other distributions please replace these two links,
@@ -67,31 +67,35 @@ sudo ufw allow 'Apache'
 sudo systemctl status apache2
 a2enmod proxy
 a2enmod proxy_http
-sudo touch /etc/apache2/sites-available/codefish.com.eg.conf
-sudo su root -c "printf'<VirtualHost *:80>\n' >> /etc/apache2/sites-available/codefish.com.eg.conf"
-sudo su root -c "printf'        ServerName codefish.com.eg\n' >> /etc/apache2/sites-available/codefish.com.eg.conf"
-sudo su root -c "printf'        ServerAlias *.codefish.com.eg\n' >> /etc/apache2/sites-available/codefish.com.eg.conf"
-sudo su root -c "printf'\n' >> /etc/apache2/sites-available/codefish.com.eg.conf"
-sudo su root -c "printf'        ProxyRequests Off\n' >> /etc/apache2/sites-available/codefish.com.eg.conf"
-sudo su root -c "printf'        <Proxy *>\n' >> /etc/apache2/sites-available/codefish.com.eg.conf"
-sudo su root -c "printf'                Order deny,allow\n' >> /etc/apache2/sites-available/codefish.com.eg.conf"
-sudo su root -c "printf'                Allow from all\n' >> /etc/apache2/sites-available/codefish.com.eg.conf"
-sudo su root -c "printf'        </Proxy>\n' >> /etc/apache2/sites-available/codefish.com.eg.conf"
-sudo su root -c "printf'\n' >> /etc/apache2/sites-available/codefish.com.eg.conf"
-sudo su root -c "printf'        ProxyPass / http://localhost:8069/\n' >> /etc/apache2/sites-available/codefish.com.eg.conf"
-sudo su root -c "printf'        ProxyPassReverse / http://localhost:8069/' >> /etc/apache2/sites-available/codefish.com.eg.conf"
-sudo su root -c "printf'        ProxyPass /longpolling/ http://localhost:8072/' >> /etc/apache2/sites-available/codefish.com.eg.conf"
-sudo su root -c "printf'        ProxyPassReverse /longpolling/ http://localhost:8072/' >> /etc/apache2/sites-available/codefish.com.eg.conf"
-sudo su root -c "printf'' >> /etc/apache2/sites-available/codefish.com.eg.conf"
-sudo su root -c "printf'        <Location />' >> /etc/apache2/sites-available/codefish.com.eg.conf"
-sudo su root -c "printf'                Order allow,deny' >> /etc/apache2/sites-available/codefish.com.eg.conf"
-sudo su root -c "printf'                Allow from all] >> /etc/apache2/sites-available/codefish.com.eg.conf"
-sudo su root -c "printf'        </Location>' >> /etc/apache2/sites-available/codefish.com.eg.conf"
-sudo su root -c "printf'</VirtualHost>' >> /etc/apache2/sites-available/codefish.com.eg.conf"
-sudo chmod 640 /etc/apache2/sites-available/codefish.com.eg.conf
 
-ln -s /etc/apache2/sites-available/codefish.com.eg.conf /etc/apache2/sites-enabled/codefish.com.eg.conf
-service apache2 restart
+echo -e "\n---- install apache server and config proxy ----"
+sudo touch /etc/apache2/sites-available/$DOMAIN.conf
+
+echo -e "* Creating server config file"
+sudo su root -c "printf '<VirtualHost *:80>\n' >> /etc/apache2/sites-available/$DOMAIN.conf"
+sudo su root -c "printf '        ServerName codefish.com.eg\n' >> /etc/apache2/sites-available/$DOMAIN.conf"
+sudo su root -c "printf '        ServerAlias *.codefish.com.eg\n' >> /etc/apache2/sites-available/$DOMAIN.conf"
+sudo su root -c "printf ' \n' >> /etc/apache2/sites-available/$DOMAIN.conf"
+sudo su root -c "printf '        ProxyRequests Off\n' >> /etc/apache2/sites-available/$DOMAIN.conf"
+sudo su root -c "printf '        <Proxy *>\n' >> /etc/apache2/sites-available/$DOMAIN.conf"
+sudo su root -c "printf '                Order deny,allow\n' >> /etc/apache2/sites-available/$DOMAIN.conf"
+sudo su root -c "printf '                Allow from all\n' >> /etc/apache2/sites-available/$DOMAIN.conf"
+sudo su root -c "printf '        </Proxy>\n' >> /etc/apache2/sites-available/$DOMAIN.conf"
+sudo su root -c "printf ' \n' >> /etc/apache2/sites-available/$DOMAIN.conf"
+sudo su root -c "printf '        ProxyPass / http://localhost:8069/\n' >> /etc/apache2/sites-available/$DOMAIN.conf"
+sudo su root -c "printf '        ProxyPassReverse / http://localhost:8069/\n' >> /etc/apache2/sites-available/$DOMAIN.conf"
+sudo su root -c "printf '        ProxyPass /longpolling/ http://localhost:8072/\n' >> /etc/apache2/sites-available/$DOMAIN.conf"
+sudo su root -c "printf '        ProxyPassReverse /longpolling/ http://localhost:8072/\n' >> /etc/apache2/sites-available/$DOMAIN.conf"
+sudo su root -c "printf '\n' >> /etc/apache2/sites-available/$DOMAIN.conf"
+sudo su root -c "printf '        <Location />\n' >> /etc/apache2/sites-available/$DOMAIN.conf"
+sudo su root -c "printf '                Order allow,deny\n' >> /etc/apache2/sites-available/$DOMAIN.conf"
+sudo su root -c "printf '                Allow from all]\n' >> /etc/apache2/sites-available/$DOMAIN.conf"
+sudo su root -c "printf '        </Location>\n' >> /etc/apache2/sites-available/$DOMAIN.conf"
+sudo su root -c "printf '</VirtualHost>\n' >> /etc/apache2/sites-available/$DOMAIN.conf"
+sudo chmod 640 /etc/apache2/sites-available/$DOMAIN.conf
+
+ln -s /etc/apache2/sites-available/$DOMAIN.conf /etc/apache2/sites-enabled/$DOMAIN.conf
+sudo systemctl restart apache2
 
 
 
