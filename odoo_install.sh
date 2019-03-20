@@ -53,6 +53,7 @@ sudo apt-get upgrade -y
 #----------------------------------------------------------
 echo -e "\n---- install tools and libraries required ----"
 sudo apt install -y libxslt1-dev git python3-pip build-essential wget python3-dev python3-venv python3-wheel libxslt-dev libzip-dev libldap2-dev libsasl2-dev python3-setuptools node-less
+sudo apt-get -y install python3-dev libmysqlclient-dev libxmlsec1-dev
 
 #--------------------------------------------------
 # Install PostgreSQL Server
@@ -384,6 +385,7 @@ cd  $OE_HOME/custom
       ADDONS_PATH=`ls -d1 /odoo/custom/*/* | tr '\n' ','`
       ADDONS_PATH=`echo /odoo/odoo-server/addons,/odoo/custom/addons,$ADDONS_PATH | sed "s,//,/,g" | sed "s,/,\\\\\/,g" | sed "s,.$,,g" `
      sed -ibak "s/addons_path.*/addons_path = $ADDONS_PATH/" /etc/odoo-server.conf
+ pip3 install MySQL-python
  pip3 install -r oca/account-analytic/requirements.txt
  pip3 install -r oca/account-budgeting/requirements.txt
  pip3 install -r oca/account-closing/requirements.txt
