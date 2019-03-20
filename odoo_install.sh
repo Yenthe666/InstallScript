@@ -33,6 +33,9 @@ IS_ENTERPRISE="False"
 OE_SUPERADMIN="admin"
 OE_CONFIG="${OE_USER}-server"
 DOMAIN="codefish.com.eg"
+OCA="True"
+SAAS="True"
+
 ##
 ###  WKHTMLTOPDF download links
 ## === Ubuntu Trusty x64 & x32 === (for other distributions please replace these two links,
@@ -343,6 +346,7 @@ sudo update-rc.d $OE_CONFIG defaults
 #--------------------------------------------------
 echo -e "install odoo Modules"
 cd  $OE_HOME/custom
+if [ $OCA = "True" ]; then
   REPOS=( "${REPOS[@]}" "https://github.com/oca/account-analytic.git oca/account-analytic")
   REPOS=( "${REPOS[@]}" "https://github.com/oca/account-budgeting.git oca/account-budgeting")
   REPOS=( "${REPOS[@]}" "https://github.com/oca/account-closing.git oca/account-closing")
@@ -421,7 +425,17 @@ cd  $OE_HOME/custom
   REPOS=( "${REPOS[@]}" "https://github.com/oca/web.git oca/web")
   REPOS=( "${REPOS[@]}" "https://github.com/oca/webkit-tools.git oca/webkit-tools")
   REPOS=( "${REPOS[@]}" "https://github.com/oca/website.git oca/website")
-
+fi
+if [ $SAAS = "True" ]; then
+  REPOS=( "${REPOS[@]}" "https://github.com/it-projects-llc/e-commerce.git it-projects-llc/e-commerce")
+  REPOS=( "${REPOS[@]}" "https://github.com/it-projects-llc/pos-addons.git it-projects-llc/pos-addons")
+  REPOS=( "${REPOS[@]}" "https://github.com/it-projects-llc/access-addons.git it-projects-llc/access-addons")
+  REPOS=( "${REPOS[@]}" "https://github.com/it-projects-llc/website-addons.git it-projects-llc/website-addons")
+  REPOS=( "${REPOS[@]}" "https://github.com/it-projects-llc/misc-addons.git it-projects-llc/misc-addons")
+  REPOS=( "${REPOS[@]}" "https://github.com/it-projects-llc/mail-addons.git it-projects-llc/mail-addons")
+  REPOS=( "${REPOS[@]}" "https://github.com/it-projects-llc/odoo-saas-tools.git it-projects-llc/odoo-saas-tools")
+  REPOS=( "${REPOS[@]}" "https://github.com/it-projects-llc/odoo-telegram.git it-projects-llc/odoo-telegram")
+fi
 
      
           if [[ "${REPOS}" != "" ]]
