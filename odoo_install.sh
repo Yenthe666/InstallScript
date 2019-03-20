@@ -388,6 +388,7 @@ cd  $OE_HOME/custom
       ADDONS_PATH=`ls -d1 /odoo/custom/*/* | tr '\n' ','`
       ADDONS_PATH=`echo /odoo/odoo-server/addons,/odoo/custom/addons,$ADDONS_PATH | sed "s,//,/,g" | sed "s,/,\\\\\/,g" | sed "s,.$,,g" `
      sed -ibak "s/addons_path.*/addons_path = $ADDONS_PATH/" /etc/odoo-server.conf
+ pip3 install PyXB
  pip3 install MySQL-python
  pip3 install -r oca/account-analytic/requirements.txt
  pip3 install -r oca/account-budgeting/requirements.txt
