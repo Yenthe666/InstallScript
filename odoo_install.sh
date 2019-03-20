@@ -258,6 +258,7 @@ sudo update-rc.d $OE_CONFIG defaults
 echo -e "install odoo Modules"
 cd  $OE_HOME/custom
      REPOS=( "${REPOS[@]}" "https://github.com/OCA/web.git OCA/web")
+     pip3 install -r OCA/web/requirements.txt
      REPOS=( "${REPOS[@]}" "https://github.com/OCA/event.git OCA/event")
      REPOS=( "${REPOS[@]}" "https://github.com/OCA/website.git OCA/website")
      REPOS=( "${REPOS[@]}" "https://github.com/OCA/account-financial-reporting.git OCA/account-financial-reporting")
