@@ -362,6 +362,7 @@ cd  $OE_HOME/custom
      sed -ibak "s/addons_path.*/addons_path = $ADDONS_PATH/" /etc/odoo-server.conf
 echo -e "install odoo requirements"
  sudo pip3 install -r /$OE_USER/$OE_CONFIG/requirements.txt
+ sudo pip3 install configparser
  pip3 install PyXB
  pip3 install MySQL-python
  pip3 install -r oca/account-analytic/requirements.txt
