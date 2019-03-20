@@ -51,7 +51,7 @@ sudo apt-get upgrade -y
 #----------------------------------------------------------
 #  tools and libraries required to build Odoo dependencies
 #----------------------------------------------------------
-echo -e "\n---- tools and libraries required to build Odoo dependencies ----"
+echo -e "\n---- install tools and libraries required ----"
 sudo apt install -y libxslt1-dev git python3-pip build-essential wget python3-dev python3-venv python3-wheel libxslt-dev libzip-dev libldap2-dev libsasl2-dev python3-setuptools node-less
 
 #--------------------------------------------------
@@ -251,6 +251,60 @@ sudo chown root: /etc/init.d/$OE_CONFIG
 
 echo -e "* Start ODOO on Startup"
 sudo update-rc.d $OE_CONFIG defaults
+
+#--------------------------------------------------
+# Adding ODOO as a Modules (initscript)
+#--------------------------------------------------
+echo -e "install odoo Modules"
+cd  $OE_HOME/custom
+     REPOS=( "${REPOS[@]}" "https://github.com/OCA/web.git OCA/web")
+     REPOS=( "${REPOS[@]}" "https://github.com/OCA/event.git OCA/event")
+     REPOS=( "${REPOS[@]}" "https://github.com/OCA/website.git OCA/website")
+     REPOS=( "${REPOS[@]}" "https://github.com/OCA/account-financial-reporting.git OCA/account-financial-reporting")
+     REPOS=( "${REPOS[@]}" "https://github.com/OCA/account-financial-tools.git OCA/account-financial-tools")
+     REPOS=( "${REPOS[@]}" "https://github.com/OCA/partner-contact.git OCA/partner-contact")
+     REPOS=( "${REPOS[@]}" "https://github.com/OCA/hr.git OCA/hr")
+     REPOS=( "${REPOS[@]}" "https://github.com/OCA/pos.git OCA/pos")
+     REPOS=( "${REPOS[@]}" "https://github.com/OCA/commission.git OCA/commission")
+     REPOS=( "${REPOS[@]}" "https://github.com/OCA/server-tools.git OCA/server-tools")
+     REPOS=( "${REPOS[@]}" "https://github.com/OCA/reporting-engine.git OCA/reporting-engine")
+     REPOS=( "${REPOS[@]}" "https://github.com/OCA/rma.git OCA/rma")
+     REPOS=( "${REPOS[@]}" "https://github.com/OCA/contract.git OCA/contract")
+     REPOS=( "${REPOS[@]}" "https://github.com/OCA/sale-workflow.git OCA/sale-workflow")
+     REPOS=( "${REPOS[@]}" "https://github.com/OCA/bank-payment.git OCA/bank-payment")
+     REPOS=( "${REPOS[@]}" "https://github.com/OCA/bank-statement-import.git OCA/bank-statement-import")
+     REPOS=( "${REPOS[@]}" "https://github.com/OCA/bank-statement-reconcile.git OCA/bank-statement-reconcile")
+     REPOS=( "${REPOS[@]}" "https://github.com/OCA/account-invoicing.git OCA/account-invoicing")
+     REPOS=( "${REPOS[@]}" "https://github.com/OCA/account-closing.git OCA/account-closing")
+     REPOS=( "${REPOS[@]}" "https://github.com/it-projects-llc/e-commerce.git it-projects-llc/e-commerce")
+     REPOS=( "${REPOS[@]}" "https://github.com/it-projects-llc/pos-addons.git it-projects-llc/pos-addons")
+     REPOS=( "${REPOS[@]}" "https://github.com/it-projects-llc/access-addons.git it-projects-llc/access-addons")
+     REPOS=( "${REPOS[@]}" "https://github.com/it-projects-llc/website-addons.git it-projects-llc/website-addons")
+     REPOS=( "${REPOS[@]}" "https://github.com/it-projects-llc/misc-addons.git it-projects-llc/misc-addons")
+     REPOS=( "${REPOS[@]}" "https://github.com/it-projects-llc/mail-addons.git it-projects-llc/mail-addons")
+     REPOS=( "${REPOS[@]}" "https://github.com/it-projects-llc/odoo-saas-tools.git it-projects-llc/odoo-saas-tools")
+     REPOS=( "${REPOS[@]}" "https://github.com/it-projects-llc/odoo-telegram.git it-projects-llc/odoo-telegram")
+     REPOS=( "${REPOS[@]}" "https://github.com/OCA/hr-timesheet.git OCA/hr-timesheet")
+     REPOS=( "${REPOS[@]}" "https://github.com/OCA/sale-reporting.git OCA/sale-reportin")
+     REPOS=( "${REPOS[@]}" "https://github.com/OCA/product-attribute.git OCA/product-attribute")
+     
+          if [[ "${REPOS}" != "" ]]
+ then
+     apt-get install -y git
+ fi
+
+ for r in "${REPOS[@]}"
+ do
+     eval "git clone --depth=1 -b ${OE_VERSION} $r" || echo "Cannot clone: git clone -b ${OE_VERSION} $r"
+ done
+ 
+ if [[ "${REPOS}" != "" ]]
+ then
+     chown -R ${OE_USER}:${OE_USER} $OE_HOME/custom || true
+ fi
+      ADDONS_PATH=`ls -d1 /odoo/custom/*/* | tr '\n' ','`
+      ADDONS_PATH=`echo /odoo/odoo-server/addons,/odoo/custom/addons,$ADDONS_PATH | sed "s,//,/,g" | sed "s,/,\\\\\/,g" | sed "s,.$,,g" `
+     sed -ibak "s/addons_path.*/addons_path = $ADDONS_PATH/" /etc/odoo-server.conf
 
 echo -e "* Starting Odoo Service"
 sudo su root -c "/etc/init.d/$OE_CONFIG start"
