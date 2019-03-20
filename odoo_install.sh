@@ -70,7 +70,6 @@ a2enmod proxy_http
 
 echo -e "\n---- install apache server and config proxy ----"
 sudo touch /etc/apache2/sites-available/$DOMAIN.conf
-sudo touch /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf
 
 echo -e "* Creating apache - domain config file"
 sudo su root -c "printf '<VirtualHost *:80>\n' >> /etc/apache2/sites-available/$DOMAIN.conf"
@@ -95,6 +94,8 @@ sudo su root -c "printf '        </Location>\n' >> /etc/apache2/sites-available/
 sudo su root -c "printf '</VirtualHost>\n' >> /etc/apache2/sites-available/$DOMAIN.conf"
 
 echo -e "* Creating apache - ssl - domain config file"
+sudo touch /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf
+
 sudo su root -c "printf '<IfModule mod_ssl.c>\n' >> /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf"
 sudo su root -c "printf '<VirtualHost *:443>\n' >> /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf"
 sudo su root -c "printf '	ServerName $DOMAIN\n' >> /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf"
@@ -102,7 +103,6 @@ sudo su root -c "printf '	ServerAlias *.$DOMAIN\n' >> /etc/apache2/sites-availab
 sudo su root -c "printf '\n' >> /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf"
 sudo su root -c "printf '	#Header set Access-Control-Allow-Origin "*"\n' >> /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf"
 sudo su root -c "printf '	#Header append Access-Control-Allow-Methods "OPTIONS"\n' >> /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf"
-sudo su root -c "printf '	#Header set Content-Security-Policy "script-src *;"\n' >> /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf"
 sudo su root -c "printf '	ProxyRequests Off\n' >> /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf"
 sudo su root -c "printf '	SSLProxyEngine on\n' >> /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf"
 sudo su root -c "printf '	SSLEngine on\n' >> /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf"
