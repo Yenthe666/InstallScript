@@ -340,7 +340,6 @@ cd  $OE_HOME/custom
   REPOS=( "${REPOS[@]}" "https://github.com/oca/reporting-engine.git oca/reporting-engine")
   REPOS=( "${REPOS[@]}" "https://github.com/oca/report-print-send.git oca/report-print-send")
   REPOS=( "${REPOS[@]}" "https://github.com/oca/rma.git oca/rma")
-  REPOS=( "${REPOS[@]}" "https://github.com/oca/runbot-addons.git oca/runbot-addons")
   REPOS=( "${REPOS[@]}" "https://github.com/oca/sale-financial.git oca/sale-financial")
   REPOS=( "${REPOS[@]}" "https://github.com/oca/sale-reporting.git oca/sale-reporting")
   REPOS=( "${REPOS[@]}" "https://github.com/oca/sale-workflow.git oca/sale-workflow")
@@ -468,7 +467,6 @@ cd  $OE_HOME/custom
  pip3 install -r oca/reporting-engine/requirements.txt
  pip3 install -r oca/report-print-send/requirements.txt
  pip3 install -r oca/rma/requirements.txt
- pip3 install -r oca/runbot-addons/requirements.txt
  pip3 install -r oca/sale-financial/requirements.txt
  pip3 install -r oca/sale-reporting/requirements.txt
  pip3 install -r oca/sale-workflow/requirements.txt
