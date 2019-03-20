@@ -360,6 +360,8 @@ cd  $OE_HOME/custom
       ADDONS_PATH=`ls -d1 /odoo/custom/*/* | tr '\n' ','`
       ADDONS_PATH=`echo /odoo/odoo-server/addons,/odoo/custom/addons,$ADDONS_PATH | sed "s,//,/,g" | sed "s,/,\\\\\/,g" | sed "s,.$,,g" `
      sed -ibak "s/addons_path.*/addons_path = $ADDONS_PATH/" /etc/odoo-server.conf
+echo -e "install odoo requirements"
+ sudo pip3 install -r /$OE_USER/$OE_CONFIG/requirements.txt
  pip3 install PyXB
  pip3 install MySQL-python
  pip3 install -r oca/account-analytic/requirements.txt
@@ -473,8 +475,7 @@ sudo su root -c "/etc/init.d/$OE_CONFIG start"
 #--------------------------------------------------
 # Adding ODOO as a deamon (initscript)
 #--------------------------------------------------
-echo -e "install odoo requirements"
-sudo pip3 install -r /$OE_USER/$OE_CONFIG/requirements.txt
+
 echo "-----------------------------------------------------------"
 echo "Done! The Odoo server is up and running. Specifications:"
 echo "Port: $OE_PORT"
