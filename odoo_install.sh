@@ -257,113 +257,114 @@ sudo update-rc.d $OE_CONFIG defaults
 #--------------------------------------------------
 echo -e "install odoo Modules"
 cd  $OE_HOME/custom
-REPOS=( "${REPOS[@]}" "https://github.com/oca/account-analytic.git oca/account-analytic") pip3 install -r /oca/account-analytic/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/account-budgeting.git oca/account-budgeting") pip3 install -r /oca/account-budgeting/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/account-closing.git oca/account-closing") pip3 install -r /oca/account-closing/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/account-consolidation.git oca/account-consolidation") pip3 install -r /oca/account-consolidation/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/account-financial-reporting.git oca/account-financial-reporting") pip3 install -r /oca/account-financial-reporting/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/account-financial-tools.git oca/account-financial-tools") pip3 install -r /oca/account-financial-tools/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/account-fiscal-rule.git oca/account-fiscal-rule") pip3 install -r /oca/account-fiscal-rule/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/account-invoice-reporting.git oca/account-invoice-reporting") pip3 install -r /oca/account-invoice-reporting/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/account-invoicing.git oca/account-invoicing") pip3 install -r /oca/account-invoicing/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/account-payment.git oca/account-payment") pip3 install -r /oca/account-payment/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/account-reconcile.git oca/account-reconcile") pip3 install -r /oca/account-reconcile/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/bank-payment.git oca/bank-payment") pip3 install -r /oca/bank-payment/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/bank-statement-import.git oca/bank-statement-import") pip3 install -r /oca/bank-statement-import/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/commission.git oca/commission") pip3 install -r /oca/commission/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/community-data-files.git oca/community-data-files") pip3 install -r /oca/community-data-files/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/connector.git oca/connector") pip3 install -r /oca/connector/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/connector-accountedge.git oca/connector-accountedge") pip3 install -r /oca/connector-accountedge/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/connector-cmis.git oca/connector-cmis") pip3 install -r /oca/connector-cmis/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/connector-ecommerce.git oca/connector-ecommerce") pip3 install -r /oca/connector-ecommerce/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/connector-interfaces.git oca/connector-interfaces") pip3 install -r /oca/connector-interfaces/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/connector-lims.git oca/connector-lims") pip3 install -r /oca/connector-lims/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/connector-magento.git oca/connector-magento") pip3 install -r /oca/connector-magento/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/connector-prestashop.git oca/connector-prestashop") pip3 install -r /oca/connector-prestashop/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/connector-redmine.git oca/connector-redmine") pip3 install -r /oca/connector-redmine/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/connector-sage.git oca/connector-sage") pip3 install -r /oca/connector-sage/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/connector-salesforce.git oca/connector-salesforce") pip3 install -r /oca/connector-salesforce/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/connector-telephony.git oca/connector-telephony") pip3 install -r /oca/connector-telephony/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/contract.git oca/contract") pip3 install -r /oca/contract/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/credit-control.git oca/credit-control") pip3 install -r /oca/credit-control/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/crm.git oca/crm") pip3 install -r /oca/crm/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/currency.git oca/currency") pip3 install -r /oca/currency/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/data-protection.git oca/data-protection") pip3 install -r /oca/data-protection/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/ddmrp.git oca/ddmrp") pip3 install -r /oca/ddmrp/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/delivery-carrier.git oca/delivery-carrier") pip3 install -r /oca/delivery-carrier/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/e-commerce.git oca/e-commerce") pip3 install -r /oca/e-commerce/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/edi.git oca/edi") pip3 install -r /oca/edi/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/event.git oca/event") pip3 install -r /oca/event/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/field-service.git oca/field-service") pip3 install -r /oca/field-service/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/geospatial.git oca/geospatial") pip3 install -r /oca/geospatial/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/hr.git oca/hr") pip3 install -r /oca/hr/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/hr-timesheet.git oca/hr-timesheet") pip3 install -r /oca/hr-timesheet/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/iot.git oca/iot") pip3 install -r /oca/iot/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/knowledge.git oca/knowledge") pip3 install -r /oca/knowledge/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/l10n-argentina.git oca/l10n-argentina") pip3 install -r /oca/l10n-argentina/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/l10n-belgium.git oca/l10n-belgium") pip3 install -r /oca/l10n-belgium/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/l10n-brazil.git oca/l10n-brazil") pip3 install -r /oca/l10n-brazil/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/l10n-canada.git oca/l10n-canada") pip3 install -r /oca/l10n-canada/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/l10n-colombia.git oca/l10n-colombia") pip3 install -r /oca/l10n-colombia/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/l10n-costa-rica.git oca/l10n-costa-rica") pip3 install -r /oca/l10n-costa-rica/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/l10n-finland.git oca/l10n-finland") pip3 install -r /oca/l10n-finland/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/l10n-france.git oca/l10n-france") pip3 install -r /oca/l10n-france/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/l10n-germany.git oca/l10n-germany") pip3 install -r /oca/l10n-germany/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/l10n-italy.git oca/l10n-italy") pip3 install -r /oca/l10n-italy/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/l10n-luxemburg.git oca/l10n-luxemburg") pip3 install -r /oca/l10n-luxemburg/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/l10n-mexico.git oca/l10n-mexico") pip3 install -r /oca/l10n-mexico/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/l10n-netherlands.git oca/l10n-netherlands") pip3 install -r /oca/l10n-netherlands/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/l10n-spain.git oca/l10n-spain") pip3 install -r /oca/l10n-spain/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/l10n-switzerland.git oca/l10n-switzerland") pip3 install -r /oca/l10n-switzerland/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/l10n-venezuela.git oca/l10n-venezuela") pip3 install -r /oca/l10n-venezuela/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/management-system.git oca/management-system") pip3 install -r /oca/management-system/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/manufacture.git oca/manufacture") pip3 install -r /oca/manufacture/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/manufacture-reporting.git oca/manufacture-reporting") pip3 install -r /oca/manufacture-reporting/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/margin-analysis.git oca/margin-analysis") pip3 install -r /oca/margin-analysis/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/mis-builder.git oca/mis-builder") pip3 install -r /oca/mis-builder/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/multi-company.git oca/multi-company") pip3 install -r /oca/multi-company/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/node_modules.git oca/node_modules") pip3 install -r /oca/node_modules/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/operating-unit.git oca/operating-unit") pip3 install -r /oca/operating-unit/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/partner-contact.git oca/partner-contact") pip3 install -r /oca/partner-contact/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/pos.git oca/pos") pip3 install -r /oca/pos/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/product-attribute.git oca/product-attribute") pip3 install -r /oca/product-attribute/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/product-kitting.git oca/product-kitting") pip3 install -r /oca/product-kitting/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/product-variant.git oca/product-variant") pip3 install -r /oca/product-variant/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/project.git oca/project") pip3 install -r /oca/project/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/project-reporting.git oca/project-reporting") pip3 install -r /oca/project-reporting/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/purchase-reporting.git oca/purchase-reporting") pip3 install -r /oca/purchase-reporting/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/purchase-workflow.git oca/purchase-workflow") pip3 install -r /oca/purchase-workflow/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/queue.git oca/queue") pip3 install -r /oca/queue/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/reporting-engine.git oca/reporting-engine") pip3 install -r /oca/reporting-engine/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/report-print-send.git oca/report-print-send") pip3 install -r /oca/report-print-send/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/rma.git oca/rma") pip3 install -r /oca/rma/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/runbot-addons.git oca/runbot-addons") pip3 install -r /oca/runbot-addons/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/sale-financial.git oca/sale-financial") pip3 install -r /oca/sale-financial/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/sale-reporting.git oca/sale-reporting") pip3 install -r /oca/sale-reporting/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/sale-workflow.git oca/sale-workflow") pip3 install -r /oca/sale-workflow/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/server-auth.git oca/server-auth") pip3 install -r /oca/server-auth/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/server-backend.git oca/server-backend") pip3 install -r /oca/server-backend/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/server-brand.git oca/server-brand") pip3 install -r /oca/server-brand/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/server-env.git oca/server-env") pip3 install -r /oca/server-env/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/server-tools.git oca/server-tools") pip3 install -r /oca/server-tools/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/server-ux.git oca/server-ux") pip3 install -r /oca/server-ux/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/social.git oca/social") pip3 install -r /oca/social/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/stock-logistics-barcode.git oca/stock-logistics-barcode") pip3 install -r /oca/stock-logistics-barcode/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/stock-logistics-reporting.git oca/stock-logistics-reporting") pip3 install -r /oca/stock-logistics-reporting/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/stock-logistics-tracking.git oca/stock-logistics-tracking") pip3 install -r /oca/stock-logistics-tracking/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/stock-logistics-transport.git oca/stock-logistics-transport") pip3 install -r /oca/stock-logistics-transport/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/stock-logistics-warehouse.git oca/stock-logistics-warehouse") pip3 install -r /oca/stock-logistics-warehouse/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/stock-logistics-workflow.git oca/stock-logistics-workflow") pip3 install -r /oca/stock-logistics-workflow/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/vertical-community.git oca/vertical-community") pip3 install -r /oca/vertical-community/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/vertical-construction.git oca/vertical-construction") pip3 install -r /oca/vertical-construction/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/vertical-edition.git oca/vertical-edition") pip3 install -r /oca/vertical-edition/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/vertical-hotel.git oca/vertical-hotel") pip3 install -r /oca/vertical-hotel/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/vertical-isp.git oca/vertical-isp") pip3 install -r /oca/vertical-isp/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/vertical-ngo.git oca/vertical-ngo") pip3 install -r /oca/vertical-ngo/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/vertical-travel.git oca/vertical-travel") pip3 install -r /oca/vertical-travel/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/web.git oca/web") pip3 install -r /oca/web/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/webkit-tools.git oca/webkit-tools") pip3 install -r /oca/webkit-tools/requirements.txt
-REPOS=( "${REPOS[@]}" "https://github.com/oca/website.git oca/website") pip3 install -r /oca/website/requirements.txt
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/account-analytic.git oca/account-analytic")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/account-budgeting.git oca/account-budgeting")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/account-closing.git oca/account-closing")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/account-consolidation.git oca/account-consolidation")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/account-financial-reporting.git oca/account-financial-reporting")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/account-financial-tools.git oca/account-financial-tools")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/account-fiscal-rule.git oca/account-fiscal-rule")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/account-invoice-reporting.git oca/account-invoice-reporting")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/account-invoicing.git oca/account-invoicing")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/account-payment.git oca/account-payment")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/account-reconcile.git oca/account-reconcile")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/bank-payment.git oca/bank-payment")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/bank-statement-import.git oca/bank-statement-import")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/commission.git oca/commission")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/community-data-files.git oca/community-data-files")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/connector.git oca/connector")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/connector-accountedge.git oca/connector-accountedge")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/connector-cmis.git oca/connector-cmis")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/connector-ecommerce.git oca/connector-ecommerce")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/connector-interfaces.git oca/connector-interfaces")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/connector-lims.git oca/connector-lims")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/connector-magento.git oca/connector-magento")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/connector-prestashop.git oca/connector-prestashop")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/connector-redmine.git oca/connector-redmine")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/connector-sage.git oca/connector-sage")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/connector-salesforce.git oca/connector-salesforce")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/connector-telephony.git oca/connector-telephony")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/contract.git oca/contract")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/credit-control.git oca/credit-control")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/crm.git oca/crm")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/currency.git oca/currency")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/data-protection.git oca/data-protection")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/ddmrp.git oca/ddmrp")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/delivery-carrier.git oca/delivery-carrier")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/e-commerce.git oca/e-commerce")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/edi.git oca/edi")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/event.git oca/event")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/field-service.git oca/field-service")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/geospatial.git oca/geospatial")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/hr.git oca/hr")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/hr-timesheet.git oca/hr-timesheet")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/iot.git oca/iot")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/knowledge.git oca/knowledge")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/l10n-argentina.git oca/l10n-argentina")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/l10n-belgium.git oca/l10n-belgium")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/l10n-brazil.git oca/l10n-brazil")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/l10n-canada.git oca/l10n-canada")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/l10n-colombia.git oca/l10n-colombia")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/l10n-costa-rica.git oca/l10n-costa-rica")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/l10n-finland.git oca/l10n-finland")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/l10n-france.git oca/l10n-france")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/l10n-germany.git oca/l10n-germany")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/l10n-italy.git oca/l10n-italy")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/l10n-luxemburg.git oca/l10n-luxemburg")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/l10n-mexico.git oca/l10n-mexico")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/l10n-netherlands.git oca/l10n-netherlands")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/l10n-spain.git oca/l10n-spain")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/l10n-switzerland.git oca/l10n-switzerland")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/l10n-venezuela.git oca/l10n-venezuela")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/management-system.git oca/management-system")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/manufacture.git oca/manufacture")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/manufacture-reporting.git oca/manufacture-reporting")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/margin-analysis.git oca/margin-analysis")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/mis-builder.git oca/mis-builder")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/multi-company.git oca/multi-company")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/node_modules.git oca/node_modules")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/operating-unit.git oca/operating-unit")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/partner-contact.git oca/partner-contact")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/pos.git oca/pos")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/product-attribute.git oca/product-attribute")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/product-kitting.git oca/product-kitting")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/product-variant.git oca/product-variant")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/project.git oca/project")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/project-reporting.git oca/project-reporting")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/purchase-reporting.git oca/purchase-reporting")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/purchase-workflow.git oca/purchase-workflow")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/queue.git oca/queue")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/reporting-engine.git oca/reporting-engine")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/report-print-send.git oca/report-print-send")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/rma.git oca/rma")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/runbot-addons.git oca/runbot-addons")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/sale-financial.git oca/sale-financial")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/sale-reporting.git oca/sale-reporting")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/sale-workflow.git oca/sale-workflow")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/server-auth.git oca/server-auth")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/server-backend.git oca/server-backend")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/server-brand.git oca/server-brand")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/server-env.git oca/server-env")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/server-tools.git oca/server-tools")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/server-ux.git oca/server-ux")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/social.git oca/social")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/stock-logistics-barcode.git oca/stock-logistics-barcode")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/stock-logistics-reporting.git oca/stock-logistics-reporting")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/stock-logistics-tracking.git oca/stock-logistics-tracking")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/stock-logistics-transport.git oca/stock-logistics-transport")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/stock-logistics-warehouse.git oca/stock-logistics-warehouse")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/stock-logistics-workflow.git oca/stock-logistics-workflow")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/vertical-community.git oca/vertical-community")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/vertical-construction.git oca/vertical-construction")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/vertical-edition.git oca/vertical-edition")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/vertical-hotel.git oca/vertical-hotel")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/vertical-isp.git oca/vertical-isp")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/vertical-ngo.git oca/vertical-ngo")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/vertical-travel.git oca/vertical-travel")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/web.git oca/web")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/webkit-tools.git oca/webkit-tools")
+  REPOS=( "${REPOS[@]}" "https://github.com/oca/website.git oca/website")
+
 
      
           if [[ "${REPOS}" != "" ]]
@@ -383,6 +384,113 @@ REPOS=( "${REPOS[@]}" "https://github.com/oca/website.git oca/website") pip3 ins
       ADDONS_PATH=`ls -d1 /odoo/custom/*/* | tr '\n' ','`
       ADDONS_PATH=`echo /odoo/odoo-server/addons,/odoo/custom/addons,$ADDONS_PATH | sed "s,//,/,g" | sed "s,/,\\\\\/,g" | sed "s,.$,,g" `
      sed -ibak "s/addons_path.*/addons_path = $ADDONS_PATH/" /etc/odoo-server.conf
+ pip3 install -r oca/account-analytic/requirements.txt
+ pip3 install -r oca/account-budgeting/requirements.txt
+ pip3 install -r oca/account-closing/requirements.txt
+ pip3 install -r oca/account-consolidation/requirements.txt
+ pip3 install -r oca/account-financial-reporting/requirements.txt
+ pip3 install -r oca/account-financial-tools/requirements.txt
+ pip3 install -r oca/account-fiscal-rule/requirements.txt
+ pip3 install -r oca/account-invoice-reporting/requirements.txt
+ pip3 install -r oca/account-invoicing/requirements.txt
+ pip3 install -r oca/account-payment/requirements.txt
+ pip3 install -r oca/account-reconcile/requirements.txt
+ pip3 install -r oca/bank-payment/requirements.txt
+ pip3 install -r oca/bank-statement-import/requirements.txt
+ pip3 install -r oca/commission/requirements.txt
+ pip3 install -r oca/community-data-files/requirements.txt
+ pip3 install -r oca/connector/requirements.txt
+ pip3 install -r oca/connector-accountedge/requirements.txt
+ pip3 install -r oca/connector-cmis/requirements.txt
+ pip3 install -r oca/connector-ecommerce/requirements.txt
+ pip3 install -r oca/connector-interfaces/requirements.txt
+ pip3 install -r oca/connector-lims/requirements.txt
+ pip3 install -r oca/connector-magento/requirements.txt
+ pip3 install -r oca/connector-prestashop/requirements.txt
+ pip3 install -r oca/connector-redmine/requirements.txt
+ pip3 install -r oca/connector-sage/requirements.txt
+ pip3 install -r oca/connector-salesforce/requirements.txt
+ pip3 install -r oca/connector-telephony/requirements.txt
+ pip3 install -r oca/contract/requirements.txt
+ pip3 install -r oca/credit-control/requirements.txt
+ pip3 install -r oca/crm/requirements.txt
+ pip3 install -r oca/currency/requirements.txt
+ pip3 install -r oca/data-protection/requirements.txt
+ pip3 install -r oca/ddmrp/requirements.txt
+ pip3 install -r oca/delivery-carrier/requirements.txt
+ pip3 install -r oca/e-commerce/requirements.txt
+ pip3 install -r oca/edi/requirements.txt
+ pip3 install -r oca/event/requirements.txt
+ pip3 install -r oca/field-service/requirements.txt
+ pip3 install -r oca/geospatial/requirements.txt
+ pip3 install -r oca/hr/requirements.txt
+ pip3 install -r oca/hr-timesheet/requirements.txt
+ pip3 install -r oca/iot/requirements.txt
+ pip3 install -r oca/knowledge/requirements.txt
+ pip3 install -r oca/l10n-argentina/requirements.txt
+ pip3 install -r oca/l10n-belgium/requirements.txt
+ pip3 install -r oca/l10n-brazil/requirements.txt
+ pip3 install -r oca/l10n-canada/requirements.txt
+ pip3 install -r oca/l10n-colombia/requirements.txt
+ pip3 install -r oca/l10n-costa-rica/requirements.txt
+ pip3 install -r oca/l10n-finland/requirements.txt
+ pip3 install -r oca/l10n-france/requirements.txt
+ pip3 install -r oca/l10n-germany/requirements.txt
+ pip3 install -r oca/l10n-italy/requirements.txt
+ pip3 install -r oca/l10n-luxemburg/requirements.txt
+ pip3 install -r oca/l10n-mexico/requirements.txt
+ pip3 install -r oca/l10n-netherlands/requirements.txt
+ pip3 install -r oca/l10n-spain/requirements.txt
+ pip3 install -r oca/l10n-switzerland/requirements.txt
+ pip3 install -r oca/l10n-venezuela/requirements.txt
+ pip3 install -r oca/management-system/requirements.txt
+ pip3 install -r oca/manufacture/requirements.txt
+ pip3 install -r oca/manufacture-reporting/requirements.txt
+ pip3 install -r oca/margin-analysis/requirements.txt
+ pip3 install -r oca/mis-builder/requirements.txt
+ pip3 install -r oca/multi-company/requirements.txt
+ pip3 install -r oca/node_modules/requirements.txt
+ pip3 install -r oca/operating-unit/requirements.txt
+ pip3 install -r oca/partner-contact/requirements.txt
+ pip3 install -r oca/pos/requirements.txt
+ pip3 install -r oca/product-attribute/requirements.txt
+ pip3 install -r oca/product-kitting/requirements.txt
+ pip3 install -r oca/product-variant/requirements.txt
+ pip3 install -r oca/project/requirements.txt
+ pip3 install -r oca/project-reporting/requirements.txt
+ pip3 install -r oca/purchase-reporting/requirements.txt
+ pip3 install -r oca/purchase-workflow/requirements.txt
+ pip3 install -r oca/queue/requirements.txt
+ pip3 install -r oca/reporting-engine/requirements.txt
+ pip3 install -r oca/report-print-send/requirements.txt
+ pip3 install -r oca/rma/requirements.txt
+ pip3 install -r oca/runbot-addons/requirements.txt
+ pip3 install -r oca/sale-financial/requirements.txt
+ pip3 install -r oca/sale-reporting/requirements.txt
+ pip3 install -r oca/sale-workflow/requirements.txt
+ pip3 install -r oca/server-auth/requirements.txt
+ pip3 install -r oca/server-backend/requirements.txt
+ pip3 install -r oca/server-brand/requirements.txt
+ pip3 install -r oca/server-env/requirements.txt
+ pip3 install -r oca/server-tools/requirements.txt
+ pip3 install -r oca/server-ux/requirements.txt
+ pip3 install -r oca/social/requirements.txt
+ pip3 install -r oca/stock-logistics-barcode/requirements.txt
+ pip3 install -r oca/stock-logistics-reporting/requirements.txt
+ pip3 install -r oca/stock-logistics-tracking/requirements.txt
+ pip3 install -r oca/stock-logistics-transport/requirements.txt
+ pip3 install -r oca/stock-logistics-warehouse/requirements.txt
+ pip3 install -r oca/stock-logistics-workflow/requirements.txt
+ pip3 install -r oca/vertical-community/requirements.txt
+ pip3 install -r oca/vertical-construction/requirements.txt
+ pip3 install -r oca/vertical-edition/requirements.txt
+ pip3 install -r oca/vertical-hotel/requirements.txt
+ pip3 install -r oca/vertical-isp/requirements.txt
+ pip3 install -r oca/vertical-ngo/requirements.txt
+ pip3 install -r oca/vertical-travel/requirements.txt
+ pip3 install -r oca/web/requirements.txt
+ pip3 install -r oca/webkit-tools/requirements.txt
+ pip3 install -r oca/website/requirements.txt
 
 echo -e "* Starting Odoo Service"
 sudo su root -c "/etc/init.d/$OE_CONFIG start"
