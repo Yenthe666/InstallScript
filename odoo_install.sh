@@ -313,7 +313,6 @@ cd  $OE_HOME/custom
   REPOS=( "${REPOS[@]}" "https://github.com/oca/l10n-finland.git oca/l10n-finland")
   REPOS=( "${REPOS[@]}" "https://github.com/oca/l10n-france.git oca/l10n-france")
   REPOS=( "${REPOS[@]}" "https://github.com/oca/l10n-germany.git oca/l10n-germany")
-  REPOS=( "${REPOS[@]}" "https://github.com/oca/l10n-italy.git oca/l10n-italy")
   REPOS=( "${REPOS[@]}" "https://github.com/oca/l10n-luxemburg.git oca/l10n-luxemburg")
   REPOS=( "${REPOS[@]}" "https://github.com/oca/l10n-mexico.git oca/l10n-mexico")
   REPOS=( "${REPOS[@]}" "https://github.com/oca/l10n-netherlands.git oca/l10n-netherlands")
@@ -442,7 +441,6 @@ cd  $OE_HOME/custom
  pip3 install -r oca/l10n-finland/requirements.txt
  pip3 install -r oca/l10n-france/requirements.txt
  pip3 install -r oca/l10n-germany/requirements.txt
- pip3 install -r oca/l10n-italy/requirements.txt
  pip3 install -r oca/l10n-luxemburg/requirements.txt
  pip3 install -r oca/l10n-mexico/requirements.txt
  pip3 install -r oca/l10n-netherlands/requirements.txt
