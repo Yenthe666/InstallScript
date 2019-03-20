@@ -70,8 +70,9 @@ a2enmod proxy_http
 
 echo -e "\n---- install apache server and config proxy ----"
 sudo touch /etc/apache2/sites-available/$DOMAIN.conf
+sudo touch /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf
 
-echo -e "* Creating server config file"
+echo -e "* Creating apache - domain config file"
 sudo su root -c "printf '<VirtualHost *:80>\n' >> /etc/apache2/sites-available/$DOMAIN.conf"
 sudo su root -c "printf '        ServerName codefish.com.eg\n' >> /etc/apache2/sites-available/$DOMAIN.conf"
 sudo su root -c "printf '        ServerAlias *.codefish.com.eg\n' >> /etc/apache2/sites-available/$DOMAIN.conf"
@@ -92,11 +93,50 @@ sudo su root -c "printf '                Order allow,deny\n' >> /etc/apache2/sit
 sudo su root -c "printf '                Allow from all]\n' >> /etc/apache2/sites-available/$DOMAIN.conf"
 sudo su root -c "printf '        </Location>\n' >> /etc/apache2/sites-available/$DOMAIN.conf"
 sudo su root -c "printf '</VirtualHost>\n' >> /etc/apache2/sites-available/$DOMAIN.conf"
-sudo chmod 640 /etc/apache2/sites-available/$DOMAIN.conf
+
+echo -e "* Creating apache - ssl - domain config file"
+sudo su root -c "printf '<IfModule mod_ssl.c>\n' >> /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf"
+sudo su root -c "printf '<VirtualHost *:443>\n' >> /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf"
+sudo su root -c "printf '	ServerName $DOMAIN\n' >> /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf"
+sudo su root -c "printf '	ServerAlias *.$DOMAIN\n' >> /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf"
+sudo su root -c "printf '\n' >> /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf"
+sudo su root -c "printf '	#Header set Access-Control-Allow-Origin "*"\n' >> /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf"
+sudo su root -c "printf '	#Header append Access-Control-Allow-Methods "OPTIONS"\n' >> /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf"
+sudo su root -c "printf '	#Header set Content-Security-Policy "script-src *;"\n' >> /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf"
+sudo su root -c "printf '	ProxyRequests Off\n' >> /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf"
+sudo su root -c "printf '	SSLProxyEngine on\n' >> /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf"
+sudo su root -c "printf '	SSLEngine on\n' >> /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf"
+sudo su root -c "printf '\n' >> /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf"
+sudo su root -c "printf '	<Proxy *>\n' >> /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf"
+sudo su root -c "printf '		Order deny,allow\n' >> /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf"
+sudo su root -c "printf '		Allow from all\n' >> /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf"
+sudo su root -c "printf '		</Proxy>\n' >> /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf"
+sudo su root -c "printf '	#RequestHeader set Access-Control-Allow-Origin "*"\n' >> /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf"
+sudo su root -c "printf '	#RequestHeader append Access-Control-Allow-Methods "OPTIONS"\n' >> /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf"
+sudo su root -c "printf '\n' >> /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf"
+sudo su root -c "printf '	ProxyPass / http://localhost:8069/\n' >> /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf"
+sudo su root -c "printf '	ProxyPassReverse / http://localhost:8069/\n' >> /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf"
+sudo su root -c "printf '	ProxyPass /longpolling/ http://localhost:8072/\n' >> /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf"
+sudo su root -c "printf '	ProxyPassReverse /longpolling/ http://localhost:8072/\n' >> /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf"
+sudo su root -c "printf '\n' >> /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf"
+sudo su root -c "printf '	<Location />\n' >> /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf"
+sudo su root -c "printf '		Order allow,deny\n' >> /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf"
+sudo su root -c "printf '		Allow from all\n' >> /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf"
+sudo su root -c "printf '	</Location>\n' >> /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf"
+sudo su root -c "printf '\n' >> /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf"
+sudo su root -c "printf '	Include /etc/letsencrypt/options-ssl-apache.conf\n' >> /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf"
+sudo su root -c "printf '	RequestHeader set "X-Forwarded-Proto""https"\n' >> /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf"
+sudo su root -c "printf '\n' >> /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf"
+sudo su root -c "printf '	SSLCertificateFile /etc/letsencrypt/live/$DOMAIN/fullchain.pem\n' >> /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf"
+sudo su root -c "printf '	SSLCertificateKeyFile /etc/letsencrypt/live/$DOMAIN/privkey.pem\n' >> /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf"
+sudo su root -c "printf '	Include /etc/letsencrypt/options-ssl-apache.conf\n' >> /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf"
+sudo su root -c "printf '</VirtualHost>\n' >> /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf"
+sudo su root -c "printf '</IfModule>\n' >> /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf"
 
 ln -s /etc/apache2/sites-available/$DOMAIN.conf /etc/apache2/sites-enabled/$DOMAIN.conf
+ln -s /etc/apache2/sites-available/000-$DOMAIN-le-ssl.conf /etc/apache2/sites-enabled/000-$DOMAIN-le-ssl.conf
 sudo systemctl restart apache2
-
+sudo systemctl status apache2
 
 
 #--------------------------------------------------
