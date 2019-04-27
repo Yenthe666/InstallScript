@@ -64,7 +64,7 @@ echo -e "\n--- Installing Python 3 + pip3 --"
 sudo apt-get install python3 python3-pip -y
 
 echo -e "\n---- Install tool packages ----"
-sudo apt-get install wget git bzr python-pip gdebi-core -y
+sudo apt-get install wget git bzr python-pip gdebi-core libpcap-dev libpq-dev -y
 
 echo -e "\n---- Install python packages ----"
 sudo apt-get install libxml2-dev libxslt1-dev zlib1g-dev -y
