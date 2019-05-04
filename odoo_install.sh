@@ -36,8 +36,8 @@ OE_CONFIG="${OE_USER}-server"
 ## === Ubuntu Trusty x64 & x32 === (for other distributions please replace these two links,
 ## in order to have correct version of wkhtmltox installed, for a danger note refer to 
 ## https://www.odoo.com/documentation/8.0/setup/install.html#deb ):
-WKHTMLTOX_X64=https://downloads.wkhtmltopdf.org/0.12/0.12.1/wkhtmltox-0.12.1_linux-trusty-amd64.deb
-WKHTMLTOX_X32=https://downloads.wkhtmltopdf.org/0.12/0.12.1/wkhtmltox-0.12.1_linux-trusty-i386.deb
+WKHTMLTOX_X64=https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.trusty_amd64.deb
+WKHTMLTOX_X32=https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.trusty_i386.deb
 
 #--------------------------------------------------
 # Update Server
@@ -45,6 +45,8 @@ WKHTMLTOX_X32=https://downloads.wkhtmltopdf.org/0.12/0.12.1/wkhtmltox-0.12.1_lin
 echo -e "\n---- Update Server ----"
 # universe package is for Ubuntu 18.x
 sudo add-apt-repository universe
+# libpng12-0 dependency for wkhtmltopdf
+sudo add-apt-repository "deb http://mirrors.kernel.org/ubuntu/ xenial main"
 sudo apt-get update
 sudo apt-get upgrade -y
 
@@ -61,25 +63,10 @@ sudo su - postgres -c "createuser -s $OE_USER" 2> /dev/null || true
 # Install Dependencies
 #--------------------------------------------------
 echo -e "\n--- Installing Python 3 + pip3 --"
-sudo apt-get install python3 python3-pip -y
+sudo apt-get install git python3 python3-pip build-essential wget python3-dev python3-venv python3-wheel libxslt-dev libzip-dev libldap2-dev libsasl2-dev python3-setuptools node-less libpng12-0 gdebi -y
 
-echo -e "\n---- Install tool packages ----"
-sudo apt-get install wget git bzr python-pip gdebi-core libpcap-dev libpq-dev -y
-
-echo -e "\n---- Install python packages ----"
-sudo apt-get install libxml2-dev libxslt1-dev zlib1g-dev -y
-sudo apt-get install libsasl2-dev libldap2-dev libssl-dev -y
-sudo apt-get install python-pypdf2 python-dateutil python-feedparser python-ldap python-libxslt1 python-lxml python-mako python-openid python-psycopg2 python-pybabel python-pychart python-pydot python-pyparsing python-reportlab python-simplejson python-tz python-vatnumber python-vobject python-webdav python-werkzeug python-xlwt python-yaml python-zsi python-docutils python-psutil python-mock python-unittest2 python-jinja2 python-pypdf python-decorator python-requests python-passlib python-pil -y
-sudo pip3 install pypdf2 Babel passlib Werkzeug decorator python-dateutil pyyaml psycopg2 psutil html2text docutils lxml pillow reportlab ninja2 requests gdata XlsxWriter vobject python-openid pyparsing pydot mock mako Jinja2 ebaysdk feedparser xlwt psycogreen suds-jurko pytz pyusb greenlet xlrd chardet libsass
-
-echo -e "\n---- Install python libraries ----"
-# This is for compatibility with Ubuntu 16.04. Will work on 14.04, 15.04 and 16.04
-sudo apt-get install python3-suds
-
-echo -e "\n--- Install other required packages"
-sudo apt-get install node-clean-css -y
-sudo apt-get install node-less -y
-sudo apt-get install python-gevent -y
+echo -e "\n---- Install python packages/requirements ----"
+sudo pip3 install -r https://github.com/odoo/odoo/raw/${OE_VERSION}/requirements.txt
 
 #--------------------------------------------------
 # Install Wkhtmltopdf if needed
