@@ -68,6 +68,10 @@ sudo apt-get install git python3 python3-pip build-essential wget python3-dev py
 echo -e "\n---- Install python packages/requirements ----"
 sudo pip3 install -r https://github.com/odoo/odoo/raw/${OE_VERSION}/requirements.txt
 
+echo -e "\n---- Installing nodeJS NPM and rtlcss for LTR support ----"
+sudo apt-get install nodejs npm
+sudo npm install -g rtlcss
+
 #--------------------------------------------------
 # Install Wkhtmltopdf if needed
 #--------------------------------------------------
@@ -123,7 +127,6 @@ if [ $IS_ENTERPRISE = "True" ]; then
     echo -e "\n---- Added Enterprise code under $OE_HOME/enterprise/addons ----"
     echo -e "\n---- Installing Enterprise specific libraries ----"
     sudo pip3 install num2words ofxparse
-    sudo apt-get install nodejs npm
     sudo npm install -g less
     sudo npm install -g less-plugin-clean-css
 fi
