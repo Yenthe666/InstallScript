@@ -43,6 +43,9 @@ WKHTMLTOX_X32=https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.
 # Update Server
 #--------------------------------------------------
 echo -e "\n---- Update Server ----"
+
+# add-apt-repository can install add-apt-repository Ubuntu 18.x
+sudo apt-get install software-properties-common
 # universe package is for Ubuntu 18.x
 sudo add-apt-repository universe
 # libpng12-0 dependency for wkhtmltopdf
