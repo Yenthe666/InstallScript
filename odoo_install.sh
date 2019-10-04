@@ -35,7 +35,7 @@ OE_CONFIG="${OE_USER}-server"
 ###  WKHTMLTOPDF download links
 ## === Ubuntu Trusty x64 & x32 === (for other distributions please replace these two links,
 ## in order to have correct version of wkhtmltopdf installed, for a danger note refer to 
-## hhttps://github.com/odoo/odoo/wiki/Wkhtmltopdf ):
+## https://github.com/odoo/odoo/wiki/Wkhtmltopdf ):
 WKHTMLTOX_X64=https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.trusty_amd64.deb
 WKHTMLTOX_X32=https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.trusty_i386.deb
 
