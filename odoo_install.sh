@@ -61,7 +61,7 @@ sudo su - postgres -c "createuser -s $OE_USER" 2> /dev/null || true
 # Install Dependencies
 #--------------------------------------------------
 echo -e "\n--- Installing Python 3 + pip3 --"
-sudo apt-get install python3 python3-pip
+sudo apt-get install python3 python3-pip -y
 
 echo -e "\n---- Install tool packages ----"
 sudo apt-get install wget git bzr python-pip gdebi-core -y
