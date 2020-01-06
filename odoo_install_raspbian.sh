@@ -1,4 +1,3 @@
-
 #!/bin/bash
 ################################################################################
 # Script for installing Odoo V10 on Debian (could be used for other version too)
