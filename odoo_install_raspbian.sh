@@ -1,11 +1,11 @@
 #!/bin/bash
 ################################################################################
-# Script for installing Odoo V10 on Debian (could be used for other version too)
+# Script for installing Odoo V11 on Raspbian (tested on Raspbian 10, Raspberry Pi 4)
 # Based on installation script by Yenthe Van Ginneken https://github.com/Yenthe666/InstallScript
 # Author: William Olhasque
 #-------------------------------------------------------------------------------
-# This script will install Odoo on your Debian Jessie server. It can install multiple Odoo instances
-# in one Ubuntu because of the different xmlrpc_ports
+# This script will install Odoo on your server. It can install multiple Odoo instances
+# because of the different xmlrpc_ports
 #-------------------------------------------------------------------------------
 # Make a new file:
 #  nano odoo-install.sh
@@ -27,7 +27,6 @@ INSTALL_WKHTMLTOPDF="True"
 #Set the default Odoo port (you still have to use -c /etc/odoo-server.conf for example to use this.)
 OE_PORT="8069"
 #Choose the Odoo version which you want to install. For example: 10.0, 9.0, 8.0, 7.0 or saas-6. When using 'trunk' the master version will be installed.
-#IMPORTANT! This script contains extra libraries that are specifically needed for Odoo 10.0
 OE_VERSION="11.0"
 # Set this to True if you want to install Odoo 10 Enterprise!
 IS_ENTERPRISE="False"
