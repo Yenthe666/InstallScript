@@ -13,6 +13,7 @@ sudo wget https://raw.githubusercontent.com/Yenthe666/InstallScript/13.0/odoo_in
 ##### 2. Modify the parameters as you wish.
 There are a few things you can configure, this is the most used list:<br/>
 ```OE_USER``` will be the username for the system user.<br/>
+```GENERATE_RANDOM_PASSWORD``` if this is set to ```True``` the script will generate a random password, if set to ```False```we'll set the password that is configured in ```OE_SUPERADMIN```. By default the value is ```True``` and the script will generate a random and secure password.<br/>
 ```INSTALL_WKHTMLTOPDF``` set to ```False``` if you do not want to install Wkhtmltopdf, if you want to install it you should set it to ```True```.<br/>
 ```OE_PORT``` is the port where Odoo should run on, for example 8069.<br/>
 ```OE_VERSION``` is the Odoo version to install, for example ```13.0``` for Odoo V13.<br/>
