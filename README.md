@@ -19,6 +19,8 @@ There are a few things you can configure, this is the most used list:<br/>
 ```OE_VERSION``` is the Odoo version to install, for example ```13.0``` for Odoo V13.<br/>
 ```IS_ENTERPRISE``` will install the Enterprise version on top of ```13.0``` if you set it to ```True```, set it to ```False``` if you want the community version of Odoo 13.<br/>
 ```OE_SUPERADMIN``` is the master password for this Odoo installation.<br/>
+```INSTALL_NGINX``` is set to ```False``` by default. Set this to ```True``` if you want to install Nginx.<br/>
+```WEBSITE_NAME``` Set the website name here for nginx configuration<br/>
 
 #### 3. Make the script executable
 ```
