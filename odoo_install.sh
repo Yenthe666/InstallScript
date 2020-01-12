@@ -42,8 +42,8 @@ LONGPOLLING_PORT="8072"
 ##
 ###  WKHTMLTOPDF download links
 ## === Ubuntu Trusty x64 & x32 === (for other distributions please replace these two links,
-## in order to have correct version of wkhtmltox installed, for a danger note refer to
-## https://www.odoo.com/documentation/8.0/setup/install.html#deb ):
+## in order to have correct version of wkhtmltopdf installed, for a danger note refer to
+## https://github.com/odoo/odoo/wiki/Wkhtmltopdf ):
 ## https://www.odoo.com/documentation/12.0/setup/install.html#debian-ubuntu
 
 WKHTMLTOX_X64=https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.trusty_amd64.deb
@@ -97,7 +97,7 @@ if [ $INSTALL_WKHTMLTOPDF = "True" ]; then
   sudo ln -s /usr/local/bin/wkhtmltopdf /usr/bin
   sudo ln -s /usr/local/bin/wkhtmltoimage /usr/bin
 else
-  echo "Wkhtmltopdf isn't installed due to choice of the user!"
+  echo "Wkhtmltopdf isn't installed due to the choice of the user!"
 fi
 
 echo -e "\n---- Create ODOO system user ----"
@@ -119,7 +119,8 @@ if [ $IS_ENTERPRISE = "True" ]; then
     # Odoo Enterprise install!
     echo -e "\n--- Create symlink for node"
     sudo ln -s /usr/bin/nodejs /usr/bin/node
-    sudo su $OE_USER -c "mkdir -p $OE_HOME/enterprise/addons"
+    sudo su $OE_USER -c "mkdir $OE_HOME/enterprise"
+    sudo su $OE_USER -c "mkdir $OE_HOME/enterprise/addons"
 
     GITHUB_RESPONSE=$(sudo git clone --depth 1 --branch $OE_VERSION https://www.github.com/odoo/enterprise "$OE_HOME/enterprise/addons" 2>&1)
     while [[ $GITHUB_RESPONSE == *"Authentication"* ]]; do
@@ -140,7 +141,8 @@ if [ $IS_ENTERPRISE = "True" ]; then
 fi
 
 echo -e "\n---- Create custom module directory ----"
-sudo su $OE_USER -c "mkdir -p $OE_HOME/custom/addons"
+sudo su $OE_USER -c "mkdir $OE_HOME/custom"
+sudo su $OE_USER -c "mkdir $OE_HOME/custom/addons"
 
 echo -e "\n---- Setting permissions on home folder ----"
 sudo chown -R $OE_USER:$OE_USER $OE_HOME/*
@@ -156,7 +158,7 @@ if [ $GENERATE_RANDOM_PASSWORD = "True" ]; then
     OE_SUPERADMIN=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)
 fi
 sudo su root -c "printf 'admin_passwd = ${OE_SUPERADMIN}\n' >> /etc/${OE_CONFIG}.conf"
-if [ $OE_VERSION == "12.0" ];then
+if [ $OE_VERSION >= "12.0" ];then
     sudo su root -c "printf 'http_port = ${OE_PORT}\n' >> /etc/${OE_CONFIG}.conf"
 else
     sudo su root -c "printf 'xmlrpc_port = ${OE_PORT}\n' >> /etc/${OE_CONFIG}.conf"
@@ -275,6 +277,8 @@ if [ $INSTALL_NGINX = "True" ]; then
    proxy_set_header X-Real-IP \$remote_addr;
    add_header X-Frame-Options "SAMEORIGIN";
    add_header X-XSS-Protection "1; mode=block";
+   proxy_set_header X-Client-IP $remote_addr;
+   proxy_set_header HTTP_X_FORWARDED_HOST $remote_addr;
 
    #   odoo    log files
    access_log  /var/log/nginx/$OE_USER-access.log;
@@ -284,9 +288,9 @@ if [ $INSTALL_NGINX = "True" ]; then
    proxy_buffers   16  64k;
    proxy_buffer_size   128k;
 
-   proxy_read_timeout 720s;
-   proxy_connect_timeout 720s;
-   proxy_send_timeout 720s;
+   proxy_read_timeout 900s;
+   proxy_connect_timeout 900s;
+   proxy_send_timeout 900s;
 
    #   force   timeouts    if  the backend dies
    proxy_next_upstream error   timeout invalid_header  http_500    http_502
@@ -316,7 +320,11 @@ if [ $INSTALL_NGINX = "True" ]; then
    location /longpolling {
    proxy_pass http://127.0.0.1:$LONGPOLLING_PORT;
    }
-
+  location ~* .(js|css|png|jpg|jpeg|gif|ico)$ {
+  expires 2d;
+  proxy_pass http://127.0.0.1:$OE_PORT;
+  add_header Cache-Control "public, no-transform";
+  }
    # cache some static data in memory for 60mins.
    location ~ /[a-zA-Z0-9_-]*/static/ {
    proxy_cache_valid 200 302 60m;
