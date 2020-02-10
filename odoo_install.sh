@@ -277,8 +277,8 @@ if [ $INSTALL_NGINX = "True" ]; then
   proxy_set_header X-Real-IP \$remote_addr;
   add_header X-Frame-Options "SAMEORIGIN";
   add_header X-XSS-Protection "1; mode=block";
-  proxy_set_header X-Client-IP $remote_addr;
-  proxy_set_header HTTP_X_FORWARDED_HOST $remote_addr;
+  proxy_set_header X-Client-IP \$remote_addr;
+  proxy_set_header HTTP_X_FORWARDED_HOST \$remote_addr;
 
   #   odoo    log files
   access_log  /var/log/nginx/$OE_USER-access.log;
