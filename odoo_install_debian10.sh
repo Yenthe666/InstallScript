@@ -65,7 +65,7 @@ echo -e "\n--- Installing Python 3 + pip3 --"
 sudo apt-get install python3 python3-pip -y
 
 echo -e "\n---- Install tool packages ----"
-sudo apt-get install wget git gdebi -y
+sudo apt-get install wget git gdebi-core -y
 
 echo -e "\n---- Install python packages ----"
 sudo pip3 install pypdf2 Babel passlib Werkzeug decorator python-dateutil pyyaml psycopg2 psutil html2text docutils lxml pillow reportlab ninja2 requests gdata XlsxWriter vobject python-openid pyparsing pydot mock mako Jinja2 ebaysdk feedparser xlwt psycogreen suds-jurko pytz pyusb greenlet xlrd 
