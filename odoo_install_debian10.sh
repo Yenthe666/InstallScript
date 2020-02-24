@@ -61,8 +61,8 @@ sudo su - postgres -c "createuser -s $OE_USER" 2> /dev/null || true
 #--------------------------------------------------
 # Install Dependencies
 #--------------------------------------------------
-echo -e "\n---- Install tool packages ----"
-sudo apt-get install wget git python-pip gdebi-core -y
+echo -e "\n--- Installing Python 3 + pip3 --"
+sudo apt-get install wget git python python-pip build-essential wget python-dev python-wheel libxslt1-dev libzip-dev libldap2-dev libsasl2-dev python-setuptools node-less libpng16-16 gdebi -y
 
 echo -e "\n---- Install python packages/requirements ----"
 sudo pip install -r https://github.com/odoo/odoo/raw/${OE_VERSION}/requirements.txt
