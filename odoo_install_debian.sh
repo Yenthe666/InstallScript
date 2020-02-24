@@ -1,8 +1,8 @@
 #!/bin/bash
 ################################################################################
 # Script for installing Odoo V9 on Debian 10 (could be used for other version too)
-# Author: Yenthe Van Ginneken, César Cordero Rodríguez
-# Maintainer: Yenthe Van Ginneken, César Cordero Rodríguez
+# Authors: Yenthe Van Ginneken, César Cordero Rodríguez
+# Maintainers: Yenthe Van Ginneken, César Cordero Rodríguez
 #-------------------------------------------------------------------------------
 # This script will install Odoo on your Debian 10 server. It can install multiple Odoo instances
 # in one Debian because of the different xmlrpc_ports
