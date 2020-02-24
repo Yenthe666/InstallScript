@@ -64,7 +64,7 @@ WKHTMLTOX_X32=https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.
 # Install Dependencies
 #--------------------------------------------------
 echo -e "\n--- Installing Python + pip --"
-sudo apt-get install wget git python python-pip build-essential wget python-dev python-wheel libxslt1-dev libzip-dev libldap2-dev libsasl2-dev python-setuptools node-less libpng16-16 gdebi-core libpq-dev -y
+sudo apt-get install wget git python python-pip build-essential wget python-dev python-wheel libxslt1-dev libzip-dev libldap2-dev libsasl2-dev python-setuptools node-less libpng16-16 gdebi-core libpq-dev libjpeg62-turbo-dev -y
 
 echo -e "\n---- Install python packages/requirements ----"
 sudo pip install -r https://github.com/odoo/odoo/raw/${OE_VERSION}/requirements.txt
