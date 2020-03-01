@@ -352,14 +352,13 @@ fi
 # Enable ssl
 #--------------------------------------------------
 
-if [ $INSTALL_NGINX = "True" ] and [$ENABLE_SSL= "True" ];
+if [ $INSTALL_NGINX = "True" ] and [$ENABLE_SSL= "True" ];then
   sudo add-apt-repository ppa:certbot/certbot && sudo apt-get update
   sudo apt-get install python-certbot-nginx
   sudo certbot --nginx -d $WEBSITE_NAME --noninteractive
   echo "SSL is enabled!"
-
 else
-    echo "SSL isn't enabled due to choice of the user!"
+  echo "SSL isn't enabled due to choice of the user!"
 fi
 
 
