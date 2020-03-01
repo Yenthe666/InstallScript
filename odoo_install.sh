@@ -356,8 +356,8 @@ fi
 if [ $INSTALL_NGINX = "True" ] && [ $ENABLE_SSL = "True" ] && [ $ADMIN_EMAIL != 'odoo@example.com' ];then
   sudo add-apt-repository ppa:certbot/certbot -y && sudo apt-get update -y
   sudo apt-get install python-certbot-nginx -y
-  sudo certbot --nginx -d $WEBSITE_NAME --noninteractive --agree-tos --email $ADMIN_EMAIL
-  sudo certbot --nginx -d $WEBSITE_NAME --noninteractive
+  sudo certbot --nginx -d $WEBSITE_NAME --noninteractive --agree-tos --email $ADMIN_EMAIL --redirect
+  sudo service nginx reload
   echo "SSL is enabled!"
 else
   echo "SSL isn't enabled due to choice of the user!"
