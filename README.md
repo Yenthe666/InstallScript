@@ -21,6 +21,10 @@ There are a few things you can configure, this is the most used list:<br/>
 ```OE_SUPERADMIN``` is the master password for this Odoo installation.<br/>
 ```INSTALL_NGINX``` is set to ```False``` by default. Set this to ```True``` if you want to install Nginx.<br/>
 ```WEBSITE_NAME``` Set the website name here for nginx configuration<br/>
+```WEBSITE_NAME``` Set the website name here for nginx configuration<br/>
+```ENABLE_SSL``` Set installs certbot configures https with Let's Encrypted certificate
+```ADMIN_EMAIL``` Email is needed to register for Let's Enctryped Registeration. Replace the default place holder with an email of your organisation.
+```INSTALL_NGINX``` and ```ENABLE_SSL``` must be set to ```True``` and the place holder in ```ADMIN_EMAIL``` must be replaced with a valid email address for certbot installation
 
 #### 3. Make the script executable
 ```
