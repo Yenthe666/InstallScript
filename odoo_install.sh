@@ -35,12 +35,13 @@ OE_SUPERADMIN="admin"
 GENERATE_RANDOM_PASSWORD="True"
 OE_CONFIG="${OE_USER}-server"
 # Set the website name
-WEBSITE_NAME="_"
+WEBSITE_NAME="-"
 # Set the default Odoo longpolling port (you still have to use -c /etc/odoo-server.conf for example to use this.)
 LONGPOLLING_PORT="8072"
 # Set to "True" to install certbot and have ssl enabled, "False" to use http
 ENABLE_SSL="True"
-
+# Provide Email to register ssl certificate
+ADMIN_EMAIL="odoo@example.com"
 ##
 ###  WKHTMLTOPDF download links
 ## === Ubuntu Trusty x64 & x32 === (for other distributions please replace these two links,
@@ -279,8 +280,8 @@ if [ $INSTALL_NGINX = "True" ]; then
   proxy_set_header X-Real-IP \$remote_addr;
   add_header X-Frame-Options "SAMEORIGIN";
   add_header X-XSS-Protection "1; mode=block";
-  proxy_set_header X-Client-IP $remote_addr;
-  proxy_set_header HTTP_X_FORWARDED_HOST $remote_addr;
+  proxy_set_header X-Client-IP \$remote_addr;
+  proxy_set_header HTTP_X_FORWARDED_HOST \$remote_addr;
 
   #   odoo    log files
   access_log  /var/log/nginx/$OE_USER-access.log;
@@ -352,9 +353,10 @@ fi
 # Enable ssl
 #--------------------------------------------------
 
-if [ $INSTALL_NGINX = "True" ] and [$ENABLE_SSL= "True" ];then
-  sudo add-apt-repository ppa:certbot/certbot && sudo apt-get update
-  sudo apt-get install python-certbot-nginx
+if [ $INSTALL_NGINX = "True" ] && [ $ENABLE_SSL = "True" ] && [ $ADMIN_EMAIL != 'odoo@example.com' ];then
+  sudo add-apt-repository ppa:certbot/certbot -y && sudo apt-get update -y
+  sudo apt-get install python-certbot-nginx -y
+  sudo certbot --nginx -d $WEBSITE_NAME --noninteractive --agree-tos --email $ADMIN_EMAIL
   sudo certbot --nginx -d $WEBSITE_NAME --noninteractive
   echo "SSL is enabled!"
 else
