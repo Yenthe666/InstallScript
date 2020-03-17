@@ -38,7 +38,10 @@ OE_CONFIG="${OE_USER}-server"
 WEBSITE_NAME="_"
 # Set the default Odoo longpolling port (you still have to use -c /etc/odoo-server.conf for example to use this.)
 LONGPOLLING_PORT="8072"
-
+# Set to "True" to install certbot and have ssl enabled, "False" to use http
+ENABLE_SSL="True"
+# Provide Email to register ssl certificate
+ADMIN_EMAIL="odoo@example.com"
 ##
 ###  WKHTMLTOPDF download links
 ## === Ubuntu Trusty x64 & x32 === (for other distributions please replace these two links,
@@ -345,6 +348,21 @@ EOF
 else
   echo "Nginx isn't installed due to choice of the user!"
 fi
+
+#--------------------------------------------------
+# Enable ssl with certbot
+#--------------------------------------------------
+
+if [ $INSTALL_NGINX = "True" ] && [ $ENABLE_SSL = "True" ] && [ $ADMIN_EMAIL != "odoo@example.com" ]  && [ $WEBSITE_NAME != "_" ];then
+  sudo add-apt-repository ppa:certbot/certbot -y && sudo apt-get update -y
+  sudo apt-get install python-certbot-nginx -y
+  sudo certbot --nginx -d $WEBSITE_NAME --noninteractive --agree-tos --email $ADMIN_EMAIL --redirect
+  sudo service nginx reload
+  echo "SSL/HTTPS is enabled!"
+else
+  echo "SSL/HTTPS isn't enabled due to choice of the user or because of a misconfiguration!"
+fi
+
 echo -e "* Starting Odoo Service"
 sudo su root -c "/etc/init.d/$OE_CONFIG start"
 echo "-----------------------------------------------------------"
@@ -358,4 +376,7 @@ echo "Password superadmin (database): $OE_SUPERADMIN"
 echo "Start Odoo service: sudo service $OE_CONFIG start"
 echo "Stop Odoo service: sudo service $OE_CONFIG stop"
 echo "Restart Odoo service: sudo service $OE_CONFIG restart"
+if [ $INSTALL_NGINX = "True" ]; then
+  echo "Nginx configuration file: /etc/nginx/sites-available/odoo"
+fi
 echo "-----------------------------------------------------------"
