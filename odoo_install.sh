@@ -161,7 +161,7 @@ if [ $GENERATE_RANDOM_PASSWORD = "True" ]; then
     OE_SUPERADMIN=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)
 fi
 sudo su root -c "printf 'admin_passwd = ${OE_SUPERADMIN}\n' >> /etc/${OE_CONFIG}.conf"
-if [ $OE_VERSION >= "12.0" ];then
+if [ $OE_VERSION > "11.0" ];then
     sudo su root -c "printf 'http_port = ${OE_PORT}\n' >> /etc/${OE_CONFIG}.conf"
 else
     sudo su root -c "printf 'xmlrpc_port = ${OE_PORT}\n' >> /etc/${OE_CONFIG}.conf"
