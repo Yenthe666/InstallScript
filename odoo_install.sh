@@ -393,7 +393,7 @@ if [ $PROXY_MODE = "PROXY_LETSENCRYPT" ] && [ $ADMIN_EMAIL != "odoo@example.com"
   sudo apt-get install python-certbot-nginx -y
 
   echo -e "\n---- Generating dhparam ----\n"
-  sudo openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
+  sudo openssl dhparam -out /etc/ssl/certs/dhparam.pem 4096
   sudo mkdir -p /var/lib/letsencrypt/.well-known
   sudo chgrp www-data /var/lib/letsencrypt
   sudo chmod g+s /var/lib/letsencrypt
