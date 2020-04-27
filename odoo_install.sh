@@ -57,7 +57,7 @@ WKHTMLTOX_X32=https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.
 #--------------------------------------------------
 # Update Server
 #--------------------------------------------------
-echo -e "\n---- Update Server ----"
+echo -e "\n---- Update Server ----\n"
 # universe package is for Ubuntu 18.x
 sudo add-apt-repository universe
 # libpng12-0 dependency for wkhtmltopdf
@@ -68,22 +68,22 @@ sudo apt-get upgrade -y
 #--------------------------------------------------
 # Install PostgreSQL Server
 #--------------------------------------------------
-echo -e "\n---- Install PostgreSQL Server ----"
+echo -e "\n---- Install PostgreSQL Server ----\n"
 sudo apt-get install postgresql postgresql-server-dev-all -y
 
-echo -e "\n---- Creating the ODOO PostgreSQL User  ----"
+echo -e "\n---- Creating the ODOO PostgreSQL User ----\n"
 sudo su - postgres -c "createuser -s $OE_USER" 2> /dev/null || true
 
 #--------------------------------------------------
 # Install Dependencies
 #--------------------------------------------------
-echo -e "\n--- Installing Python 3 + pip3 --"
+echo -e "\n--- Installing Python 3 + pip3 ----\n"
 sudo apt-get install git python3 python3-pip build-essential wget python3-dev python3-venv python3-wheel libxslt-dev libzip-dev libldap2-dev libsasl2-dev python3-setuptools node-less libpng12-0 gdebi-core -y
 
-echo -e "\n---- Install python packages/requirements ----"
+echo -e "\n---- Install python packages/requirements ----\n"
 sudo -H pip3 install -r https://github.com/odoo/odoo/raw/${OE_VERSION}/requirements.txt
 
-echo -e "\n---- Installing nodeJS NPM and rtlcss for LTR support ----"
+echo -e "\n---- Installing nodeJS NPM and rtlcss for LTR support ----\n"
 sudo apt-get install nodejs npm -y
 sudo npm install -g rtlcss
 
@@ -91,7 +91,7 @@ sudo npm install -g rtlcss
 # Install Wkhtmltopdf if needed
 #--------------------------------------------------
 if [ $INSTALL_WKHTMLTOPDF = "True" ]; then
-  echo -e "\n---- Install wkhtml and place shortcuts on correct place for ODOO 13 ----"
+  echo -e "\n---- Install wkhtml and place shortcuts on correct place for ODOO 13 ----\n"
   #pick up correct one from x64 & x32 versions:
   if [ "`getconf LONG_BIT`" == "64" ];then
       _url=$WKHTMLTOX_X64
@@ -103,27 +103,27 @@ if [ $INSTALL_WKHTMLTOPDF = "True" ]; then
   sudo ln -s /usr/local/bin/wkhtmltopdf /usr/bin
   sudo ln -s /usr/local/bin/wkhtmltoimage /usr/bin
 else
-  echo "Wkhtmltopdf isn't installed due to the choice of the user!"
+  echo -e "\n---- Wkhtmltopdf isn't installed due to the choice of the user! ----\n"
 fi
 
-echo -e "\n---- Create ODOO system user ----"
+echo -e "\n---- Create ODOO system user ----\n"
 sudo adduser --system --quiet --shell=/bin/bash --home=$OE_HOME --gecos 'ODOO' --group $OE_USER
 #The user should also be added to the sudo'ers group.
 sudo adduser $OE_USER sudo
 
-echo -e "\n---- Create Log directory ----"
+echo -e "\n---- Create Log directory ----\n"
 sudo mkdir /var/log/$OE_USER
 sudo chown $OE_USER:$OE_USER /var/log/$OE_USER
 
 #--------------------------------------------------
 # Install ODOO
 #--------------------------------------------------
-echo -e "\n==== Installing ODOO Server ===="
+echo -e "\n---- Installing ODOO Server ----\n"
 sudo git clone --depth 1 --branch $OE_VERSION https://www.github.com/odoo/odoo $OE_HOME_EXT/
 
 if [ $IS_ENTERPRISE = "True" ]; then
     # Odoo Enterprise install!
-    echo -e "\n--- Create symlink for node"
+  echo -e "\n---- Create symlink for node ----\n"
     sudo ln -s /usr/bin/nodejs /usr/bin/node
     sudo su $OE_USER -c "mkdir $OE_HOME/enterprise"
     sudo su $OE_USER -c "mkdir $OE_HOME/enterprise/addons"
@@ -139,28 +139,27 @@ if [ $IS_ENTERPRISE = "True" ]; then
         GITHUB_RESPONSE=$(sudo git clone --depth 1 --branch $OE_VERSION https://www.github.com/odoo/enterprise "$OE_HOME/enterprise/addons" 2>&1)
     done
 
-    echo -e "\n---- Added Enterprise code under $OE_HOME/enterprise/addons ----"
-    echo -e "\n---- Installing Enterprise specific libraries ----"
+  echo -e "\n---- Added Enterprise code under $OE_HOME/enterprise/addons ----\n"
+  echo -e "\n---- Installing Enterprise specific libraries ----\n"
     sudo -H pip3 install num2words ofxparse dbfread ebaysdk firebase_admin pyOpenSSL
     sudo npm install -g less
     sudo npm install -g less-plugin-clean-css
 fi
 
-echo -e "\n---- Create custom module directory ----"
+echo -e "\n---- Create custom module directory ----\n"
 sudo su $OE_USER -c "mkdir $OE_HOME/custom"
 sudo su $OE_USER -c "mkdir $OE_HOME/custom/addons"
 
-echo -e "\n---- Setting permissions on home folder ----"
+echo -e "\n---- Setting permissions on home folder ----\n"
 sudo chown -R $OE_USER:$OE_USER $OE_HOME/*
 
-echo -e "* Create server config file"
-
+echo -e "\n---- Create server config file ----\n"
 
 sudo touch /etc/${OE_CONFIG}.conf
-echo -e "* Creating server config file"
+echo -e "\n---- Creating server config file ----\n"
 sudo su root -c "printf '[options] \n; This is the password that allows database operations:\n' >> /etc/${OE_CONFIG}.conf"
 if [ $GENERATE_RANDOM_PASSWORD = "True" ]; then
-    echo -e "* Generating random admin password"
+  echo -e "\n---- Generating random admin password ----\n"
     OE_SUPERADMIN=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)
 fi
 sudo su root -c "printf 'admin_passwd = ${OE_SUPERADMIN}\n' >> /etc/${OE_CONFIG}.conf"
@@ -179,7 +178,7 @@ fi
 sudo chown $OE_USER:$OE_USER /etc/${OE_CONFIG}.conf
 sudo chmod 640 /etc/${OE_CONFIG}.conf
 
-echo -e "* Create startup file"
+echo -e "\n---- Create startup file ----\n"
 sudo su root -c "echo '#!/bin/sh' >> $OE_HOME_EXT/start.sh"
 sudo su root -c "echo 'sudo -u $OE_USER $OE_HOME_EXT/odoo-bin --config=/etc/${OE_CONFIG}.conf' >> $OE_HOME_EXT/start.sh"
 sudo chmod 755 $OE_HOME_EXT/start.sh
@@ -188,8 +187,7 @@ sudo chmod 755 $OE_HOME_EXT/start.sh
 # Adding ODOO as a deamon (initscript)
 #--------------------------------------------------
 
-echo -e "* Create init file"
-cat <<EOF > ~/$OE_CONFIG
+echo -e "\n---- Create init file ----\n"
 #!/bin/sh
 ### BEGIN INIT INFO
 # Provides: $OE_CONFIG
@@ -255,12 +253,12 @@ esac
 exit 0
 EOF
 
-echo -e "* Security Init File"
+echo -e "\n---- Security Init File ----\n"
 sudo mv ~/$OE_CONFIG /etc/init.d/$OE_CONFIG
 sudo chmod 755 /etc/init.d/$OE_CONFIG
 sudo chown root: /etc/init.d/$OE_CONFIG
 
-echo -e "* Start ODOO on Startup"
+echo -e "\n---- Start ODOO on Startup ----\n"
 sudo update-rc.d $OE_CONFIG defaults
 
 #--------------------------------------------------
@@ -347,9 +345,8 @@ EOF
   sudo rm /etc/nginx/sites-enabled/default
   sudo service nginx reload
   sudo su root -c "printf 'proxy_mode = True\n' >> /etc/${OE_CONFIG}.conf"
-  echo "Done! The Nginx server is up and running. Configuration can be found at /etc/nginx/sites-available/odoo"
-else
-  echo "Nginx isn't installed due to choice of the user!"
+  echo -e "\n---- Done! The Nginx server is up and running on "$PROXY_MODE" ----\n"
+  echo -e "\n---- Configuration can be found at /etc/nginx/sites-available/odoo ----\n"
 fi
 
 #--------------------------------------------------
@@ -361,12 +358,12 @@ if [ $INSTALL_NGINX = "True" ] && [ $ENABLE_SSL = "True" ] && [ $ADMIN_EMAIL != 
   sudo apt-get install python-certbot-nginx -y
   sudo certbot --nginx -d $WEBSITE_NAME --noninteractive --agree-tos --email $ADMIN_EMAIL --redirect
   sudo service nginx reload
-  echo "SSL/HTTPS is enabled!"
+  echo -e "\n---- SSL/HTTPS is enabled! ----\n"
 else
-  echo "SSL/HTTPS isn't enabled due to choice of the user or because of a misconfiguration!"
+  echo -e "\n---- SSL/HTTPS isn't enabled due to choice of the user or because of a misconfiguration! ----\n"
 fi
 
-echo -e "* Starting Odoo Service"
+echo -e "\n---- Starting Odoo Service ----\n"
 sudo su root -c "/etc/init.d/$OE_CONFIG start"
 echo "-----------------------------------------------------------"
 echo "Done! The Odoo server is up and running. Specifications:"
@@ -379,7 +376,6 @@ echo "Password superadmin (database): $OE_SUPERADMIN"
 echo "Start Odoo service: sudo service $OE_CONFIG start"
 echo "Stop Odoo service: sudo service $OE_CONFIG stop"
 echo "Restart Odoo service: sudo service $OE_CONFIG restart"
-if [ $INSTALL_NGINX = "True" ]; then
-  echo "Nginx configuration file: /etc/nginx/sites-available/odoo"
+  echo -e "\n---- Nginx configuration file: /etc/nginx/sites-available/odoo ----\n"
 fi
 echo "-----------------------------------------------------------"
