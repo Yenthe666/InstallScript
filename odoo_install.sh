@@ -375,7 +375,9 @@ EOF
   sudo mv ~/odoo /etc/nginx/sites-available/
   sudo ln -s /etc/nginx/sites-available/odoo /etc/nginx/sites-enabled/odoo
   sudo rm /etc/nginx/sites-enabled/default
+  if [ $PROXY_MODE = "PROXY_HTTP" ]; then
   sudo service nginx reload
+  fi
   sudo su root -c "printf 'proxy_mode = True\n' >> /etc/${OE_CONFIG}.conf"
   echo -e "\n---- Done! The Nginx server is up and running on "$PROXY_MODE" ----\n"
   echo -e "\n---- Configuration can be found at /etc/nginx/sites-available/odoo ----\n"
