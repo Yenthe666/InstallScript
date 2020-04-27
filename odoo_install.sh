@@ -463,4 +463,7 @@ if [ $PROXY_MODE != "PROXY_NONE" ]; then
 else
   echo -e "\n---- Nginx was not installed because PROXY_MODE is PROXY_NONE ----\n"
 fi
+if [ $PROXY_MODE = "PROXY_LETSENCRYPT" ]; then
+  echo -e "\n---- Check your SSL Report at: https://www.ssllabs.com/ssltest/analyze.html?d=$WEBSITE_NAME ----\n"
+fi
 echo "-----------------------------------------------------------"
