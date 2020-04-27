@@ -72,7 +72,7 @@ echo -e "\n---- Install PostgreSQL Server ----\n"
 sudo apt-get install postgresql postgresql-server-dev-all -y
 
 echo -e "\n---- Creating the ODOO PostgreSQL User ----\n"
-sudo su - postgres -c "createuser -s $OE_USER" 2> /dev/null || true
+sudo su - postgres -c "createuser -s $OE_USER" 2>/dev/null || true
 
 #--------------------------------------------------
 # Install Dependencies
@@ -192,6 +192,7 @@ sudo chmod 755 $OE_HOME_EXT/start.sh
 #--------------------------------------------------
 
 echo -e "\n---- Create init file ----\n"
+cat <<EOF >~/$OE_CONFIG
 #!/bin/sh
 ### BEGIN INIT INFO
 # Provides: $OE_CONFIG
