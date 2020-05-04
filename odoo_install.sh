@@ -29,6 +29,8 @@ OE_VERSION="13.0"
 IS_ENTERPRISE="False"
 # Set this to True if you want to install Nginx!
 INSTALL_NGINX="False"
+# Set this to True if you want to install Postgresql!
+INSTALL_POSTGRESQL="True"
 # Set the superadmin password - if GENERATE_RANDOM_PASSWORD is set to "True" we will automatically generate a random password, otherwise we use this one
 OE_SUPERADMIN="admin"
 # Set to "True" to generate a random password, "False" to use the variable in OE_SUPERADMIN
@@ -65,12 +67,15 @@ sudo apt-get upgrade -y
 #--------------------------------------------------
 # Install PostgreSQL Server
 #--------------------------------------------------
-echo -e "\n---- Install PostgreSQL Server ----"
-sudo apt-get install postgresql postgresql-server-dev-all -y
+if [ $INSTALL_POSTGRESQL = "True" ]; then
+  echo -e "\n---- Install PostgreSQL Server ----"
+  sudo apt-get install postgresql postgresql-server-dev-all -y
 
-echo -e "\n---- Creating the ODOO PostgreSQL User  ----"
-sudo su - postgres -c "createuser -s $OE_USER" 2> /dev/null || true
-
+  echo -e "\n---- Creating the ODOO PostgreSQL User  ----"
+  sudo su - postgres -c "createuser -s $OE_USER" 2> /dev/null || true
+else
+  echo "Postgresql isn't installed due to the choice of the user!"
+fi
 #--------------------------------------------------
 # Install Dependencies
 #--------------------------------------------------
