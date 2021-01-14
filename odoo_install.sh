@@ -120,6 +120,7 @@ sudo git clone --depth 1 --branch $OE_VERSION https://www.github.com/odoo/odoo $
 
 if [ $IS_ENTERPRISE = "True" ]; then
     # Odoo Enterprise install!
+    sudo pip3 install psycopg2-binary pdfminer.six
     echo -e "\n--- Create symlink for node"
     sudo ln -s /usr/bin/nodejs /usr/bin/node
     sudo su $OE_USER -c "mkdir $OE_HOME/enterprise"
