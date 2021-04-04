@@ -49,8 +49,36 @@ ADMIN_EMAIL="odoo@example.com"
 ## https://github.com/odoo/odoo/wiki/Wkhtmltopdf ):
 ## https://www.odoo.com/documentation/13.0/setup/install.html#debian-ubuntu
 
-WKHTMLTOX_X64=https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.trusty_amd64.deb
-WKHTMLTOX_X32=https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.trusty_i386.deb
+SYS_RELEASE=$((lsb_release -rs) 2>&1)
+
+# returns x86_x64 for 64-bit debian,ubuntu based distros, but need to be amd64 for wkhtml url
+
+SYS_CODENAME=$(lsb_release -cs)
+DISTRIBUTORS=("Debian" "Ubuntu")
+SYS_ARCH=$((uname -m) 2>&1)
+WKHTMLTOPDF_VERSION=0.12.6-1  #change wkhtmltopdf version here 
+
+SYS_DISTRIBUTOR=$((lsb_release -is) 2>&1) 
+
+
+for i in "${DISTRIBUTORS[@]}"
+do
+     if [[ "$i" == "$SYS_DISTRIBUTOR" ]]; then
+        SYS_ARCH=$((dpkg --print-architecture) 2>&1)
+    fi
+
+    #x86_64 for all distros except debian and ubuntu based ones
+    #the command dpkg isn't available non debian ones
+done
+
+
+
+
+
+WKHTMLTOX_URL=https://github.com/wkhtmltopdf/packaging/releases/download/${WKHTMLTOPDF_VERSION}/wkhtmltox_${WKHTMLTOPDF_VERSION}.${SYS_CODENAME}_${SYS_ARCH}.deb
+echo $WKHTMLTOX_URL
+
+#WKHTMLTOX_X32=https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.trusty_i386
 #--------------------------------------------------
 # Update Server
 #--------------------------------------------------
@@ -90,13 +118,9 @@ sudo npm install -g rtlcss
 if [ $INSTALL_WKHTMLTOPDF = "True" ]; then
   echo -e "\n---- Install wkhtml and place shortcuts on correct place for ODOO 13 ----"
   #pick up correct one from x64 & x32 versions:
-  if [ "`getconf LONG_BIT`" == "64" ];then
-      _url=$WKHTMLTOX_X64
-  else
-      _url=$WKHTMLTOX_X32
-  fi
-  sudo wget $_url
-  sudo gdebi --n `basename $_url`
+  
+  sudo wget $WKHTMLTOX_URL
+  sudo gdebi --n `basename $WKHTMLTOX_URL`
   sudo ln -s /usr/local/bin/wkhtmltopdf /usr/bin
   sudo ln -s /usr/local/bin/wkhtmltoimage /usr/bin
 else
