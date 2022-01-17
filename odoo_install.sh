@@ -49,8 +49,8 @@ ADMIN_EMAIL="odoo@example.com"
 ## https://github.com/odoo/odoo/wiki/Wkhtmltopdf ):
 ## https://www.odoo.com/documentation/13.0/setup/install.html#debian-ubuntu
 
-WKHTMLTOX_X64=https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.trusty_amd64.deb
-WKHTMLTOX_X32=https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.trusty_i386.deb
+WKHTMLTOX_X64=https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.(lsb_release -c -s)_amd64.deb
+WKHTMLTOX_X32=https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.(lsb_release -c -s)_i386.deb
 #--------------------------------------------------
 # Update Server
 #--------------------------------------------------
@@ -268,7 +268,7 @@ if [ $INSTALL_NGINX = "True" ]; then
   echo -e "\n---- Installing and setting up Nginx ----"
   sudo apt install nginx -y
   cat <<EOF > ~/odoo
-  server {
+server {
   listen 80;
 
   # set proper server name after domain set
@@ -301,8 +301,8 @@ if [ $INSTALL_NGINX = "True" ]; then
   http_503;
 
   types {
-  text/less less;
-  text/scss scss;
+    text/less less;
+    text/scss scss;
   }
 
   #   enable  data    compression
@@ -316,36 +316,38 @@ if [ $INSTALL_NGINX = "True" ]; then
   client_max_body_size 0;
 
   location / {
-  proxy_pass    http://127.0.0.1:$OE_PORT;
-  # by default, do not forward anything
-  proxy_redirect off;
+    proxy_pass    http://127.0.0.1:$OE_PORT;
+    # by default, do not forward anything
+    proxy_redirect off;
   }
 
   location /longpolling {
-  proxy_pass http://127.0.0.1:$LONGPOLLING_PORT;
+    proxy_pass http://127.0.0.1:$LONGPOLLING_PORT;
   }
+
   location ~* .(js|css|png|jpg|jpeg|gif|ico)$ {
-  expires 2d;
-  proxy_pass http://127.0.0.1:$OE_PORT;
-  add_header Cache-Control "public, no-transform";
+    expires 2d;
+    proxy_pass http://127.0.0.1:$OE_PORT;
+    add_header Cache-Control "public, no-transform";
   }
+
   # cache some static data in memory for 60mins.
   location ~ /[a-zA-Z0-9_-]*/static/ {
-  proxy_cache_valid 200 302 60m;
-  proxy_cache_valid 404      1m;
-  proxy_buffering    on;
-  expires 864000;
-  proxy_pass    http://127.0.0.1:$OE_PORT;
+    proxy_cache_valid 200 302 60m;
+    proxy_cache_valid 404      1m;
+    proxy_buffering    on;
+    expires 864000;
+    proxy_pass    http://127.0.0.1:$OE_PORT;
   }
-  }
+}
 EOF
 
-  sudo mv ~/odoo /etc/nginx/sites-available/
-  sudo ln -s /etc/nginx/sites-available/odoo /etc/nginx/sites-enabled/odoo
+  sudo mv ~/odoo /etc/nginx/sites-available/$WEBSITE_NAME
+  sudo ln -s /etc/nginx/sites-available/$WEBSITE_NAME /etc/nginx/sites-enabled/$WEBSITE_NAME
   sudo rm /etc/nginx/sites-enabled/default
   sudo service nginx reload
   sudo su root -c "printf 'proxy_mode = True\n' >> /etc/${OE_CONFIG}.conf"
-  echo "Done! The Nginx server is up and running. Configuration can be found at /etc/nginx/sites-available/odoo"
+  echo "Done! The Nginx server is up and running. Configuration can be found at /etc/nginx/sites-available/$WEBSITE_NAME"
 else
   echo "Nginx isn't installed due to choice of the user!"
 fi
@@ -380,6 +382,6 @@ echo "Start Odoo service: sudo service $OE_CONFIG start"
 echo "Stop Odoo service: sudo service $OE_CONFIG stop"
 echo "Restart Odoo service: sudo service $OE_CONFIG restart"
 if [ $INSTALL_NGINX = "True" ]; then
-  echo "Nginx configuration file: /etc/nginx/sites-available/odoo"
+  echo "Nginx configuration file: /etc/nginx/sites-available/$WEBSITE_NAME"
 fi
 echo "-----------------------------------------------------------"
