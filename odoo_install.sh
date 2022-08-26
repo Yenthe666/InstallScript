@@ -22,8 +22,8 @@ OE_HOME_EXT="/$OE_USER/${OE_USER}-server"
 INSTALL_WKHTMLTOPDF="True"
 # Set the default Odoo port (you still have to use -c /etc/odoo-server.conf for example to use this.)
 OE_PORT="8069"
-# Choose the Odoo version which you want to install. For example: 13.0, 12.0, 11.0 or saas-18. When using 'master' the master version will be installed.
-# IMPORTANT! This script contains extra libraries that are specifically needed for Odoo 13.0
+# Choose the Odoo version which you want to install. For example: 15.0, 12.0, 11.0 or saas-18. When using 'master' the master version will be installed.
+# IMPORTANT! This script contains extra libraries that are specifically needed for Odoo 15.0
 OE_VERSION="15.0"
 # Set this to True if you want to install the Odoo enterprise version!
 IS_ENTERPRISE="False"
@@ -32,7 +32,7 @@ INSTALL_NGINX="False"
 # Set the superadmin password - if GENERATE_RANDOM_PASSWORD is set to "True" we will automatically generate a random password, otherwise we use this one
 OE_SUPERADMIN="admin"
 # Set to "True" to generate a random password, "False" to use the variable in OE_SUPERADMIN
-GENERATE_RANDOM_PASSWORD="True"
+GENERATE_RANDOM_PASSWORD="False"
 OE_CONFIG="${OE_USER}-server"
 # Set the website name
 WEBSITE_NAME="_"
@@ -47,7 +47,7 @@ ADMIN_EMAIL="odoo@example.com"
 ## === Ubuntu Trusty x64 & x32 === (for other distributions please replace these two links,
 ## in order to have correct version of wkhtmltopdf installed, for a danger note refer to
 ## https://github.com/odoo/odoo/wiki/Wkhtmltopdf ):
-## https://www.odoo.com/documentation/13.0/setup/install.html#debian-ubuntu
+## https://www.odoo.com/documentation/15.0/setup/install.html#debian-ubuntu
 
 WKHTMLTOX_X64="https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.$(lsb_release -c -s)_amd64.deb"
 WKHTMLTOX_X32="https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.$(lsb_release -c -s)_i386.deb"
@@ -55,10 +55,11 @@ WKHTMLTOX_X32="https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12
 # Update Server
 #--------------------------------------------------
 echo -e "\n---- Update Server ----"
-# universe package is for Ubuntu 18.x
+# universe package is for Ubuntu 20.x
 sudo add-apt-repository universe
 # libpng12-0 dependency for wkhtmltopdf
-sudo add-apt-repository "deb http://mirrors.kernel.org/ubuntu/ xenial main"
+sudo add-apt-repository "deb http://mirrors.kernel.org/ubuntu/ focal main"
+sudo add-apt-repository ppa:linuxuprising/libpng12 -y
 sudo apt-get update
 sudo apt-get upgrade -y
 
@@ -66,7 +67,7 @@ sudo apt-get upgrade -y
 # Install PostgreSQL Server
 #--------------------------------------------------
 echo -e "\n---- Install PostgreSQL Server ----"
-sudo apt-get install postgresql postgresql-server-dev-all -y
+sudo apt-get install postgresql postgresql-client -y
 
 echo -e "\n---- Creating the ODOO PostgreSQL User  ----"
 sudo su - postgres -c "createuser -s $OE_USER" 2> /dev/null || true
@@ -75,33 +76,44 @@ sudo su - postgres -c "createuser -s $OE_USER" 2> /dev/null || true
 # Install Dependencies
 #--------------------------------------------------
 echo -e "\n--- Installing Python 3 + pip3 --"
-sudo apt-get install git python3 python3-pip build-essential wget python3-dev python3-venv python3-wheel libxslt-dev libzip-dev libldap2-dev libsasl2-dev python3-setuptools node-less libpng12-0 libjpeg-dev gdebi -y
+sudo apt-get install python3-dev libxml2-dev libxslt1-dev libldap2-dev libsasl2-dev \
+    libtiff5-dev libjpeg8-dev libopenjp2-7-dev zlib1g-dev libfreetype6-dev \
+    liblcms2-dev libwebp-dev libharfbuzz-dev libfribidi-dev libxcb1-dev libpq-dev gdebi -y
 
 echo -e "\n---- Install python packages/requirements ----"
+sudo pip3 install setuptools wheel
 sudo -H pip3 install -r https://github.com/odoo/odoo/raw/${OE_VERSION}/requirements.txt
 
 echo -e "\n---- Installing nodeJS NPM and rtlcss for LTR support ----"
-sudo apt-get install nodejs npm -y
+sudo apt-get curl -y
+sudo curl -sSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+sudo apt-get install nodejs -y
+sudo apt-get install npm -y
 sudo npm install -g rtlcss
+
 
 #--------------------------------------------------
 # Install Wkhtmltopdf if needed
 #--------------------------------------------------
 if [ $INSTALL_WKHTMLTOPDF = "True" ]; then
-  echo -e "\n---- Install wkhtml and place shortcuts on correct place for ODOO 13 ----"
+  echo -e "\n---- Install wkhtml and place shortcuts on correct place for ODOO 15 ----"
   #pick up correct one from x64 & x32 versions:
   if [ "`getconf LONG_BIT`" == "64" ];then
+      echo "install for 64 bit system"
       _url=$WKHTMLTOX_X64
   else
+      echo "install for 32 bit system"
       _url=$WKHTMLTOX_X32
   fi
-  sudo wget $_url
+  echo "curl -sSL $_url -o `basename $_url`"
+  sudo curl -sSL $_url -o `basename $_url`
   sudo gdebi --n `basename $_url`
   sudo ln -s /usr/local/bin/wkhtmltopdf /usr/bin
   sudo ln -s /usr/local/bin/wkhtmltoimage /usr/bin
 else
   echo "Wkhtmltopdf isn't installed due to the choice of the user!"
 fi
+
 
 echo -e "\n---- Create ODOO system user ----"
 sudo adduser --system --quiet --shell=/bin/bash --home=$OE_HOME --gecos 'ODOO' --group $OE_USER
@@ -122,7 +134,6 @@ if [ $IS_ENTERPRISE = "True" ]; then
     # Odoo Enterprise install!
     sudo pip3 install psycopg2-binary pdfminer.six
     echo -e "\n--- Create symlink for node"
-    sudo ln -s /usr/bin/nodejs /usr/bin/node
     sudo su $OE_USER -c "mkdir $OE_HOME/enterprise"
     sudo su $OE_USER -c "mkdir $OE_HOME/enterprise/addons"
 
