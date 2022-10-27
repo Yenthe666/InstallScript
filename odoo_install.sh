@@ -63,6 +63,7 @@ sudo add-apt-repository universe
 sudo add-apt-repository "deb http://mirrors.kernel.org/ubuntu/ xenial main"
 sudo apt-get update
 sudo apt-get upgrade -y
+sudo apt-get install libpq-dev
 
 #--------------------------------------------------
 # Install PostgreSQL Server
