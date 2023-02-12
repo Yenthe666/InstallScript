@@ -38,6 +38,8 @@ sudo chmod +x odoo_install.sh
 sudo ./odoo_install.sh
 ```
 
+Please note that the script should not be run as an "odoo" user, but another user on the server.
+
 ## Where should I host Odoo?
 There are plenty of great services that offer good hosting. The script has been tested with a few major players such as [Google Cloud](https://cloud.google.com/), [Hetzner](https://www.hetzner.com/), [Amazon AWS](https://aws.amazon.com/) and [DigitalOcean](https://www.digitalocean.com/products/droplets/).
 If you'd like you can use my [DigitalOcean referral link](https://m.do.co/c/d605cc420682) which gives you a 200$ voucher for free for the first 60 days.
