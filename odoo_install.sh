@@ -53,8 +53,9 @@ ADMIN_EMAIL="odoo@example.com"
 
 # Check if the operating system is Ubuntu 22.04
 if [[ $(lsb_release -r -s) == "22.04" ]]; then
-    WKHTMLTOX_X64="https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.focal_amd64.deb"
-    #No 32 bit version available for Ubuntu 22.04
+    WKHTMLTOX_X64="https://packages.ubuntu.com/jammy/wkhtmltopdf"
+    WKHTMLTOX_X32="https://packages.ubuntu.com/jammy/wkhtmltopdf"
+    #No Same link works for both 64 and 32-bit on Ubuntu 22.04
 else
     # For older versions of Ubuntu
     WKHTMLTOX_X64="https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.$(lsb_release -c -s)_amd64.deb"
@@ -67,7 +68,7 @@ fi
 echo -e "\n---- Update Server ----"
 # universe package is for Ubuntu 18.x
 sudo add-apt-repository universe
-# libpng12-0 dependency for wkhtmltopdf
+# libpng12-0 dependency for wkhtmltopdf for older Ubuntu versions
 sudo add-apt-repository "deb http://mirrors.kernel.org/ubuntu/ xenial main"
 sudo apt-get update
 sudo apt-get upgrade -y
@@ -118,7 +119,15 @@ if [ $INSTALL_WKHTMLTOPDF = "True" ]; then
       _url=$WKHTMLTOX_X32
   fi
   sudo wget $_url
-  sudo gdebi --n `basename $_url`
+  
+
+  if [[ $(lsb_release -r -s) == "22.04" ]]; then
+    # Ubuntu 22.04 LTS
+    sudo apt install wkhtmltopdf -y
+  else
+      # For older versions of Ubuntu
+    sudo gdebi --n `basename $_url`
+  fi
   
   sudo ln -s /usr/local/bin/wkhtmltopdf /usr/bin
   sudo ln -s /usr/local/bin/wkhtmltoimage /usr/bin
@@ -380,13 +389,22 @@ fi
 #--------------------------------------------------
 
 if [ $INSTALL_NGINX = "True" ] && [ $ENABLE_SSL = "True" ] && [ $ADMIN_EMAIL != "odoo@example.com" ]  && [ $WEBSITE_NAME != "_" ];then
-  sudo add-apt-repository ppa:certbot/certbot -y && sudo apt-get update -y
+  sudo apt-get update -y
+  sudo apt install snapd -y
+  sudo snap install core; snap refresh core
+  sudo snap install --classic certbot
   sudo apt-get install python3-certbot-nginx -y
   sudo certbot --nginx -d $WEBSITE_NAME --noninteractive --agree-tos --email $ADMIN_EMAIL --redirect
   sudo service nginx reload
   echo "SSL/HTTPS is enabled!"
 else
   echo "SSL/HTTPS isn't enabled due to choice of the user or because of a misconfiguration!"
+  if $ADMIN_EMAIL = "odoo@example.com" then 
+    echo "Certbot does not support registering odoo@example.com. You should use real e-mail address."
+  fi
+  if $WEBSITE_NAME = "_" then
+    echo "Website name is set as _. Cannot obtain SSL Certificate for _. You should use real website address."
+  fi
 fi
 
 echo -e "* Starting Odoo Service"
