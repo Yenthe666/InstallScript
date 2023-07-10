@@ -399,10 +399,10 @@ if [ $INSTALL_NGINX = "True" ] && [ $ENABLE_SSL = "True" ] && [ $ADMIN_EMAIL != 
   echo "SSL/HTTPS is enabled!"
 else
   echo "SSL/HTTPS isn't enabled due to choice of the user or because of a misconfiguration!"
-  if $ADMIN_EMAIL = "odoo@example.com" then 
+  if $ADMIN_EMAIL = "odoo@example.com";then 
     echo "Certbot does not support registering odoo@example.com. You should use real e-mail address."
   fi
-  if $WEBSITE_NAME = "_" then
+  if $WEBSITE_NAME = "_";then
     echo "Website name is set as _. Cannot obtain SSL Certificate for _. You should use real website address."
   fi
 fi
