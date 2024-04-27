@@ -1,15 +1,15 @@
 #!/bin/bash
 ################################################################################
-# Script for installing Odoo on Ubuntu 16.04, 18.04, 20.04 and 22.04 (could be used for other version too)
+# Script for installing Odoo on Ubuntu 20.04, 22.04 and 24.04 (could be used for other version too with adjustments)
 # Author: Yenthe Van Ginneken
 #-------------------------------------------------------------------------------
 # This script will install Odoo on your Ubuntu server. It can install multiple Odoo instances
-# in one Ubuntu because of the different xmlrpc_ports
+# in one Ubuntu because of the different http_ports
 #-------------------------------------------------------------------------------
 # Make a new file:
-# sudo nano odoo-install.sh
+# sudo nano odoo_install.sh
 # Place this content in it and then make the file executable:
-# sudo chmod +x odoo-install.sh
+# sudo chmod +x odoo_install.sh
 # Execute the script to install Odoo:
 # ./odoo-install
 ################################################################################
@@ -22,13 +22,20 @@ OE_HOME_EXT="/$OE_USER/${OE_USER}-server"
 INSTALL_WKHTMLTOPDF="True"
 # Set the default Odoo port (you still have to use -c /etc/odoo-server.conf for example to use this.)
 OE_PORT="8069"
-# Choose the Odoo version which you want to install. For example: 16.0, 15.0, 14.0 or saas-22. When using 'master' the master version will be installed.
+# Choose the Odoo version which you want to install. For example: 17.0, 16.0, 15.0, or saas-22. When using 'master' the master version will be installed.
 # IMPORTANT! This script contains extra libraries that are specifically needed for Odoo 17.0
 OE_VERSION="17.0"
 # Set this to True if you want to install the Odoo enterprise version!
-IS_ENTERPRISE="False"
-# Installs postgreSQL V14 instead of defaults (e.g V12 for Ubuntu 20/22) - this improves performance
-INSTALL_POSTGRESQL_FOURTEEN="True"
+IS_ENTERPRISE="True"
+# Installs postgreSQL V16 instead of defaults (e.g V12 for Ubuntu 20/22) - this improves performance
+INSTALL_POSTGRESQL_SIXTEEN="True"
+# Set to True and provide the Database Parameters if using remote PostgresSQL Server
+REMOTE_POSTGRESQL="False"
+# Set the Database Parameters to be added to the Odoo config file
+OE_DB_HOST=""
+OE_DB_USER=""
+OE_DB_PORT=""
+OE_DB_PASS=""
 # Set this to True if you want to install Nginx!
 INSTALL_NGINX="False"
 # Set the superadmin password - if GENERATE_RANDOM_PASSWORD is set to "True" we will automatically generate a random password, otherwise we use this one
@@ -41,57 +48,77 @@ WEBSITE_NAME="_"
 # Set the default Odoo longpolling port (you still have to use -c /etc/odoo-server.conf for example to use this.)
 LONGPOLLING_PORT="8072"
 # Set to "True" to install certbot and have ssl enabled, "False" to use http
-ENABLE_SSL="True"
+ENABLE_SSL="False"
 # Provide Email to register ssl certificate
 ADMIN_EMAIL="odoo@example.com"
-##
-###  WKHTMLTOPDF download links
-## === Ubuntu Trusty x64 & x32 === (for other distributions please replace these two links,
-## in order to have correct version of wkhtmltopdf installed, for a danger note refer to
-## https://github.com/odoo/odoo/wiki/Wkhtmltopdf ):
-## https://www.odoo.com/documentation/16.0/administration/install.html
 
-# Check if the operating system is Ubuntu 22.04
-if [[ $(lsb_release -r -s) == "22.04" ]]; then
-    WKHTMLTOX_X64="https://packages.ubuntu.com/jammy/wkhtmltopdf"
-    WKHTMLTOX_X32="https://packages.ubuntu.com/jammy/wkhtmltopdf"
-    #No Same link works for both 64 and 32-bit on Ubuntu 22.04
-else
-    # For older versions of Ubuntu
-    WKHTMLTOX_X64="https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.$(lsb_release -c -s)_amd64.deb"
-    WKHTMLTOX_X32="https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.$(lsb_release -c -s)_i386.deb"
-fi
+# Check Ubuntu version to adjust script as needed
+UBUNTU_VERSION=$(lsb_release -cs)  # Get the codename of the Ubuntu version
+
+# Set the URL for WKHTMLTOPDF 0.12.6 needed for Ubuntu 20.04
+echo "Adding URL for WKHTMLTOPDF 0.12.6"
+WKHTMLTOX_X64="https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.6/wkhtmltox_0.12.6-1.$(lsb_release -c -s)_amd64.deb"
+WKHTMLTOX_X32="https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.6/wkhtmltox_0.12.6-1.$(lsb_release -c -s)_i386.deb"
 
 #--------------------------------------------------
 # Update Server
 #--------------------------------------------------
 echo -e "\n---- Update Server ----"
-# universe package is for Ubuntu 18.x
+sudo apt-get update
+sudo apt install software-properties-common -y
+
+# Add the universe repository, which is available across these Ubuntu versions and add main resposity specific to Ubuntu 20.04, 22.04, or 24.04
 sudo add-apt-repository universe
-# libpng12-0 dependency for wkhtmltopdf for older Ubuntu versions
-sudo add-apt-repository "deb http://mirrors.kernel.org/ubuntu/ xenial main"
+
+case $UBUNTU_VERSION in
+    focal)
+        echo "Adding repository for Ubuntu 20.04 (Focal)"
+        sudo add-apt-repository "deb http://mirrors.kernel.org/ubuntu/ focal main"
+        ;;
+    jammy)
+        echo "Adding repository for Ubuntu 22.04 (Jammy)"
+        sudo add-apt-repository "deb http://mirrors.kernel.org/ubuntu/ jammy main"
+        ;;
+    noble)
+        echo "Adding repository for Ubuntu 24.04 (Noble)"
+        sudo add-apt-repository "deb http://mirrors.kernel.org/ubuntu/ noble main"
+        ;;
+    *)
+        echo "Current Ubuntu version is $UBUNTU_VERSION. No specific repository added for this version."
+        ;;
+esac
+
+# Update package lists and upgrade installed packages
 sudo apt-get update
 sudo apt-get upgrade -y
+
+# Install specific packages
 sudo apt-get install libpq-dev
 
 #--------------------------------------------------
 # Install PostgreSQL Server
 #--------------------------------------------------
 echo -e "\n---- Install PostgreSQL Server ----"
-if [ $INSTALL_POSTGRESQL_FOURTEEN = "True" ]; then
-    echo -e "\n---- Installing postgreSQL V14 due to the user it's choise ----"
-    sudo curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc|sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/postgresql.gpg
-    sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
-    sudo apt-get update
-    sudo apt-get install postgresql-16
+
+# Check if REMOTE_POSTGRESQL is set to True to skip installation
+if [ "$REMOTE_POSTGRESQL" = "True" ]; then
+    echo "PostgreSQL install skipped due to choice of the user!"
 else
-    echo -e "\n---- Installing the default postgreSQL version based on Linux version ----"
-    sudo apt-get install postgresql postgresql-server-dev-all -y
+    # Proceed with installation if REMOTE_POSTGRES is not True
+    if [ "$INSTALL_POSTGRESQL_SIXTEEN" = "True" ]; then
+        echo -e "\n---- Installing postgreSQL V16 as per user's choice ----"
+        sudo curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/postgresql.gpg
+        sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+        sudo apt-get update
+        sudo apt-get install postgresql-16
+    else
+        echo -e "\n---- Installing the default postgreSQL version based on Linux version ----"
+        sudo apt-get install postgresql postgresql-server-dev-all -y
+    fi
+
+    echo -e "\n---- Creating the ODOO PostgreSQL User  ----"
+    sudo su - postgres -c "createuser -s $OE_USER" 2> /dev/null || true
 fi
-
-
-echo -e "\n---- Creating the ODOO PostgreSQL User  ----"
-sudo su - postgres -c "createuser -s $OE_USER" 2> /dev/null || true
 
 #--------------------------------------------------
 # Install Dependencies
@@ -103,6 +130,10 @@ sudo apt-get install git python3-cffi build-essential wget python3-dev python3-v
 echo -e "\n---- Install python packages/requirements ----"
 sudo -H pip3 install -r https://github.com/odoo/odoo/raw/${OE_VERSION}/requirements.txt
 
+echo -e "\n---- Fix pyOpenSSL Version Problems ----"
+sudo -H pip3 uninstall pyopenssl
+sudo -H pip install pyopenssl==22.1.0
+
 echo -e "\n---- Installing nodeJS NPM and rtlcss for LTR support ----"
 sudo apt-get install nodejs npm -y
 sudo npm install -g rtlcss
@@ -110,29 +141,32 @@ sudo npm install -g rtlcss
 #--------------------------------------------------
 # Install Wkhtmltopdf if needed
 #--------------------------------------------------
-if [ $INSTALL_WKHTMLTOPDF = "True" ]; then
-  echo -e "\n---- Install wkhtml and place shortcuts on correct place for ODOO 13 ----"
-  #pick up correct one from x64 & x32 versions:
-  if [ "`getconf LONG_BIT`" == "64" ];then
-      _url=$WKHTMLTOX_X64
-  else
-      _url=$WKHTMLTOX_X32
-  fi
-  sudo wget $_url
-  
+if [ "$INSTALL_WKHTMLTOPDF" = "True" ]; then
+  echo -e "\n---- Install wkhtml and place shortcuts on correct place for ODOO ${OE_VERSION} ----"
 
-  if [[ $(lsb_release -r -s) == "22.04" ]]; then
-    # Ubuntu 22.04 LTS
-    sudo apt install wkhtmltopdf -y
+  # Use apt install for Ubuntu 22.04 and 24.04 directly
+  UBUNTU_VERSION=$(lsb_release -r -s)
+  if [[ "$UBUNTU_VERSION" == "22.04" || "$UBUNTU_VERSION" == "24.04" ]]; then
+      # Ubuntu 22.04 LTS and 24.04 Noble Numbat
+      sudo apt install wkhtmltopdf -y
   else
-      # For older versions of Ubuntu
-    sudo gdebi --n `basename $_url`
+      # Pick the correct one from x64 & x32 versions:
+      if [ "`getconf LONG_BIT`" == "64" ]; then
+          _url=$WKHTMLTOX_X64
+      else
+          _url=$WKHTMLTOX_X32
+      fi
+      sudo wget $_url
+
+      # Install using gdebi for older or other versions of Ubuntu not specified for direct apt install
+      sudo gdebi --n `basename $_url`
   fi
-  
-  sudo ln -s /usr/local/bin/wkhtmltopdf /usr/bin
-  sudo ln -s /usr/local/bin/wkhtmltoimage /usr/bin
+
+  # Ensure wkhtmltopdf and wkhtmltoimage are linked correctly for all scenarios
+  sudo ln -s /usr/bin/wkhtmltopdf /usr/local/bin/wkhtmltopdf
+  sudo ln -s /usr/bin/wkhtmltoimage /usr/local/bin/wkhtmltoimage
 else
-  echo "Wkhtmltopdf isn't installed due to the choice of the user!"
+  echo "Wkhtmltopdf install skipped due to the choice of the user!"
 fi
 
 echo -e "\n---- Create ODOO system user ----"
@@ -171,7 +205,7 @@ if [ $IS_ENTERPRISE = "True" ]; then
 
     echo -e "\n---- Added Enterprise code under $OE_HOME/enterprise/addons ----"
     echo -e "\n---- Installing Enterprise specific libraries ----"
-    sudo -H pip3 install num2words ofxparse dbfread ebaysdk firebase_admin pyOpenSSL
+    sudo -H pip3 install num2words ofxparse dbfread ebaysdk firebase_admin
     sudo npm install -g less
     sudo npm install -g less-plugin-clean-css
 fi
@@ -184,7 +218,6 @@ echo -e "\n---- Setting permissions on home folder ----"
 sudo chown -R $OE_USER:$OE_USER $OE_HOME/*
 
 echo -e "* Create server config file"
-
 
 sudo touch /etc/${OE_CONFIG}.conf
 echo -e "* Creating server config file"
@@ -205,6 +238,14 @@ if [ $IS_ENTERPRISE = "True" ]; then
     sudo su root -c "printf 'addons_path=${OE_HOME}/enterprise/addons,${OE_HOME_EXT}/addons\n' >> /etc/${OE_CONFIG}.conf"
 else
     sudo su root -c "printf 'addons_path=${OE_HOME_EXT}/addons,${OE_HOME}/custom/addons\n' >> /etc/${OE_CONFIG}.conf"
+fi
+if [ $REMOTE_POSTGRESQL = "True" ]; then
+    sudo su root -c "printf 'db_host = ${OE_DB_HOST}\n' >> /etc/${OE_CONFIG}.conf"
+    sudo su root -c "printf 'db_user = ${OE_DB_USER}\n' >> /etc/${OE_CONFIG}.conf"
+    sudo su root -c "printf 'db_port = ${OE_DB_PORT}\n' >> /etc/${OE_CONFIG}.conf"
+    sudo su root -c "printf 'db_password = ${OE_DB_PASS}\n' >> /etc/${OE_CONFIG}.conf"
+else
+    sudo su root -c "printf ';db_host = \n' >> /etc/${OE_CONFIG}.conf"
 fi
 sudo chown $OE_USER:$OE_USER /etc/${OE_CONFIG}.conf
 sudo chmod 640 /etc/${OE_CONFIG}.conf
@@ -415,7 +456,15 @@ echo "Port: $OE_PORT"
 echo "User service: $OE_USER"
 echo "Configuraton file location: /etc/${OE_CONFIG}.conf"
 echo "Logfile location: /var/log/$OE_USER"
-echo "User PostgreSQL: $OE_USER"
+if [ $REMOTE_POSTGRESQL = "True" ]; then
+  echo "Remote PostgreSQL Specifications:"
+  echo "User PostgreSQL: $OE_DB_USER"
+  echo "Host PostgreSQL: $OE_DB_HOST"
+  echo "Port PostgreSQL: $OE_DB_PORT"
+  echo "Password PostgreSQL: $OE_DB_PASS"
+else
+  echo "User PostgreSQL: $OE_USER"
+fi
 echo "Code location: $OE_USER"
 echo "Addons folder: $OE_USER/$OE_CONFIG/addons/"
 echo "Password superadmin (database): $OE_SUPERADMIN"
