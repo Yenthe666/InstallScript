@@ -1,0 +1,65 @@
+#db_location {
+	outline: none;
+	border: none;
+	font-size: 15px;
+	box-shadow: none;
+	background-color: #fff;
+	padding: 4px 24px;
+	height: 40px;
+}
+.db_restore_content {
+	height: 100%;
+	width: 100%;
+}
+#db_restore {
+	color: #ffffff;
+	width: 100px;
+	background-color: #b1b1b1;
+	height: 30px;
+	border: none;
+	text-transform: capitalize;
+	margin-right: 10px;
+	text-align: center;
+}
+#db_restore:hover {
+	background-color: #000;
+	color: #fff;
+}
+.backup_download {
+	color: #ffffff;
+	width: 30px;
+	background-color: #b1b1b1;
+	height: 30px;
+	border: none;
+	text-transform: capitalize;
+}
+.backup_download:hover {
+	background-color: #000;
+	color: #fff;
+}
+.table-head {
+	background-color: #2e2e2e;
+	color: #fff;
+	border: 1px solid #eaeaea;
+}
+.table-data {
+	text-align: center;
+}
+.file_row {
+	--table-bg: #ffffff;
+	color: #000;
+	border: 1px solid #eaeaea;
+}
+.scrollable-table {
+	height: 75vh;
+	overflow-y: auto;
+}
+.company_image {
+	max-width: 200px;
+	max-height: 100px;
+	margin: 20px;
+}
+.option {
+	background-color: black;
+	color: white;
+}

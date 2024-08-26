@@ -1,0 +1,3 @@
+id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
+access_database_manager,access.database.manager,model_database_manager,base.group_user,1,1,1,1
+access_database_restore,access.database.restore,model_database_restore,base.group_user,1,1,1,1
