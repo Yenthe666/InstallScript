@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--    Dashboard template    -->
+<template id="db_restore">
+    <t t-name="database_manager_dashboard.DbRestoreDashboard">
+        <div class="container">
+            <section class="dashboard_main_section db_restore_section"
+                     id="main_section_manager">
+                <center>
+                    <div class="company_image"/>
+                </center>
+                <!-- Selection for filtering on basis of storage types  -->
+                <div class="filter_location"
+                     style="float:right; margin-right: 15px; margin-bottom: 10px;">
+                    <select id="db_location"
+                            t-on-change="_onchange_location"
+                            class="form-select db_location">
+                        <option class="option" value="all_backups">All
+                            Backups
+                        </option>
+                        <option class="option" value="OneDrive">OneDrive
+                        </option>
+                        <option class="option" value="Dropbox">Dropbox</option>
+                        <option class="option" value="AmazonS3">Amazon</option>
+                        <option class="option" value="Google Drive">Google
+                            Drive
+                        </option>
+                        <option class="option" value="Local Storage">Local
+                            Storage
+                        </option>
+                        <option class="option" value="FTP Storage">FTP
+                            Storage
+                        </option>
+                        <option class="option" value="SFTP Storage">SFTP
+                            Storage
+                        </option>
+                        <option class="option" value="Nextcloud">Nextcloud
+                        </option>
+                    </select>
+                </div>
+                <br/>
+                <!--            Table to show all Backup Files     -->
+                <div class="db_restore_content scrollable-table"
+                     style="margin-top: 46px">
+                    <table class="table" id="db_restore_table">
+                        <thead class="table-head">
+                            <tr style="text-align:center;">
+                                <th style="text-align:center;" scope="col">SL
+                                    NO:
+                                </th>
+                                <th scope="col">Backup Files</th>
+                                <th scope="col">Backup Location</th>
+                                <th scope="col">Time (UTC)</th>
+                                <th scope="col" style="width:190px"/>
+                            </tr>
+                        </thead>
+                        <tbody class="db_restore_files">
+                            <tr class="table_row" t-foreach="dbDashboard.data" t-as="data" t-key="data_index">
+                                <td class="table-data" t-out="data_index + 1"/>
+                                <td class="table-data" t-out="data.file_name"/>
+                                <td class="table-data" t-out="data.values[1]"/>
+                                <td class="table-data" t-out="data.values[2]"/>
+                                <td>
+                                    <button type="button" id="db_restore"
+                                            t-att-data-location="data.values[1]"
+                                            t-on-click="_onClick_restore"
+                                            t-att-value="data.values[0]"
+                                            class="btn btn-primary">
+                                        <i class="fa fa-floppy-o fa-fw"/>
+                                        Restore
+                                    </button>
+                                    <a t-if="isValidBackupName(data.values[1])" t-att-href="data.values[0]">
+                                        <button type="button" class="backup_download btn btn-primary">
+                                            <i class="fa fa-download o_pivot_download"/>
+                                        </button>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </t>
+</template>

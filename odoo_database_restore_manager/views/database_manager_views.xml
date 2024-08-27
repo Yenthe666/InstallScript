@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Database manager views -->
+    <record id="database_manager_action" model="ir.actions.client">
+        <field name="name">Database Restore Manager</field>
+        <field name="tag">database_manager_dashboard</field>
+        <field name="target">current</field>
+    </record>
+    <menuitem id="menu_db_restore_view"
+              parent="auto_database_backup.db_backup_menu_root"
+              name="Restore Manager"
+              action="database_manager_action"/>
+</odoo>
