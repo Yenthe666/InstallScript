@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+<!--Rule to hide menu items -->
+    <record id="ir_ui_menu_rule_user" model="ir.rule">
+        <field name="name">Restrict Menu from Users</field>
+        <field name="model_id" ref="model_ir_ui_menu"/>
+        <field name="domain_force">[('restrict_user_ids','not in',user.id)]</field>
+    </record>
+</odoo>

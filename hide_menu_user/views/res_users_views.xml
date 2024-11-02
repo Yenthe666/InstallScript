@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--Inheriting fields to res.users and ir.ui.menu-->
+    <record id="view_users_form" model="ir.ui.view">
+        <field name="name">res.users.view.form.inherit.hide.menu.user</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Hide Specific Menu" invisible="is_admin">
+                    <tree>
+                        <field name="hide_menu_ids"/>
+                    </tree>
+                </page>
+            </xpath>
+            <field name="name" position="after">
+                <field name="is_admin" invisible="1"/>
+            </field>
+        </field>
+    </record>
+    <!--Inherited view of the model ir.ui.menu-->
+    <record id="edit_menu_access" model="ir.ui.view">
+        <field name="name">ir.ui.menu.view.form.inherit.hide.menu.user</field>
+        <field name="model">ir.ui.menu</field>
+        <field name="inherit_id" ref="base.edit_menu_access"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Restrict users" name="restrict_users">
+                    <tree>
+                        <field name="restrict_user_ids"/>
+                    </tree>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
