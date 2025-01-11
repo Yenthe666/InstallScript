@@ -13,7 +13,7 @@ If you set the parameter ```INSTALL_NGINX``` to ```True``` you should also confi
 
 ##### 1. Download the script:
 ```
-sudo wget https://raw.githubusercontent.com/Yenthe666/InstallScript/17.0/odoo_install.sh
+sudo wget https://raw.githubusercontent.com/DrunkOne/InstallScript/17.0/odoo_install.sh
 ```
 ##### 2. Modify the parameters as you wish.
 There are a few things you can configure, this is the most used list:<br/>
