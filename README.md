@@ -4,6 +4,8 @@ This script is based on the install script from André Schenkels (https://github
 but goes a bit further and has been improved. This script will also give you the ability to define an xmlrpc_port in the .conf file that is generated under /etc/
 This script can be safely used in a multi-odoo code base server because the default Odoo port is changed BEFORE the Odoo is started.
 
+This script was further iterated due to installation dependency issues. The original is from (https://github.com/Yenthe666/InstallScript). The issue stems from "Build to Wheel errors" that occurred during the package installation. Specifically ```gevent==21.8.0``` and ```greenlet==1.1.2``` (Discovered by /ryumada). This just makes it a bit easier for me to just chuck it in. 
+
 ## Installing Nginx
 If you set the parameter ```INSTALL_NGINX``` to ```True``` you should also configure workers. Without workers you will probably get connection loss issues. Look at [the deployment guide from Odoo](https://www.odoo.com/documentation/17.0/administration/install/deploy.html) on how to configure workers.
 
