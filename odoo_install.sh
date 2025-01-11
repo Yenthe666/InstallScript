@@ -101,7 +101,7 @@ sudo apt-get install python3 python3-pip
 sudo apt-get install git python3-cffi build-essential wget python3-dev python3-venv python3-wheel libxslt-dev libzip-dev libldap2-dev libsasl2-dev python3-setuptools node-less libpng-dev libjpeg-dev gdebi -y
 
 echo -e "\n---- Install python packages/requirements ----"
-sudo -H pip3 install -r https://github.com/odoo/odoo/raw/${OE_VERSION}/requirements.txt
+sudo -H pip3 install -r https://github.com/DrunkOne/odoo/raw/${OE_VERSION}/requirements.txt
 
 echo -e "\n---- Installing nodeJS NPM and rtlcss for LTR support ----"
 sudo apt-get install nodejs npm -y
@@ -148,7 +148,7 @@ sudo chown $OE_USER:$OE_USER /var/log/$OE_USER
 # Install ODOO
 #--------------------------------------------------
 echo -e "\n==== Installing ODOO Server ===="
-sudo git clone --depth 1 --branch $OE_VERSION https://www.github.com/DrunkOne/odoo $OE_HOME_EXT/
+sudo git clone --depth 1 --branch $OE_VERSION https://www.github.com/odoo/odoo $OE_HOME_EXT/
 
 if [ $IS_ENTERPRISE = "True" ]; then
     # Odoo Enterprise install!
