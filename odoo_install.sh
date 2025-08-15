@@ -23,8 +23,8 @@ INSTALL_WKHTMLTOPDF="True"
 # Set the default Odoo port (you still have to use -c /etc/odoo-server.conf for example to use this.)
 OE_PORT="8069"
 # Choose the Odoo version which you want to install. For example: 16.0, 15.0, 14.0 or saas-22. When using 'master' the master version will be installed.
-# IMPORTANT! This script contains extra libraries that are specifically needed for Odoo 16.0
-OE_VERSION="16.0"
+# IMPORTANT! This script contains extra libraries that are specifically needed for Odoo 17.0
+OE_VERSION="17.0"
 # Set this to True if you want to install the Odoo enterprise version!
 IS_ENTERPRISE="False"
 # Installs postgreSQL V14 instead of defaults (e.g V12 for Ubuntu 20/22) - this improves performance
@@ -67,9 +67,9 @@ fi
 #--------------------------------------------------
 echo -e "\n---- Update Server ----"
 # universe package is for Ubuntu 18.x
-sudo add-apt-repository universe
+# sudo add-apt-repository universe
 # libpng12-0 dependency for wkhtmltopdf for older Ubuntu versions
-sudo add-apt-repository "deb http://mirrors.kernel.org/ubuntu/ xenial main"
+# sudo add-apt-repository "deb http://mirrors.kernel.org/ubuntu/ xenial main"
 sudo apt-get update
 sudo apt-get upgrade -y
 sudo apt-get install libpq-dev
@@ -83,7 +83,7 @@ if [ $INSTALL_POSTGRESQL_FOURTEEN = "True" ]; then
     sudo curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc|sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/postgresql.gpg
     sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
     sudo apt-get update
-    sudo apt-get install postgresql-14
+    sudo apt-get install postgresql-16
 else
     echo -e "\n---- Installing the default postgreSQL version based on Linux version ----"
     sudo apt-get install postgresql postgresql-server-dev-all -y
