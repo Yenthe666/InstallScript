@@ -44,6 +44,15 @@ LONGPOLLING_PORT="8072"
 ENABLE_SSL="True"
 # Provide Email to register ssl certificate
 ADMIN_EMAIL="odoo@example.com"
+
+# Helper: pip install with optional --break-system-packages (Ubuntu 24.04 / PEP 668)
+pip_install() {
+  if pip3 help install 2>/dev/null | grep -q -- '--break-system-packages'; then
+    sudo -H pip3 install --break-system-packages "$@"
+  else
+    sudo -H pip3 install "$@"
+  fi
+}
 ##
 ###  WKHTMLTOPDF download links
 ## === Ubuntu Trusty x64 & x32 === (for other distributions please replace these two links,
@@ -70,20 +79,32 @@ echo -e "\n---- Update Server ----"
 # sudo add-apt-repository universe
 # libpng12-0 dependency for wkhtmltopdf for older Ubuntu versions
 # sudo add-apt-repository "deb http://mirrors.kernel.org/ubuntu/ xenial main"
-sudo apt-get update
+sudo apt-get update -y
 sudo apt-get upgrade -y
-sudo apt-get install libpq-dev
+sudo apt-get install -y libpq-dev
 
 #--------------------------------------------------
 # Install PostgreSQL Server
 #--------------------------------------------------
 echo -e "\n---- Install PostgreSQL Server ----"
-if [ $$INSTALL_POSTGRESQL_SIXTEEN = "True" ]; then
+if [ "$INSTALL_POSTGRESQL_SIXTEEN" = "True" ]; then
     echo -e "\n---- Installing postgreSQL V16 due to the user it's choise ----"
     sudo curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc|sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/postgresql.gpg
     sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
-    sudo apt-get update
-    sudo apt-get install postgresql-16
+    sudo apt-get update -y
+    sudo apt-get install -y postgresql-16
+    if [ "$IS_ENTERPRISE" = "True" ]; then
+      # Ensure PostgreSQL is running before pgvector setup (Ubuntu 24.04 uses systemd)
+      sudo systemctl start postgresql || true
+      # pgvector is only needed for Enterprise AI features
+      sudo apt-get install -y postgresql-16-pgvector
+      # Wait for PostgreSQL to become available
+      until sudo -u postgres pg_isready >/dev/null 2>&1; do sleep 1; done
+      # Create vector extension using a heredoc to avoid any quoting issues
+      sudo -u postgres psql -v ON_ERROR_STOP=1 -d template1 <<'SQL'
+CREATE EXTENSION IF NOT EXISTS vector;
+SQL
+    fi
 else
     echo -e "\n---- Installing the default postgreSQL version based on Linux version ----"
     sudo apt-get install postgresql postgresql-server-dev-all -y
@@ -97,11 +118,14 @@ sudo su - postgres -c "createuser -s $OE_USER" 2> /dev/null || true
 # Install Dependencies
 #--------------------------------------------------
 echo -e "\n--- Installing Python 3 + pip3 --"
-sudo apt-get install python3 python3-pip
+sudo apt-get install -y python3 python3-pip
 sudo apt-get install git python3-cffi build-essential wget python3-dev python3-venv python3-wheel libxslt-dev libzip-dev libldap2-dev libsasl2-dev python3-setuptools node-less libpng-dev libjpeg-dev gdebi -y
 
 echo -e "\n---- Install python packages/requirements ----"
-sudo -H pip3 install -r https://github.com/odoo/odoo/raw/${OE_VERSION}/requirements.txt --break-system-packages
+pip_install -r https://github.com/odoo/odoo/raw/${OE_VERSION}/requirements.txt
+
+# Extra: ensure phonenumbers is installed
+pip_install phonenumbers
 
 echo -e "\n---- Installing nodeJS NPM and rtlcss for LTR support ----"
 sudo apt-get install nodejs npm -y
@@ -110,7 +134,7 @@ sudo npm install -g rtlcss
 #--------------------------------------------------
 # Install Wkhtmltopdf if needed
 #--------------------------------------------------
-if [ $INSTALL_WKHTMLTOPDF = "True" ]; then
+if [ "$INSTALL_WKHTMLTOPDF" = "True" ]; then
   echo -e "\n---- Install wkhtml and place shortcuts on correct place for ODOO 13 ----"
   #pick up correct one from x64 & x32 versions:
   if [ "`getconf LONG_BIT`" == "64" ];then
@@ -152,7 +176,7 @@ sudo git clone --depth 1 --branch $OE_VERSION https://www.github.com/odoo/odoo $
 
 if [ $IS_ENTERPRISE = "True" ]; then
     # Odoo Enterprise install!
-    sudo pip3 install psycopg2-binary pdfminer.six --break-system-packages
+    pip_install psycopg2-binary pdfminer.six
     sudo su $OE_USER -c "mkdir $OE_HOME/enterprise"
     sudo su $OE_USER -c "mkdir $OE_HOME/enterprise/addons"
 
@@ -169,7 +193,7 @@ if [ $IS_ENTERPRISE = "True" ]; then
 
     echo -e "\n---- Added Enterprise code under $OE_HOME/enterprise/addons ----"
     echo -e "\n---- Installing Enterprise specific libraries ----"
-    sudo -H pip3 install num2words ofxparse dbfread ebaysdk firebase_admin pyOpenSSL --break-system-packages
+    pip_install num2words ofxparse dbfread ebaysdk firebase_admin pyOpenSSL
     sudo npm install -g less
     sudo npm install -g less-plugin-clean-css
 fi
@@ -296,7 +320,7 @@ sudo update-rc.d $OE_CONFIG defaults
 #--------------------------------------------------
 if [ $INSTALL_NGINX = "True" ]; then
   echo -e "\n---- Installing and setting up Nginx ----"
-  sudo apt install nginx -y
+  sudo apt-get install -y nginx
   cat <<EOF > ~/odoo
 server {
   listen 80;
@@ -388,7 +412,7 @@ fi
 
 if [ $INSTALL_NGINX = "True" ] && [ $ENABLE_SSL = "True" ] && [ $ADMIN_EMAIL != "odoo@example.com" ]  && [ $WEBSITE_NAME != "_" ];then
   sudo apt-get update -y
-  sudo apt install snapd -y
+  sudo apt-get install -y snapd
   sudo snap install core; snap refresh core
   sudo snap install --classic certbot
   sudo apt-get install python3-certbot-nginx -y
