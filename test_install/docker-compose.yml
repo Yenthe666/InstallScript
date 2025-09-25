@@ -1,0 +1,10 @@
+services:
+  odoo19:
+    build: .
+    container_name: odoo19
+    restart: unless-stopped
+    command: ["sleep", "infinity"]
+    tty: true
+    stdin_open: true
+    volumes:
+      - ../odoo_install.sh:/opt/odoo-install/odoo_install.sh:ro
