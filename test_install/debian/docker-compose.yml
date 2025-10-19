@@ -1,0 +1,14 @@
+services:
+  odoo19:
+    build: .
+    container_name: odoo19
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+    privileged: true
+    volumes:
+      - ../../odoo_install_debian.sh:/opt/odoo-install/odoo_install.sh
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    tmpfs:
+      - /run
+      - /tmp

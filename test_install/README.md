@@ -1,6 +1,7 @@
 # Odoo 19 Installer Test Environment
 
 This folder provides a minimal Docker setup to exercise the `odoo_install.sh` script in a clean Ubuntu 24.04 container.
+The setup for Debian is similar and can be found in the `debian/` subfolder.
 
 ## Prerequisites
 - Docker 24+
