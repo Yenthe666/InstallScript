@@ -30,20 +30,20 @@ IS_ENTERPRISE="False"
 # Installs postgreSQL V14 instead of defaults (e.g V12 for Ubuntu 20/22) - this improves performance
 INSTALL_POSTGRESQL_FOURTEEN="True"
 # Set this to True if you want to install Nginx!
-INSTALL_NGINX="True"
+INSTALL_NGINX="False"
 # Set the superadmin password - if GENERATE_RANDOM_PASSWORD is set to "True" we will automatically generate a random password, otherwise we use this one
 OE_SUPERADMIN="admin"
 # Set to "True" to generate a random password, "False" to use the variable in OE_SUPERADMIN
 GENERATE_RANDOM_PASSWORD="True"
 OE_CONFIG="${OE_USER}-server"
 # Set the website name
-WEBSITE_NAME="k4i.org"
+WEBSITE_NAME=""
 # Set the default Odoo longpolling port (you still have to use -c /etc/odoo-server.conf for example to use this.)
 LONGPOLLING_PORT="8072"
 # Set to "True" to install certbot and have ssl enabled, "False" to use http
 ENABLE_SSL="True"
 # Provide Email to register ssl certificate
-ADMIN_EMAIL="ragemohammed5@gmail.com"
+ADMIN_EMAIL=""
 ##
 ###  WKHTMLTOPDF download links
 ## === Ubuntu Trusty x64 & x32 === (for other distributions please replace these two links,
