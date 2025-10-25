@@ -11,7 +11,7 @@ If you set the parameter ```INSTALL_NGINX``` to ```True``` you should also confi
 
 ##### 1. Download the script:
 ```
-sudo wget https://raw.githubusercontent.com/Yenthe666/InstallScript/17.0/odoo_install.sh
+sudo wget https://raw.githubusercontent.com/jo0ta/InstallScript/17.0/odoo_install.sh
 ```
 ##### 2. Modify the parameters as you wish.
 There are a few things you can configure, this is the most used list:<br/>
@@ -44,5 +44,5 @@ If you'd like you can use my [DigitalOcean referral link](https://m.do.co/c/d605
 
 ## Minimal server requirements
 While technically you can run an Odoo instance on 1GB (1024MB) of RAM it is absolutely not advised. A Linux instance typically uses 300MB-500MB and the rest has to be split among Odoo, postgreSQL and others. If you install an Odoo you should make sure to use at least 2GB of RAM. This script might fail with less resources too.
-There are known issues on DigitalOcean for example where the installation crashes on 1GB RAM machines. See https://github.com/Yenthe666/InstallScript/issues/243
+There are known issues on DigitalOcean for example where the installation crashes on 1GB RAM machines. See https://github.com/jo0ta/InstallScript/issues/243
 
