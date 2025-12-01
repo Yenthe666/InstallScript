@@ -165,7 +165,7 @@ if [ "$INSTALL_WKHTMLTOPDF" = "True" ]; then
     echo -e "\n---- Could not install from the Ubuntu repositories ----."
   fi
 
-  echo -e "\n---- EEnsure that the links are in /usr/local/bin ----"
+  echo -e "\n---- Ensure that the links are in /usr/local/bin ----"
   wkhtml_create_symlinks_if_needed
 
   if command -v wkhtmltopdf >/dev/null 2>&1; then
