@@ -1,4 +1,5 @@
-# [Odoo](https://www.odoo.com "Odoo's Homepage") Install Script
+# [Odoo](https://www.odoo.com "Odoo's Homepage") Install Script X86 X32 ARM
+# Arch detection + wkhtmltopdf via Ubuntu repos (arm64/amd64/i386)
 
 This script is based on the install script from André Schenkels (https://github.com/aschenkels-ictstudio/openerp-install-scripts)
 but goes a bit further and has been improved. This script will also give you the ability to define an xmlrpc_port in the .conf file that is generated under /etc/

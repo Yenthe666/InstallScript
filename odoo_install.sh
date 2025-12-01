@@ -54,22 +54,45 @@ pip_install() {
   fi
 }
 ##
-###  WKHTMLTOPDF download links
-## === Ubuntu Trusty x64 & x32 === (for other distributions please replace these two links,
-## in order to have correct version of wkhtmltopdf installed, for a danger note refer to
-## https://github.com/odoo/odoo/wiki/Wkhtmltopdf ):
-## https://www.odoo.com/documentation/19.0/administration/install.html
 
-# Check if the operating system is Ubuntu 24.04
-if [[ $(lsb_release -r -s) == "24.04" ]]; then
-    WKHTMLTOX_X64="https://packages.ubuntu.com/jammy/wkhtmltopdf"
-    WKHTMLTOX_X32="https://packages.ubuntu.com/jammy/wkhtmltopdf"
-    #No Same link works for both 64 and 32-bit on Ubuntu 24.04
-else
-    # For older versions of Ubuntu
-    WKHTMLTOX_X64="https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.$(lsb_release -c -s)_amd64.deb"
-    WKHTMLTOX_X32="https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.$(lsb_release -c -s)_i386.deb"
-fi
+## ### WKHTMLTOPDF download & arch detection (x86/x86_64/ARM) ##
+# Installed from the Ubuntu 24.04 repositories
+
+detect_arch() {
+  local arch_raw
+  arch_raw="$(dpkg --print-architecture 2>/dev/null || uname -m)"
+
+  case "$arch_raw" in
+    amd64|x86_64)   ARCH_DEB="amd64";;
+    i386|i686)      ARCH_DEB="i386";;
+    arm64|aarch64)  ARCH_DEB="arm64";;
+    armhf|armv7l)   ARCH_DEB="armhf";;
+    *)              ARCH_DEB="$arch_raw";;
+  esac
+
+  UBUNTU_CODENAME="$(lsb_release -c -s 2>/dev/null || echo noble)"
+  UBUNTU_RELEASE="$(lsb_release -r -s 2>/dev/null || echo 24.04)"
+}
+
+install_wkhtmltopdf_from_ubuntu() {
+  sudo apt-get update -y
+  if sudo apt-get install -y wkhtmltopdf; then
+    echo "wkhtmltopdf installed from Ubuntu repositories ($ARCH_DEB)."
+    return 0
+  fi
+  return 1
+
+wkhtml_create_symlinks_if_needed() {
+  # symlinks
+  if [ -x /usr/local/bin/wkhtmltopdf ] && ! command -v wkhtmltopdf >/dev/null 2>&1; then
+    sudo ln -s /usr/local/bin/wkhtmltopdf /usr/bin || true
+  fi
+  if [ -x /usr/local/bin/wkhtmltoimage ] && ! command -v wkhtmltoimage >/dev/null 2>&1; then
+    sudo ln -s /usr/local/bin/wkhtmltoimage /usr/bin || true
+  fi
+}
+
+detect_arch
 
 #--------------------------------------------------
 # Update Server
@@ -110,7 +133,6 @@ else
     sudo apt-get install postgresql postgresql-server-dev-all -y
 fi
 
-
 echo -e "\n---- Creating the ODOO PostgreSQL User  ----"
 sudo su - postgres -c "createuser -s $OE_USER" 2> /dev/null || true
 
@@ -135,28 +157,24 @@ sudo npm install -g rtlcss
 # Install Wkhtmltopdf if needed
 #--------------------------------------------------
 if [ "$INSTALL_WKHTMLTOPDF" = "True" ]; then
-  echo -e "\n---- Install wkhtml and place shortcuts on correct place for ODOO 13 ----"
-  #pick up correct one from x64 & x32 versions:
-  if [ "`getconf LONG_BIT`" == "64" ];then
-      _url=$WKHTMLTOX_X64
-  else
-      _url=$WKHTMLTOX_X32
-  fi
-  sudo wget $_url
-  
+  echo -e "\n---- Installing wkhtmltopdf (architecture detected: $ARCH_DEB) ----"
 
-  if [[ $(lsb_release -r -s) == "24.04" ]]; then
-    # Ubuntu 24.04 LTS
-    sudo apt install wkhtmltopdf -y
+  if install_wkhtmltopdf_from_ubuntu; then
+    :
   else
-      # For older versions of Ubuntu
-    sudo gdebi --n `basename $_url`
+    echo -e "\n---- Could not install from the Ubuntu repositories ----."
   fi
-  
-  sudo ln -s /usr/local/bin/wkhtmltopdf /usr/bin
-  sudo ln -s /usr/local/bin/wkhtmltoimage /usr/bin
+
+  echo -e "\n---- Ensure that the links are in /usr/local/bin ----"
+  wkhtml_create_symlinks_if_needed
+
+  if command -v wkhtmltopdf >/dev/null 2>&1; then
+    echo -e "\n---- wkhtmltopdf available at: $(command -v wkhtmltopdf) ----"
+  else
+    echo -e "\n----- WARNING: wkhtmltopdf was not installed. You can install it manually later ----"
+  fi
 else
-  echo "Wkhtmltopdf isn't installed due to the choice of the user!"
+  echo -e "\n---- Wkhtmltopdf will not be installed at the user's choice ----"
 fi
 
 echo -e "\n---- Create ODOO system user ----"
