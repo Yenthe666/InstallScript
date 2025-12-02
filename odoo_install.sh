@@ -81,6 +81,7 @@ install_wkhtmltopdf_from_ubuntu() {
     return 0
   fi
   return 1
+}
 
 wkhtml_create_symlinks_if_needed() {
   # symlinks
