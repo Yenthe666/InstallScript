@@ -135,7 +135,13 @@ else
 fi
 
 echo -e "\n---- Creating the ODOO PostgreSQL User  ----"
-sudo su - postgres -c "createuser -s $OE_USER" 2> /dev/null || true
+# Create the role with CREATEDB (Odoo needs it to create/drop databases) but WITHOUT
+# SUPERUSER. A superuser role can run 'COPY ... FROM PROGRAM', which lets anyone who
+# reaches an Odoo admin turn SQL access into shell command execution as the postgres
+# OS user. Keeping the role non-superuser closes that privilege-escalation path and
+# matches Odoo's deployment guidance. See:
+# https://www.odoo.com/documentation/19.0/administration/on_premise/deploy.html
+sudo su - postgres -c "createuser -d -R -S $OE_USER" 2> /dev/null || true
 
 #--------------------------------------------------
 # Install Dependencies
@@ -235,6 +241,11 @@ if [ $GENERATE_RANDOM_PASSWORD = "True" ]; then
     OE_SUPERADMIN=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)
 fi
 sudo su root -c "printf 'admin_passwd = ${OE_SUPERADMIN}\n' >> /etc/${OE_CONFIG}.conf"
+# Security: once your database(s) exist, set list_db = False to disable the
+# unauthenticated database selector/manager (/web/database/*), which otherwise
+# lets anyone enumerate database names. Left commented so the web database
+# manager still works for creating the first database right after install.
+sudo su root -c "printf '; list_db = False\n' >> /etc/${OE_CONFIG}.conf"
 if [ $OE_VERSION > "11.0" ];then
     sudo su root -c "printf 'http_port = ${OE_PORT}\n' >> /etc/${OE_CONFIG}.conf"
 else
