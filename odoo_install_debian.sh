@@ -15,6 +15,15 @@
 # ./odoo-install
 ################################################################################
 
+# Helper function for pip install with PEP 668 compatibility (Debian 12+)
+pip_install() {
+  if pip3 help install 2>/dev/null | grep -q -- '--break-system-packages'; then
+    sudo -H pip3 install --break-system-packages "$@"
+  else
+    sudo -H pip3 install "$@"
+  fi
+}
+
 OE_USER="odoo"
 OE_HOME="/$OE_USER"
 OE_HOME_EXT="/$OE_USER/${OE_USER}-server"
@@ -25,9 +34,11 @@ INSTALL_WKHTMLTOPDF="True"
 OE_PORT="8069"
 # Choose the Odoo version which you want to install. For example: 13.0, 12.0, 11.0 or saas-18. When using 'master' the master version will be installed.
 # IMPORTANT! This script contains extra libraries that are specifically needed for Odoo 13.0
-OE_VERSION="14.0"
+OE_VERSION="19.0"
 # Set this to True if you want to install the Odoo enterprise version!
 IS_ENTERPRISE="False"
+# Installs postgreSQL V16 instead of defaults (e.g V12 for Ubuntu 20/22) - this improves performance
+INSTALL_POSTGRESQL_SIXTEEN="False"
 # Set this to True if you want to install Nginx!
 INSTALL_NGINX="False"
 # Set the superadmin password - if GENERATE_RANDOM_PASSWORD is set to "True" we will automatically generate a random password, otherwise we use this one
@@ -60,7 +71,36 @@ sudo apt-get upgrade -y
 # Install PostgreSQL Server
 #--------------------------------------------------
 echo -e "\n---- Install PostgreSQL Server ----"
-sudo apt-get install postgresql -y
+if [ "$INSTALL_POSTGRESQL_SIXTEEN" = "True" ]; then
+    echo -e "\n---- Installing postgreSQL V16 due to the user's choice ----"
+    sudo apt-get install -y gnupg2
+    sudo curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc|sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/postgresql.gpg
+    sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+    sudo apt-get update -y
+    sudo apt-get install -y postgresql-16
+    if [ "$IS_ENTERPRISE" = "True" ]; then
+      # Ensure PostgreSQL is running before pgvector setup (Ubuntu 24.04 uses systemd)
+      sudo systemctl start postgresql || true
+      # pgvector is only needed for Enterprise AI features
+      sudo apt-get install -y postgresql-16-pgvector
+      # Wait for PostgreSQL to become available
+      until sudo -u postgres pg_isready >/dev/null 2>&1; do sleep 1; done
+      # Create vector extension using a heredoc to avoid any quoting issues
+      sudo -u postgres psql -v ON_ERROR_STOP=1 -d template1 <<'SQL'
+CREATE EXTENSION IF NOT EXISTS vector;
+SQL
+    fi
+else
+    echo -e "\n---- Installing the default postgreSQL version based on Linux version ----"
+    sudo apt-get install postgresql postgresql-server-dev-all -y
+fi
+
+# Ensure PostgreSQL is running before creating the user
+echo -e "\n---- Ensure PostgreSQL is running ----"
+# add timeout to avoid infinite loop in case of errors
+sudo systemctl start postgresql || true
+echo -e "\n---- Waiting for PostgreSQL to become available ----"
+until sudo -u postgres pg_isready >/dev/null 2>&1; do sleep 1; done
 
 echo -e "\n---- Creating the ODOO PostgreSQL User  ----"
 sudo su - postgres -c "createuser -s $OE_USER" 2> /dev/null || true
@@ -69,11 +109,14 @@ sudo su - postgres -c "createuser -s $OE_USER" 2> /dev/null || true
 # Install Dependencies
 #--------------------------------------------------
 echo -e "\n--- Installing Python 3 + pip3 --"
-sudo apt-get install git python3 python3-pip build-essential wget python3-dev python3-venv python3-wheel libxslt1-dev -y
-sudo apt-get install libzip-dev libldap2-dev libsasl2-dev python3-setuptools node-less gdebi -y
+sudo apt-get install -y python3 python3-pip libpq-dev
+sudo apt-get install git python3-cffi build-essential wget python3-dev python3-venv python3-wheel libxslt-dev libzip-dev libldap2-dev libsasl2-dev python3-setuptools node-less libpng-dev libjpeg-dev gdebi -y
 
 echo -e "\n---- Install python packages/requirements ----"
-sudo pip3 install -r https://github.com/odoo/odoo/raw/${OE_VERSION}/requirements.txt
+pip_install -r https://github.com/odoo/odoo/raw/${OE_VERSION}/requirements.txt
+
+# Extra: ensure phonenumbers is installed
+pip_install phonenumbers
 
 echo -e "\n---- Installing nodeJS NPM and rtlcss for LTR support ----"
 sudo apt-get install nodejs npm -y
@@ -82,7 +125,7 @@ sudo npm install -g rtlcss
 #--------------------------------------------------
 # Install Wkhtmltopdf if needed
 #--------------------------------------------------
-if [ $INSTALL_WKHTMLTOPDF = "True" ]; then
+if [ "$INSTALL_WKHTMLTOPDF" = "True" ]; then
   echo -e "\n---- Install wkhtml and place shortcuts on correct place for ODOO 13 ----"
   #pick up correct one from x64 & x32 versions:
   if [ "`getconf LONG_BIT`" == "64" ];then
@@ -139,8 +182,7 @@ if [ $IS_ENTERPRISE = "True" ]; then
 fi
 
 echo -e "\n---- Create custom module directory ----"
-sudo su $OE_USER -c "mkdir $OE_HOME/custom"
-sudo su $OE_USER -c "mkdir $OE_HOME/custom/addons"
+sudo su $OE_USER -c "mkdir -p $OE_HOME/custom/addons"
 
 echo -e "\n---- Setting permissions on home folder ----"
 sudo chown -R $OE_USER:$OE_USER $OE_HOME/*
@@ -295,8 +337,8 @@ if [ $INSTALL_NGINX = "True" ]; then
   http_503;
 
   types {
-  text/less less;
-  text/scss scss;
+    text/less less;
+    text/scss scss;
   }
 
   #   enable  data    compression
@@ -310,36 +352,38 @@ if [ $INSTALL_NGINX = "True" ]; then
   client_max_body_size 0;
 
   location / {
-  proxy_pass    http://127.0.0.1:$OE_PORT;
-  # by default, do not forward anything
-  proxy_redirect off;
+    proxy_pass    http://127.0.0.1:$OE_PORT;
+    # by default, do not forward anything
+    proxy_redirect off;
   }
 
   location /longpolling {
-  proxy_pass http://127.0.0.1:$LONGPOLLING_PORT;
+    proxy_pass http://127.0.0.1:$LONGPOLLING_PORT;
   }
+
   location ~* .(js|css|png|jpg|jpeg|gif|ico)$ {
-  expires 2d;
-  proxy_pass http://127.0.0.1:$OE_PORT;
-  add_header Cache-Control "public, no-transform";
+    expires 2d;
+    proxy_pass http://127.0.0.1:$OE_PORT;
+    add_header Cache-Control "public, no-transform";
   }
+
   # cache some static data in memory for 60mins.
   location ~ /[a-zA-Z0-9_-]*/static/ {
-  proxy_cache_valid 200 302 60m;
-  proxy_cache_valid 404      1m;
-  proxy_buffering    on;
-  expires 864000;
-  proxy_pass    http://127.0.0.1:$OE_PORT;
+    proxy_cache_valid 200 302 60m;
+    proxy_cache_valid 404      1m;
+    proxy_buffering    on;
+    expires 864000;
+    proxy_pass    http://127.0.0.1:$OE_PORT;
   }
-  }
+}
 EOF
 
-  sudo mv ~/odoo /etc/nginx/sites-available/
-  sudo ln -s /etc/nginx/sites-available/odoo /etc/nginx/sites-enabled/odoo
+  sudo mv ~/odoo /etc/nginx/sites-available/$WEBSITE_NAME
+  sudo ln -s /etc/nginx/sites-available/$WEBSITE_NAME /etc/nginx/sites-enabled/$WEBSITE_NAME
   sudo rm /etc/nginx/sites-enabled/default
   sudo service nginx reload
   sudo su root -c "printf 'proxy_mode = True\n' >> /etc/${OE_CONFIG}.conf"
-  echo "Done! The Nginx server is up and running. Configuration can be found at /etc/nginx/sites-available/odoo"
+  echo "Done! The Nginx server is up and running. Configuration can be found at /etc/nginx/sites-available/$WEBSITE_NAME"
 else
   echo "Nginx isn't installed due to choice of the user!"
 fi
@@ -349,11 +393,19 @@ echo "-----------------------------------------------------------"
 echo "Done! The Odoo server is up and running. Specifications:"
 echo "Port: $OE_PORT"
 echo "User service: $OE_USER"
+echo "Configuration file location: /etc/${OE_CONFIG}.conf"
+echo "Logfile location: /var/log/$OE_USER"
 echo "User PostgreSQL: $OE_USER"
-echo "Code location: $OE_USER"
-echo "Addons folder: $OE_USER/$OE_CONFIG/addons/"
+echo "Code location: $OE_HOME_EXT"
+echo "Addons folder: $OE_HOME_EXT/addons/"
+echo "Custom addons folder: $OE_HOME/custom/addons/"
 echo "Password superadmin (database): $OE_SUPERADMIN"
-echo "Start Odoo service: sudo service $OE_CONFIG start"
-echo "Stop Odoo service: sudo service $OE_CONFIG stop"
-echo "Restart Odoo service: sudo service $OE_CONFIG restart"
+echo "Start Odoo service: sudo systemctl start $OE_CONFIG"
+echo "Stop Odoo service: sudo systemctl stop $OE_CONFIG"
+echo "Restart Odoo service: sudo systemctl restart $OE_CONFIG"
+echo "Check Odoo status: sudo systemctl status $OE_CONFIG"
+echo "View Odoo logs: sudo journalctl -u $OE_CONFIG -f"
+if [ $INSTALL_NGINX = "True" ]; then
+  echo "Nginx configuration file: /etc/nginx/sites-available/$WEBSITE_NAME"
+fi
 echo "-----------------------------------------------------------"
