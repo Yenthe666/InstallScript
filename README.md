@@ -19,6 +19,7 @@ There are a few things you can configure, this is the most used list:<br/>
 ```OE_USER``` will be the username for the system user.<br/>
 ```GENERATE_RANDOM_PASSWORD``` if this is set to ```True``` the script will generate a random password, if set to ```False```we'll set the password that is configured in ```OE_SUPERADMIN```. By default the value is ```True``` and the script will generate a random and secure password.<br/>
 ```INSTALL_WKHTMLTOPDF``` set to ```False``` if you do not want to install Wkhtmltopdf, if you want to install it you should set it to ```True```.<br/>
+```INSTALL_PDFKILN``` set to ```True``` to install [PDFKiln](https://github.com/pdfkiln/pdfkiln) instead of Ubuntu's wkhtmltopdf package, on amd64 and arm64 (other architectures keep Ubuntu's package). Ubuntu's package is built without wkhtmltopdf's patched Qt, so Odoo prints reports without their header and footer; PDFKiln keeps the wkhtmltopdf command line and renders with Chromium. By default the value is ```False```.<br/>
 ```OE_PORT``` is the port where Odoo should run on, for example 8069.<br/>
 ```OE_VERSION``` is the Odoo version to install, for example ```19.0``` for Odoo V19.<br/>
 ```IS_ENTERPRISE``` will install the Enterprise version on top of ```19.0``` if you set it to ```True```, set it to ```False``` if you want the community version of Odoo 19.<br/>
