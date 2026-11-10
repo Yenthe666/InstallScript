@@ -20,6 +20,9 @@ OE_HOME_EXT="/$OE_USER/${OE_USER}-server"
 # The default port where this Odoo instance will run under (provided you use the command -c in the terminal)
 # Set to true if you want to install it, false if you don't need it or have it already installed.
 INSTALL_WKHTMLTOPDF="True"
+# Set to "True" to install PDFKiln (https://github.com/pdfkiln/pdfkiln) instead of Ubuntu's wkhtmltopdf package, on amd64 and arm64.
+# Ubuntu's package is built without wkhtmltopdf's patched Qt: Odoo reports print without their header and footer.
+INSTALL_PDFKILN="False"
 # Set the default Odoo port (you still have to use -c /etc/odoo-server.conf for example to use this.)
 OE_PORT="8069"
 # Choose the Odoo version which you want to install. For example: 16.0, 15.0, 14.0 or saas-22. When using 'master' the master version will be installed.
@@ -80,6 +83,26 @@ install_wkhtmltopdf_from_ubuntu() {
     echo "wkhtmltopdf installed from Ubuntu repositories ($ARCH_DEB)."
     return 0
   fi
+  return 1
+}
+
+install_pdfkiln() {
+  # PDFKiln's signed APT repository: wkhtmltopdf and wkhtmltoimage in /usr/bin, rendered by Chromium
+  case "$ARCH_DEB" in
+    amd64|arm64) ;;
+    *) echo "No PDFKiln package for $ARCH_DEB: installing wkhtmltopdf from the Ubuntu repositories instead."; return 1;;
+  esac
+  curl -fsS https://apt.pdfkiln.org/pdfkiln-archive-keyring.asc | sudo tee /usr/share/keyrings/pdfkiln-archive-keyring.asc > /dev/null
+  printf 'Types: deb\nURIs: https://apt.pdfkiln.org\nSuites: stable\nComponents: main\nSigned-By: /usr/share/keyrings/pdfkiln-archive-keyring.asc\n' \
+    | sudo tee /etc/apt/sources.list.d/pdfkiln.sources > /dev/null
+  sudo apt-get update -y
+  if sudo apt-get install -y pdfkiln; then
+    echo "PDFKiln installed as wkhtmltopdf ($ARCH_DEB)."
+    return 0
+  fi
+  # Leave apt as it was before falling back
+  sudo rm -f /etc/apt/sources.list.d/pdfkiln.sources /usr/share/keyrings/pdfkiln-archive-keyring.asc
+  echo "Could not install PDFKiln: installing wkhtmltopdf from the Ubuntu repositories instead."
   return 1
 }
 
@@ -166,7 +189,9 @@ sudo npm install -g rtlcss
 if [ "$INSTALL_WKHTMLTOPDF" = "True" ]; then
   echo -e "\n---- Installing wkhtmltopdf (architecture detected: $ARCH_DEB) ----"
 
-  if install_wkhtmltopdf_from_ubuntu; then
+  if [ "$INSTALL_PDFKILN" = "True" ] && install_pdfkiln; then
+    :
+  elif install_wkhtmltopdf_from_ubuntu; then
     :
   else
     echo -e "\n---- Could not install from the Ubuntu repositories ----."
